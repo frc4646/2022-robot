@@ -3,9 +3,9 @@ package frc.robot;
 public final class Constants {
     public static final class Ports {
         public static final int DRIVE_FL = 0;
-        public static final int DRIVE_FR = 0;
-        public static final int DRIVE_BL = 0;
-        public static final int DRIVE_BR = 0;
+        public static final int DRIVE_FR = 1;
+        public static final int DRIVE_BL = 2;
+        public static final int DRIVE_BR = 3;
     }
 
     public static final class Drive {
