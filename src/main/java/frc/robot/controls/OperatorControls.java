@@ -9,7 +9,7 @@ public class OperatorControls {
   private final XboxController operator;
   
   public OperatorControls() {
-      operator = new XboxController(2);
-      new JoystickButton(operator, Button.kB.value).whenPressed(new IntakeActivate());
+    operator = new XboxController(2);
+    new JoystickButton(operator, Button.kB.value).whenPressed(new IntakeActivate());
   }
 }

@@ -4,19 +4,20 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class DriveSubsystem extends SubsystemBase {
+public class Drivetrain extends SubsystemBase {
   private final CANSparkMax leftMaster, rightMaster, leftSlave, rightSlave;
   
   private boolean isBrakeMode;
 
-  public DriveSubsystem() {
-    leftMaster = new CANSparkMax(Constants.Ports.DRIVE_FL, MotorType.kBrushless);
-    leftSlave = new CANSparkMax(Constants.Ports.DRIVE_BL, MotorType.kBrushless);
-    rightMaster = new CANSparkMax(Constants.Ports.DRIVE_FR, MotorType.kBrushless);
-    rightSlave = new CANSparkMax(Constants.Ports.DRIVE_BR, MotorType.kBrushless);
+  public Drivetrain() {
+    leftMaster = new CANSparkMax(Constants.Ports.DRIVETRAIN_FL, MotorType.kBrushless);
+    leftSlave = new CANSparkMax(Constants.Ports.DRIVETRAIN_BL, MotorType.kBrushless);
+    rightMaster = new CANSparkMax(Constants.Ports.DRIVETRAIN_FR, MotorType.kBrushless);
+    rightSlave = new CANSparkMax(Constants.Ports.DRIVETRAIN_BR, MotorType.kBrushless);
     
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
@@ -33,7 +34,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void configureMotor(CANSparkMax motor, boolean isLeft) {
     motor.setInverted(!isLeft);
     motor.enableVoltageCompensation(12.0);
-    motor.setSmartCurrentLimit(Constants.Drive.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
+    motor.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
   }
 
   public void setBrakeMode(boolean enable) {
@@ -51,5 +52,9 @@ public class DriveSubsystem extends SubsystemBase {
   public void setOpenLoop(double left, double right) {
     leftMaster.set(left);
     rightMaster.set(right);
+  }
+
+  public Rotation2d getHeading() {
+    return null;  // TODO
   }
 }

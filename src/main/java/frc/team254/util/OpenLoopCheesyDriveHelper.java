@@ -23,8 +23,8 @@ public class OpenLoopCheesyDriveHelper {
 
     public DriveSignal cheesyDrive(double throttle, double wheel, boolean quickTurn) {
 
-        throttle = Util.handleDeadband(throttle, Constants.Drive.THROTTLE_DEADBAND);
-        wheel = Util.handleDeadband(wheel, Constants.Drive.TURNING_DEADBAND);
+        throttle = Util.handleDeadband(throttle, Constants.Drivetrain.THROTTLE_DEADBAND);
+        wheel = Util.handleDeadband(wheel, Constants.Drivetrain.TURNING_DEADBAND);
 
         // Apply a sin function that's scaled to make it feel better.
         if (!quickTurn) {

@@ -18,7 +18,7 @@ public class Kinematics {
         if (Math.abs(velocity.dtheta) < kEpsilon) {
             return new DriveSignal(velocity.dx, velocity.dx);
         }
-        double delta_v = Constants.Drive.WHEEL_TRACK_WIDTH_INCHES * velocity.dtheta / (2 * Constants.Drive.WHEEL_SCRUB_FACTOR);
+        double delta_v = Constants.Drivetrain.WHEEL_TRACK_WIDTH_INCHES * velocity.dtheta / (2 * Constants.Drivetrain.WHEEL_SCRUB_FACTOR);
         return new DriveSignal(velocity.dx - delta_v, velocity.dx + delta_v);
     }
 }
