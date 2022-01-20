@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.commands.drivetrain.DriveTeleop;
+import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
@@ -20,7 +21,7 @@ public class RobotContainer {
 
   public static Controls CONTROLS;
 
-  private final Command autoCommand = null;
+  public final AutoModeSelector autoModeSelector;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -33,9 +34,11 @@ public class RobotContainer {
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
+
+    autoModeSelector = new AutoModeSelector();
   }
 
   public Command getAutonomousCommand() {
-    return autoCommand;
+    return null;
   }
 }
