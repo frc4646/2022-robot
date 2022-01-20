@@ -5,6 +5,7 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.auto.TestAuto;
 
 public class AutoModeSelector {
   enum StartingPosition {
@@ -12,7 +13,7 @@ public class AutoModeSelector {
   }
   enum DesiredMode { 
     DO_NOTHING,
-    TODO,
+    TEST_AUTO,
   }
 
   private SendableChooser<DesiredMode> modeSelector;
@@ -32,7 +33,7 @@ public class AutoModeSelector {
 
     modeSelector = new SendableChooser<>();
     modeSelector.setDefaultOption("Do Nothing", DesiredMode.DO_NOTHING);
-    modeSelector.addOption("TODO an actual auto mode", DesiredMode.TODO);
+    modeSelector.addOption("TODO an actual auto mode", DesiredMode.TEST_AUTO);
     SmartDashboard.putData("Auto mode", modeSelector);
   }
 
@@ -57,7 +58,8 @@ public class AutoModeSelector {
 
   private Optional<Command> getAutoModeForParams(DesiredMode mode, StartingPosition position) {
     switch (mode) {
-      // TODO add auto modes
+      case TEST_AUTO:
+        return Optional.of(new TestAuto());
       default:
         break;
     }
