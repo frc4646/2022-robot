@@ -22,6 +22,6 @@ public class IntakeTwoCargo extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    subsystem.setIntakeSpeed(); // TODO subsystem.setOpenLoop(0.0);
+    subsystem.setIntakeSpeed(0.0);
   }
 }

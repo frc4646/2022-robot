@@ -7,12 +7,15 @@ import frc.robot.subsystems.Intake;
 public class IntakeActivate extends InstantCommand {
   private final Intake subsystem = RobotContainer.INTAKE;
 
-  public IntakeActivate() {
+  public final double intakeSpeed;
+
+  public IntakeActivate(double intakePercent) {
     addRequirements(subsystem);
+    this.intakeSpeed = intakePercent;
   }
 
   @Override
   public void initialize() {
-    subsystem.setIntakeSpeed();
+    subsystem.setIntakeSpeed(intakeSpeed);
   }
 }

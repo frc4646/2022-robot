@@ -33,8 +33,8 @@ public class AutoModeSelector {
 
     modeSelector = new SendableChooser<>();
     modeSelector.setDefaultOption("Do Nothing", DesiredMode.DO_NOTHING);
-    modeSelector.addOption("TODO an actual auto mode", DesiredMode.TEST_AUTO);
-    SmartDashboard.putData("Auto mode", modeSelector);
+    modeSelector.addOption("Test Mode", DesiredMode.TEST_AUTO);
+    SmartDashboard.putData("Auto Mode", modeSelector);
   }
 
   public void update() {

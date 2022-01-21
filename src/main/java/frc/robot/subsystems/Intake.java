@@ -14,8 +14,8 @@ public class Intake extends SubsystemBase {
     // TODO supply current limiting
   }
 
-  public void setIntakeSpeed () {
-    motor.set(ControlMode.PercentOutput, .5);
+  public void setIntakeSpeed (double intakeSpeed) {
+    motor.set(ControlMode.PercentOutput, intakeSpeed);
   }
 
   public boolean isStalled() {
