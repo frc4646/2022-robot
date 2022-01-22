@@ -7,6 +7,9 @@ public final class Constants {
     public static final int DRIVETRAIN_FR = 4;
     public static final int DRIVETRAIN_BL = 3;
     public static final int DRIVETRAIN_BR = 2;
+    public static final int SHOOTER_L = 6;
+    public static final int SHOOTER_R = 7;
+    public static final int INDEXER = 8;
     public static final int INTAKE = 5;
   }
 

@@ -1,13 +1,21 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
   // TODO motor(s)
+  private final CANSparkMax leftMaster,rightMaster;
 
   public Shooter() {
-    // TODO configure motors
+    // TODO configure motors 
+    
     // TODO limit supply current
+    leftMaster = new CANSparkMax(Constants.Ports.SHOOTER_L, MotorType.kBrushless);
+    rightMaster = new CANSparkMax(Constants.Ports.SHOOTER_R, MotorType.kBrushless);
     // TODO PIDF
     // TODO peak output forward direction only
     // TODO coast mode
@@ -17,7 +25,9 @@ public class Shooter extends SubsystemBase {
     // TODO set percent voltage mode
   }
 
-  public void setSpeed(int velocity) {
+  public void setSpeed(double velocity) {
+    leftMaster.set(velocity);
+    rightMaster.set(velocity);
     // TODO set velocity control mode
   }
 

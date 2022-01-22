@@ -7,9 +7,9 @@ import frc.robot.subsystems.Shooter;
 public class ShooterVelocity extends CommandBase {
   private Shooter subsystem = RobotContainer.SHOOTER;
 
-  private final int output;
+  private final double output;
 
-  public ShooterVelocity(int velocity) {
+  public ShooterVelocity(double velocity) {
     addRequirements(subsystem);
     this.output = velocity;
   }
