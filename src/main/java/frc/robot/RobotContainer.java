@@ -27,7 +27,7 @@ public class RobotContainer {
   public RobotContainer() {
     //CLIMBER = new Climber();
     DRIVETRAIN = new Drivetrain();
-    //INDEXER = new Indexer();
+    INDEXER = new Indexer();
     INTAKE = new Intake();
     SHOOTER = new Shooter();
     //VISION = new Vision();
