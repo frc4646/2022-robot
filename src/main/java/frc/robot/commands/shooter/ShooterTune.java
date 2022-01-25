@@ -14,7 +14,7 @@ public class ShooterTune extends CommandBase {
 
   @Override
   public void initialize() {
-    int setpoint = (int) SmartDashboard.getNumber("tuning/shooterVel", 0);
+    double setpoint = (double) SmartDashboard.getNumber("tuning/shooterVel", 1);
     subsystem.setOpenLoop(setpoint);  // TODO use velocity mode once we have an encoder
     //subsystem.setSpeed(setpoint);
   }
