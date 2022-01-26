@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.team254.util.InterpolatingDouble;
 
 public class Vision extends SubsystemBase {
   public enum LEDMode { PIPELINE, OFF, BLINK, ON }         // Order must match Limelight docs
@@ -16,6 +17,7 @@ public class Vision extends SubsystemBase {
     public boolean seesTarget;  // Whether the limelight has any valid targets (0 or 1)
   }
 
+  private final double RANGE_INVALID = -1.0;
   private final double HEIGHT_VISION_TAPE_TO_CAMERA = Constants.Field.VISION_TAPE_HEIGHT - Constants.Vision.CAMERA_MOUNTING_HEIGHT;
 
   private final NetworkTable table;
@@ -49,11 +51,14 @@ public class Vision extends SubsystemBase {
     if (isTargetPresent()) {
       return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians(cache.yDegrees) + Constants.Vision.CAMERA_MOUNTING_ANGLE);
     }
-    return -1.0;
+    return RANGE_INVALID;
   }
 
-  public int getShooterSpeed() {
-    return 0;  // TODO ideal speed for shooter
+  public double getShooterVelocityRPM() {
+    if (isTargetPresent()) {
+      return Constants.Shooter.RPM_MAP.getInterpolated(new InterpolatingDouble(getGroundDistanceToHubInches())).value;
+    }
+    return Constants.Shooter.SPEED_NO_TARGETS;
   }
 
   public boolean isTargetPresent() {

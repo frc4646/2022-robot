@@ -9,14 +9,14 @@ public class ShooterVelocity extends CommandBase {
 
   private final double output;
 
-  public ShooterVelocity(double velocity) {
+  public ShooterVelocity(double rpm) {
     addRequirements(subsystem);
-    this.output = velocity;
+    this.output = rpm;
   }
 
   @Override
   public void initialize() {
-    subsystem.setSpeed(output);
+    subsystem.setClosedLoopVelocity(output);
   }
 
   @Override

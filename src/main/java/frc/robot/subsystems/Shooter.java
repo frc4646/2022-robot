@@ -9,40 +9,35 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-
-  private final CANSparkMax leftMotor, rightMotor;
+  private final CANSparkMax leftMaster, rightSlave;
 
   public Shooter() {
-    leftMotor = new CANSparkMax(Constants.Ports.SHOOTER_L, MotorType.kBrushless);
-    rightMotor = new CANSparkMax(Constants.Ports.SHOOTER_R, MotorType.kBrushless);
+    leftMaster = new CANSparkMax(Constants.Ports.SHOOTER_L, MotorType.kBrushless);
+    rightSlave = new CANSparkMax(Constants.Ports.SHOOTER_R, MotorType.kBrushless);
     
-    IdleMode mode = IdleMode.kCoast;
-    leftMotor.setIdleMode(mode);
-    rightMotor.setIdleMode(mode);
-    leftMotor.enableVoltageCompensation(12.0);
-    rightMotor.enableVoltageCompensation(12.0);
-    // leftMotor.follow(rightMotor);
+    rightSlave.follow(leftMaster);
+    // TODO doesn't slave need to be inverted?
+    leftMaster.setIdleMode(IdleMode.kCoast);
+    rightSlave.setIdleMode(IdleMode.kCoast);
+    leftMaster.enableVoltageCompensation(12.0);
+    rightSlave.enableVoltageCompensation(12.0);
     // leftMotor.setSmartCurrentLimit(40);
     // rightMotor.setSmartCurrentLimit(40);
 
-    // TODO we have 2 motors So set one as a follower but inverted
     // TODO limit supply current
     // TODO PIDF
     // TODO peak output forward direction only
-    // TODO coast mode
-
   }
 
   public void setOpenLoop(double percent) {
-    leftMotor.set(percent);
-    rightMotor.set(percent);
+    leftMaster.set(percent);
   }
 
-  public void setSpeed(double velocity) {
+  public void setClosedLoopVelocity(double rpm) {
     // this is closed loop
     // TODO set velocity control mode
   }
-  public int getSpeed() {
+  public int getVelocityRPM() {
     return 0;  // TODO read sensor
   }
 
@@ -54,6 +49,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Shooter/Velocity", leftMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Shooter/Velocity", leftMaster.getEncoder().getVelocity());
   }
 }
