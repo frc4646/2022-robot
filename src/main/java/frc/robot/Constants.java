@@ -7,7 +7,7 @@ public final class Constants {
   public static final class Ports {
     public static final int
       POWER_DISTRIBUTION_PANEL = 0,  DRIVETRAIN_FL = 1, DRIVETRAIN_BR = 2, DRIVETRAIN_BL = 3, DRIVETRAIN_FR = 4,
-      INTAKE = 5, SHOOTER_L = 6, SHOOTER_R = 7, INDEXER = 8;
+      INTAKE = 5, SHOOTER_L = 6, SHOOTER_R = 7, INDEXER = 8, GYRO = 9;
   }
 
   public static final class Drivetrain {
@@ -19,6 +19,10 @@ public final class Constants {
         
     public static final int CURRENT_LIMIT = 30;
     //public static final int kDriveCurrentUnThrottledLimit = 80; // TODO use case?
+
+    public static final double FEED_FORWARD_GAIN_STATIC = 0.0;  // TODO
+    public static final double FEED_FORWARD_GAIN_VELOCITY = 0.0;  // TODO
+    public static final double FEED_FORWARD_GAIN_ACCEL = 0.0;  // TODO
   }
 
   public static final class Shooter {

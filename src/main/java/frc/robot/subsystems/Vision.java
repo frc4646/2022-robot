@@ -3,11 +3,10 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.team254.util.InterpolatingDouble;
 
-public class Vision extends SubsystemBase {
+public class Vision extends SmartSubsystem {
   public enum LEDMode { PIPELINE, OFF, BLINK, ON }         // Order must match Limelight docs
   public enum CamMode { VISION_PROCESSOR, DRIVER_CAMERA }  // Order must match Limelight docs
   public static class DataCache {
@@ -17,7 +16,7 @@ public class Vision extends SubsystemBase {
     public boolean seesTarget;  // Whether the limelight has any valid targets (0 or 1)
   }
 
-  private final double RANGE_INVALID = -1.0;
+  private final double RPM_MAP_KEY_INVALID = -1.0;
   private final double HEIGHT_VISION_TAPE_TO_CAMERA = Constants.Field.VISION_TAPE_HEIGHT - Constants.Vision.CAMERA_MOUNTING_HEIGHT;
 
   private final NetworkTable table;
@@ -28,6 +27,7 @@ public class Vision extends SubsystemBase {
   }
 
   /** See https://docs.limelightvision.io/en/latest/networktables_api.html. */
+  @Override
   public void cacheSensors() {
     cache.xDegrees = table.getEntry("tx").getDouble(0.0);
     cache.yDegrees = table.getEntry("ty").getDouble(0.0);
@@ -35,6 +35,7 @@ public class Vision extends SubsystemBase {
     cache.seesTarget = table.getEntry("tv").getDouble(0) == 1.0;
   }
 
+  @Override
   public void updateDashboard() {
     SmartDashboard.putNumber("Limelight X: ", cache.xDegrees);
     SmartDashboard.putNumber("Limelight Y: ", cache.yDegrees);
@@ -51,7 +52,7 @@ public class Vision extends SubsystemBase {
     if (isTargetPresent()) {
       return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians(cache.yDegrees) + Constants.Vision.CAMERA_MOUNTING_ANGLE);
     }
-    return RANGE_INVALID;
+    return RPM_MAP_KEY_INVALID;
   }
 
   public double getShooterVelocityRPM() {

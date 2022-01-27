@@ -31,7 +31,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    autonomousCommand = robotContainer.getAutonomousCommand();
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
@@ -53,10 +52,9 @@ public class Robot extends TimedRobot {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard integrated updating. */
   @Override
   public void robotPeriodic() {
-    // Runs these steps: Polls buttons, adds newly-scheduled commands, runs already-scheduled commands, removes finished or interrupted commands, calls subsystem periodic() methods.
-    CommandScheduler.getInstance().run();  // Must be called from robotPeriodic().
-
-    robotContainer.autoModeSelector.outputToSmartDashboard();
+    robotContainer.cacheSensors();
+    CommandScheduler.getInstance().run();  // Must be called from robotPeriodic(). Runs these steps: Polls buttons, adds newly-scheduled commands, runs already-scheduled commands, removes finished or interrupted commands, calls subsystem periodic() methods.
+    robotContainer.updateDashboard();
   }
 
   @Override
@@ -71,7 +69,7 @@ public class Robot extends TimedRobot {
 
     if ((Timer.getFPGATimestamp() - timeInitDisabled) > 5.0 && (Timer.getFPGATimestamp() - timeInitDisabled) < 5.5) {
       System.out.println("Releasing climber!");
-      // TODO set climber motor(s) to coast mode
+      robotContainer.CLIMBER.setBrakeMode(false);
     }
   }
 

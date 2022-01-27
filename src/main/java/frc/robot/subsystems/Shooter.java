@@ -5,10 +5,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Shooter extends SubsystemBase {
+public class Shooter extends SmartSubsystem {
   private final CANSparkMax leftMaster, rightSlave;
 
   public Shooter() {
@@ -29,6 +28,11 @@ public class Shooter extends SubsystemBase {
     // TODO peak output forward direction only
   }
 
+  @Override
+  public void updateDashboard() {
+    SmartDashboard.putNumber("Shooter/Velocity", leftMaster.getEncoder().getVelocity());
+  }
+
   public void setOpenLoop(double percent) {
     leftMaster.set(percent);
   }
@@ -45,10 +49,5 @@ public class Shooter extends SubsystemBase {
     // TODO is close enough
     // TODO increment how many times is stable    
     return false;  // TODO decide is enough times is stable
-  }
-
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Shooter/Velocity", leftMaster.getEncoder().getVelocity());
   }
 }
