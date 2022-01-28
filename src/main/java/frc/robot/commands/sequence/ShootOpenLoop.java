@@ -10,12 +10,12 @@ import frc.robot.commands.shooter.ShooterTune;
 public class ShootOpenLoop extends SequentialCommandGroup {
   public ShootOpenLoop() {
     addCommands(
-      new ShooterTune(),
-      new WaitCommand(Constants.Shooter.REV_TIME),
-      new IndexOpenLoop(.5),
-      new WaitCommand(2.0),
-      new ShooterOpenLoop(0.0),
-      new IndexOpenLoop(0.0)
+     new ShooterOpenLoop(.5),
+     new WaitCommand(Constants.Shooter.REV_TIME),
+   new IndexOpenLoop(.5),
+    new WaitCommand( 1),
+    new ShooterOpenLoop(0),
+    new IndexOpenLoop(0)
     );
   }
 }

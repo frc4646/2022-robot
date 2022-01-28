@@ -13,7 +13,7 @@ import frc.robot.Constants;
 
 public class Drivetrain extends SmartSubsystem {
   private final CANSparkMax leftMaster, rightMaster, leftSlave, rightSlave;
-  private final PigeonIMU gyro;
+  // private final PigeonIMU gyro;
   private final SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(Constants.Drivetrain.FEED_FORWARD_GAIN_STATIC, Constants.Drivetrain.FEED_FORWARD_GAIN_VELOCITY, Constants.Drivetrain.FEED_FORWARD_GAIN_ACCEL);
   
   private boolean isBrakeMode;
@@ -23,7 +23,7 @@ public class Drivetrain extends SmartSubsystem {
     leftSlave = new CANSparkMax(Constants.Ports.DRIVETRAIN_BL, MotorType.kBrushless);
     rightMaster = new CANSparkMax(Constants.Ports.DRIVETRAIN_FR, MotorType.kBrushless);
     rightSlave = new CANSparkMax(Constants.Ports.DRIVETRAIN_BR, MotorType.kBrushless);
-    gyro = new PigeonIMU(Constants.Ports.GYRO);
+    // gyro = new PigeonIMU(Constants.Ports.GYRO);
     
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
@@ -32,7 +32,7 @@ public class Drivetrain extends SmartSubsystem {
     configureMotor(leftSlave, true);
     configureMotor(rightMaster, false);
     configureMotor(rightSlave, false);
-    gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 10, 10);
+    // gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 10, 10);
 
     isBrakeMode = true;
     setBrakeMode(false);

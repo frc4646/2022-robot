@@ -27,7 +27,7 @@ public class RobotContainer {
 
   public static Controls CONTROLS;
 
-  public final AutoModeSelector autoModeSelector;
+  // public final AutoModeSelector autoModeSelector;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -36,13 +36,13 @@ public class RobotContainer {
     INDEXER = new Indexer();
     INTAKE = new Intake();
     SHOOTER = new Shooter();
-    //VISION = new Vision();
+    VISION = new Vision();
     allSubsystems = Arrays.asList(DRIVETRAIN, INDEXER, INTAKE, SHOOTER);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
 
-    autoModeSelector = new AutoModeSelector();
+    // autoModeSelector = new AutoModeSelector();
   }
 
   public void cacheSensors() {
@@ -51,7 +51,7 @@ public class RobotContainer {
 
   public void updateDashboard() {
     allSubsystems.forEach(SmartSubsystem::updateDashboard);
-    autoModeSelector.outputToSmartDashboard();
+    // autoModeSelector.outputToSmartDashboard();
   }
 
   public Command getAutonomousCommand() {

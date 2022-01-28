@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.auto.TestAuto;
 
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
@@ -24,16 +25,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    robotContainer.autoModeSelector.reset();
-    robotContainer.autoModeSelector.update();
+    // robotContainer.autoModeSelector.reset();
+    // robotContainer.autoModeSelector.update();
     timeInitDisabled = Timer.getFPGATimestamp();
   }
 
   @Override
   public void autonomousInit() {
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
-    }
+   // if (autonomousCommand != null) {
+    autonomousCommand= new TestAuto();
+    autonomousCommand.schedule();
+   // }
   }
 
   @Override
@@ -59,18 +61,18 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    robotContainer.autoModeSelector.update();
+    // robotContainer.autoModeSelector.update();
 
-    Optional<Command> autoMode = robotContainer.autoModeSelector.getAutoMode();
-    if (autoMode.isPresent()) {
-      System.out.println("Set auto mode to: " + autoMode.get().getClass().toString());
-      autonomousCommand = autoMode.get();
-    }
+    // Optional<Command> autoMode = robotContainer.autoModeSelector.getAutoMode();
+    // if (autoMode.isPresent()) {
+    //   System.out.println("Set auto mode to: " + autoMode.get().getClass().toString());
+    //   autonomousCommand = autoMode.get();
+    // }
 
-    if ((Timer.getFPGATimestamp() - timeInitDisabled) > 5.0 && (Timer.getFPGATimestamp() - timeInitDisabled) < 5.5) {
-      System.out.println("Releasing climber!");
-      robotContainer.CLIMBER.setBrakeMode(false);
-    }
+    // if ((Timer.getFPGATimestamp() - timeInitDisabled) > 5.0 && (Timer.getFPGATimestamp() - timeInitDisabled) < 5.5) {
+    //   System.out.println("Releasing climber!");
+    //   robotContainer.CLIMBER.setBrakeMode(false);
+    // }
   }
 
   @Override

@@ -13,7 +13,7 @@ public class Shooter extends SmartSubsystem {
   public Shooter() {
     leftMaster = new CANSparkMax(Constants.Ports.SHOOTER_L, MotorType.kBrushless);
     rightSlave = new CANSparkMax(Constants.Ports.SHOOTER_R, MotorType.kBrushless);
-    
+   // leftMaster.setInverted(true);
     rightSlave.follow(leftMaster);
     // TODO doesn't slave need to be inverted?
     leftMaster.setIdleMode(IdleMode.kCoast);
@@ -34,7 +34,7 @@ public class Shooter extends SmartSubsystem {
   }
 
   public void setOpenLoop(double percent) {
-    leftMaster.set(percent);
+    leftMaster.set(-percent);
   }
 
   public void setClosedLoopVelocity(double rpm) {
