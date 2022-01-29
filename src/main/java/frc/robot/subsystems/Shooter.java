@@ -8,7 +8,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class Shooter extends SmartSubsystem {
+  public static class DataCache {
+    public double rpm;
+  }
+
   private final CANSparkMax leftMaster, rightSlave;
+  private final DataCache cache = new DataCache();
+
+  private double closedLoopTargetRPM = 0.0;
 
   public Shooter() {
     leftMaster = new CANSparkMax(Constants.Ports.SHOOTER_L, MotorType.kBrushless);
@@ -29,25 +36,29 @@ public class Shooter extends SmartSubsystem {
   }
 
   @Override
+  public void cacheSensors() {
+    cache.rpm = leftMaster.getEncoder().getVelocity();
+  }
+
+  @Override
   public void updateDashboard() {
-    SmartDashboard.putNumber("Shooter/Velocity", leftMaster.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Shooter/Velocity", cache.rpm);
   }
 
   public void setOpenLoop(double percent) {
-    leftMaster.set(-percent);
+    leftMaster.set(-percent);  // TODO make inverted instead, otherwise close loop will be wrong
   }
 
   public void setClosedLoopVelocity(double rpm) {
-    // this is closed loop
-    // TODO set velocity control mode
+    closedLoopTargetRPM = rpm;
+    // TODO set motor to velocity control mode
   }
-  public int getVelocityRPM() {
-    return 0;  // TODO read sensor
+  public double getVelocityRPM() {
+    return cache.rpm;
   }
 
   public boolean isOnTarget() {
-    // TODO is close enough
     // TODO increment how many times is stable    
-    return false;  // TODO decide is enough times is stable
+    return Math.abs(closedLoopTargetRPM - getVelocityRPM()) > Constants.Shooter.ERROR_ALLOWED_RPM;
   }
 }

@@ -20,7 +20,7 @@ public class AutoModeSelector {
   private SendableChooser<StartingPosition> startingPositionSelector;
 
   private DesiredMode modeDesiredCached = DesiredMode.DO_NOTHING;
-  private StartingPosition startingPositionCached = null;
+  private StartingPosition startingPositionCached = StartingPosition.LEFT;
 
   private Optional<Command> mode = Optional.empty();
 
@@ -41,16 +41,14 @@ public class AutoModeSelector {
     DesiredMode desiredMode = modeSelector.getSelected();
     StartingPosition startingPosition = startingPositionSelector.getSelected();
 
-    if (desiredMode == null) {
+    if (desiredMode == null || startingPosition == null) {
       desiredMode = DesiredMode.DO_NOTHING;
-    }
-    if (startingPosition == null) {
       startingPosition = StartingPosition.LEFT;
     }
 
     if (modeDesiredCached != desiredMode || startingPosition != startingPositionCached) {
-        System.out.println("Auto selection changed, updating creator: desiredMode->" + desiredMode.name() + ", starting position->" + startingPosition.name());
-        mode = getAutoModeForParams(desiredMode, startingPosition);
+      System.out.println("Auto selection changed, updating creator: desiredMode->" + desiredMode.name() + ", starting position->" + startingPosition.name());
+      mode = getAutoModeForParams(desiredMode, startingPosition);
     }
     modeDesiredCached = desiredMode;
     startingPositionCached = startingPosition;
@@ -61,20 +59,15 @@ public class AutoModeSelector {
       case TEST_AUTO:
         return Optional.of(new TestAuto());
       default:
-        break;
+        System.err.println("No valid auto mode found for  " + mode);
+        return Optional.empty();
     }
-    System.err.println("No valid auto mode found for  " + mode);
-    return Optional.empty();
   }
 
   public void reset() {
     mode = Optional.empty();
     modeDesiredCached = null;
-  }
-
-  public void outputToSmartDashboard() {
-    SmartDashboard.putString("AutoModeSelected", modeDesiredCached.name());
-    SmartDashboard.putString("StartingPositionSelected", startingPositionCached.name());
+    startingPositionCached = null;
   }
 
   public Optional<Command> getAutoMode() {

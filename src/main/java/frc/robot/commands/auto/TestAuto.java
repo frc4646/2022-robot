@@ -17,10 +17,10 @@ public class TestAuto extends SequentialCommandGroup {
      // new DriveOpenLoop(.15).withTimeout(0.5),
      // new DriveOpenLoop(0.0),
      // new ShootOpenLoop()
-     new ShootOpenLoop(),
-    new DriveOpenLoop(.1),
-    new WaitCommand(1),
-   new DriveOpenLoop(0)
+      new ShootOpenLoop(),
+      new DriveOpenLoop(.1),
+      new WaitCommand(1.0),
+      new DriveOpenLoop(0.0)
     );
   }
 }

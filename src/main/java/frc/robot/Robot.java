@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import java.util.Optional;
@@ -32,10 +28,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-   // if (autonomousCommand != null) {
-    autonomousCommand= new TestAuto();
-    autonomousCommand.schedule();
-   // }
+    autonomousCommand= new TestAuto();  // TODO Use auto chooser
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    }
   }
 
   @Override

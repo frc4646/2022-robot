@@ -7,24 +7,21 @@ import frc.robot.subsystems.Vision;
 
 public class ShooterAim extends CommandBase {
   private Shooter subsystem = RobotContainer.SHOOTER;
-  // private Vision vision = RobotContainer.VISION;
+  private Vision vision = RobotContainer.VISION;
 
   public ShooterAim() {
     addRequirements(subsystem);
   }
 
   @Override
-  public void initialize()
-  {
-    // if (vision.isTargetPresent())
-    {
-      // subsystem.setSpeed(vision.getShooterSpeed());
+  public void initialize() {
+    if (vision.isTargetPresent()) {
+      subsystem.setClosedLoopVelocity(vision.getShooterVelocityRPM());
     }
   }
 
   @Override
-  public boolean isFinished()
-  {
+  public boolean isFinished() {
     return subsystem.isOnTarget();
   }
 }
