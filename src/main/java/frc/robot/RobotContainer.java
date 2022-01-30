@@ -6,7 +6,7 @@ import frc.robot.controls.Controls;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Shooter;
@@ -21,7 +21,7 @@ public class RobotContainer {
   public static Agitator AGITATOR;
   public static Climber CLIMBER;
   public static Drivetrain DRIVETRAIN;
-  public static Indexer INDEXER;
+  public static Feeder FEEDER;
   public static Intake INTAKE;
   public static Shooter SHOOTER;
   public static Vision VISION;
@@ -29,23 +29,23 @@ public class RobotContainer {
 
   public static Controls CONTROLS;
 
-  //public final AutoModeSelector autoModeSelector;
+  public final AutoModeSelector autoModeSelector;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    AGITATOR = new Agitator();
-    CLIMBER = new Climber();
+    // AGITATOR = new Agitator();
+    // CLIMBER = new Climber();
     DRIVETRAIN = new Drivetrain();
-    INDEXER = new Indexer();
+    FEEDER = new Feeder();
     INTAKE = new Intake();
     SHOOTER = new Shooter();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(DRIVETRAIN, INDEXER, INTAKE, SHOOTER);
+    allSubsystems = Arrays.asList(DRIVETRAIN, FEEDER, INTAKE, SHOOTER, VISION);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
 
-    //autoModeSelector = new AutoModeSelector();
+    autoModeSelector = new AutoModeSelector();
   }
 
   public void cacheSensors() {

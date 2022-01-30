@@ -1,15 +1,15 @@
-package frc.robot.commands.indexer;
+package frc.robot.commands.feeder;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Feeder;
 
-public class IndexOpenLoop extends InstantCommand {
-  private Indexer subsystem = RobotContainer.INDEXER;
+public class FeederOpenLoop extends InstantCommand {
+  private Feeder subsystem = RobotContainer.FEEDER;
 
   private final double output;
 
-  public IndexOpenLoop(double percent) {
+  public FeederOpenLoop(double percent) {
     addRequirements(subsystem);
     output = percent;
   }

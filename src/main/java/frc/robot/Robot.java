@@ -21,14 +21,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    // robotContainer.autoModeSelector.reset();
-    // robotContainer.autoModeSelector.update();
+    robotContainer.autoModeSelector.reset();
+    robotContainer.autoModeSelector.update();
     timeInitDisabled = Timer.getFPGATimestamp();
   }
 
   @Override
   public void autonomousInit() {
-    autonomousCommand= new TestAuto();  // TODO Use auto chooser
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
@@ -57,13 +56,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    // robotContainer.autoModeSelector.update();
+    robotContainer.autoModeSelector.update();
 
-    // Optional<Command> autoMode = robotContainer.autoModeSelector.getAutoMode();
-    // if (autoMode.isPresent()) {
-    //   System.out.println("Set auto mode to: " + autoMode.get().getClass().toString());
-    //   autonomousCommand = autoMode.get();
-    // }
+    Optional<Command> autoMode = robotContainer.autoModeSelector.getAutoMode();
+    if (autoMode.isPresent()) {
+      System.out.println("Set auto mode to: " + autoMode.get().getClass().toString());
+      autonomousCommand = autoMode.get();
+    }
 
     // if ((Timer.getFPGATimestamp() - timeInitDisabled) > 5.0 && (Timer.getFPGATimestamp() - timeInitDisabled) < 5.5) {
     //   System.out.println("Releasing climber!");

@@ -4,23 +4,23 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
 
-public class ShooterVelocity extends CommandBase {
-  private Shooter subsystem = RobotContainer.SHOOTER;
+public class ShooterWaitForVelocity extends CommandBase {
+  public final Shooter subsystem = RobotContainer.SHOOTER;
 
-  private final double rpm;
+  public final double rpm;
 
-  public ShooterVelocity(double rpm) {
+  public ShooterWaitForVelocity(double wantedRPM) {
     addRequirements(subsystem);
-    this.rpm = rpm;
+    rpm = wantedRPM;
   }
 
   @Override
   public void initialize() {
-    subsystem.setClosedLoopVelocity(rpm);
+    subsystem.setTargetVelocity(rpm);
   }
-
+  
   @Override
   public boolean isFinished() {
-    return subsystem.isOnTarget();
+    return subsystem.isStable(); 
   }
 }

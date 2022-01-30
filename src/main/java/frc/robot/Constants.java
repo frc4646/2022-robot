@@ -10,6 +10,13 @@ public final class Constants {
       INTAKE = 5, SHOOTER_L = 6, SHOOTER_R = 7, INDEXER = 8, GYRO = 9;
   }
 
+  public static final class Digital {
+    public static final int DRIVETRAIN_L_ENCODER_A = 0;
+    public static final int DRIVETRAIN_L_ENCODER_B = 1;
+    public static final int DRIVETRAIN_R_ENCODER_A = 2;
+    public static final int DRIVETRAIN_R_ENCODER_B = 3;
+  }
+
   public static final class Drivetrain {
     public static final double WHEEL_TRACK_WIDTH_INCHES = 26.0;
     public static final double WHEEL_SCRUB_FACTOR = 1.02;
@@ -25,13 +32,33 @@ public final class Constants {
     public static final double FEED_FORWARD_GAIN_ACCEL = 0.0;  // TODO
   }
 
+  public static final class Feeder {
+    public static final double PERCENT_OPEN_LOOP = 0.5;
+  }
+
+  public static final class Intake {
+    public static final double PERCENT_OPEN_LOOP = 1.0;
+  }
+
   public static final class Shooter {
     public static final double REV_TIME = 2.0;  // Seconds
     public static final double ERROR_ALLOWED_RPM = 250.0;  // TODO best value ~250-1000
     public static final double SPEED_NO_TARGETS = 0.0;  // TODO
+    public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> VOLTAGE_MAP = new InterpolatingTreeMap<>();
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> RPM_MAP = new InterpolatingTreeMap<>();
     static {
-      RPM_MAP.put(new InterpolatingDouble(0.0), new InterpolatingDouble(4500.0));
+      VOLTAGE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(0.42));
+      VOLTAGE_MAP.put(new InterpolatingDouble(127.0), new InterpolatingDouble(0.4515));
+      VOLTAGE_MAP.put(new InterpolatingDouble(147.0), new InterpolatingDouble(.5));
+      VOLTAGE_MAP.put(new InterpolatingDouble(163.0), new InterpolatingDouble(.525));
+      VOLTAGE_MAP.put(new InterpolatingDouble(196.0), new InterpolatingDouble(.575));
+    }
+    static {
+      RPM_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
+      RPM_MAP.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
+      RPM_MAP.put(new InterpolatingDouble(147.0), new InterpolatingDouble(2750.0));
+      RPM_MAP.put(new InterpolatingDouble(163.0), new InterpolatingDouble(2910.0));
+      RPM_MAP.put(new InterpolatingDouble(196.0), new InterpolatingDouble(3200.0));
     }
   }
 

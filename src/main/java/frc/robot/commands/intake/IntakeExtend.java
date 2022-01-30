@@ -9,9 +9,9 @@ public class IntakeExtend extends InstantCommand {
 
   public final boolean extend;
 
-  public IntakeExtend(boolean extend) {
+  public IntakeExtend(boolean isWantExtended) {
     addRequirements(subsystem);
-    this.extend = extend;
+    this.extend = isWantExtended;
   }
 
   @Override

@@ -5,7 +5,9 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.auto.TestAuto;
+import frc.robot.commands.auto.TwoCargoAuto;
 
 public class AutoModeSelector {
   enum StartingPosition {
@@ -14,6 +16,7 @@ public class AutoModeSelector {
   enum DesiredMode { 
     DO_NOTHING,
     TEST_AUTO,
+    TWO_CARGO_MODE,
   }
 
   private SendableChooser<DesiredMode> modeSelector;
@@ -33,6 +36,7 @@ public class AutoModeSelector {
 
     modeSelector = new SendableChooser<>();
     modeSelector.setDefaultOption("Do Nothing", DesiredMode.DO_NOTHING);
+    modeSelector.addOption("2 Cargo Mode", DesiredMode.TWO_CARGO_MODE);
     modeSelector.addOption("Test Mode", DesiredMode.TEST_AUTO);
     SmartDashboard.putData("Auto Mode", modeSelector);
   }
@@ -56,11 +60,13 @@ public class AutoModeSelector {
 
   private Optional<Command> getAutoModeForParams(DesiredMode mode, StartingPosition position) {
     switch (mode) {
+      case TWO_CARGO_MODE:
+        return Optional.of(new TwoCargoAuto());
       case TEST_AUTO:
         return Optional.of(new TestAuto());
       default:
         System.err.println("No valid auto mode found for  " + mode);
-        return Optional.empty();
+        return Optional.of(new WaitCommand(15.0));
     }
   }
 
