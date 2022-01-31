@@ -62,6 +62,11 @@ public final class Constants {
     }
   }
 
+  public static final class Turret {
+    public static final double ENCODER_ZERO_MIN = 0.0;  // Raw TODO actual value
+    public static final double ENCODER_ZERO_MAX = 0.0;  // Raw TODO actual value
+  }
+
   public static final class Vision {
     public static final double HORIZONTAL_FOV = 54.0;  // Degrees (LL1: 54.0, LL2: 59.6)
     public static final double VERTICAL_FOV = 41.0;  // Degrees (LL1: 41.0, LL2: 49.7)

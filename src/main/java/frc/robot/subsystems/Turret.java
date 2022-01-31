@@ -30,7 +30,15 @@ public class Turret extends SmartSubsystem {
     SmartDashboard.putNumber(this.getName() + " Amps", cache.amps);
   }
 
+  public void resetEncoders() {
+    // TODO
+  }
+
   public void setOpenLoop(double percent) {
     motor.set(percent);
+  }
+
+  public double getPositionRaw() {
+    return 0.0;  // TODO
   }
 }
