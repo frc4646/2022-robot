@@ -7,10 +7,12 @@ import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SmartSubsystem;
+import frc.robot.subsystems.Turret;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,8 +24,10 @@ public class RobotContainer {
   public static Climber CLIMBER;
   public static Drivetrain DRIVETRAIN;
   public static Feeder FEEDER;
+  public static Hood HOOD;
   public static Intake INTAKE;
   public static Shooter SHOOTER;
+  public static Turret TURRET;
   public static Vision VISION;
   private final List<SmartSubsystem> allSubsystems;
 
@@ -37,8 +41,10 @@ public class RobotContainer {
     // CLIMBER = new Climber();
     DRIVETRAIN = new Drivetrain();
     FEEDER = new Feeder();
+    // HOOD = new Hood();
     INTAKE = new Intake();
     SHOOTER = new Shooter();
+    // TURRET = new Turret();
     VISION = new Vision();
     allSubsystems = Arrays.asList(DRIVETRAIN, FEEDER, INTAKE, SHOOTER, VISION);
 

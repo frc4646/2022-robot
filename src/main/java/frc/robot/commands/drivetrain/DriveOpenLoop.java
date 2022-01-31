@@ -15,6 +15,7 @@ public class DriveOpenLoop extends InstantCommand {
 
   @Override
   public void initialize() {
+    subsystem.setBrakeMode(true);
     subsystem.setOpenLoop(output, output);
   }
 }

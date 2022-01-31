@@ -12,6 +12,8 @@ public class Shooter extends SmartSubsystem {
   public static class DataCache {
     public double rpmL;
     public double rpmR;
+    public double ampsL;
+    public double ampsR;
   }
 
   private final CANSparkMax leftMaster, rightSlave;
@@ -44,6 +46,8 @@ public class Shooter extends SmartSubsystem {
   public void cacheSensors() {
     cache.rpmL = leftMaster.getEncoder().getVelocity();
     cache.rpmR = rightSlave.getEncoder().getVelocity();
+    cache.ampsL = leftMaster.getOutputCurrent();
+    cache.ampsR = rightSlave.getOutputCurrent();
     stableCounts++;
     if (!isOnTarget()) {
       stableCounts = 0;
@@ -56,12 +60,12 @@ public class Shooter extends SmartSubsystem {
     SmartDashboard.putNumber("Shooter RPM R", cache.rpmR);
     SmartDashboard.putNumber("Shooter RPM", getVelocityRPM());
     SmartDashboard.putNumber("Shooter Demand", demand);
-    SmartDashboard.putNumber("Shooter Amps L", leftMaster.getOutputCurrent());
-    SmartDashboard.putNumber("Shooter Amps R", rightSlave.getOutputCurrent());
+    SmartDashboard.putNumber("Shooter Amps L", cache.ampsL);
+    SmartDashboard.putNumber("Shooter Amps R", cache.ampsR);
   }
 
   public void setOpenLoop(double percent) {
-    leftMaster.set(percent);  // TODO make inverted instead, otherwise close loop will be wrong
+    leftMaster.set(percent);
     demand = percent;
   }
 

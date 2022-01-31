@@ -16,9 +16,13 @@ public class DriveTeleop extends CommandBase {
     addRequirements(subsystem);
   }
 
+  public void initialize() {
+    subsystem.setBrakeMode(false);
+  }
+
   @Override
   public void execute() {
-    DriveSignal output = steeringController.cheesyDrive(controls.getThrottle(), controls.getTurning(), controls.getQuickturn());
+    final DriveSignal output = steeringController.cheesyDrive(controls.getThrottle(), controls.getTurning(), controls.getQuickturn());
     subsystem.setOpenLoop(output.getLeft(), output.getRight());
   }
 }

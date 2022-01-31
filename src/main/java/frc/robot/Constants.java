@@ -7,7 +7,7 @@ public final class Constants {
   public static final class Ports {
     public static final int
       POWER_DISTRIBUTION_PANEL = 0,  DRIVETRAIN_FL = 1, DRIVETRAIN_BR = 2, DRIVETRAIN_BL = 3, DRIVETRAIN_FR = 4,
-      INTAKE = 5, SHOOTER_L = 6, SHOOTER_R = 7, INDEXER = 8, GYRO = 9;
+      INTAKE = 5, SHOOTER_L = 6, SHOOTER_R = 7, FEEDER = 8, GYRO = 9, TURRET = 10, HOOD = 11;
   }
 
   public static final class Digital {
