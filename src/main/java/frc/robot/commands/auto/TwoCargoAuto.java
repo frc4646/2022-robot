@@ -8,8 +8,8 @@ import frc.robot.commands.intake.IntakeActivate;
 import frc.robot.commands.intake.IntakeExtend;
 import frc.robot.commands.sequence.ShootOpenLoop;
 
-public class ThreeCargoAuto extends SequentialCommandGroup {
-  public ThreeCargoAuto() {
+public class TwoCargoAuto extends SequentialCommandGroup {
+  public TwoCargoAuto() {
     addCommands(
       new ShootOpenLoop(.5),
       new IntakeExtend(true),
