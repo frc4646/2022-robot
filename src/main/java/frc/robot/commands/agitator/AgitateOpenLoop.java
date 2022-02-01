@@ -4,12 +4,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Agitator;
 
-public class Agitate extends InstantCommand {
+public class AgitateOpenLoop extends InstantCommand {
   private Agitator subsystem = RobotContainer.AGITATOR;
 
   private final double output;
 
-  public Agitate(double percent) {
+  public AgitateOpenLoop(double percent) {
     addRequirements(subsystem);
     output = percent;
   }
