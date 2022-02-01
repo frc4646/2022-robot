@@ -4,6 +4,8 @@ import frc.team254.util.InterpolatingDouble;
 import frc.team254.util.InterpolatingTreeMap;
 
 public final class Constants {
+  public static int CAN_TIMEOUT_LONG = 100;
+
   public static final class Ports {
     public static final int
       POWER_DISTRIBUTION_PANEL = 0,  DRIVETRAIN_FL = 1, DRIVETRAIN_BR = 2, DRIVETRAIN_BL = 3, DRIVETRAIN_FR = 4,
@@ -45,6 +47,8 @@ public final class Constants {
     public static final double PERCENT_OPEN_LOOP = .5;  //PERCENT
     public static final double ERROR_ALLOWED_RPM = 250.0;  // TODO best value ~250-1000
     public static final double SPEED_NO_TARGETS = 0.0;  // TODO
+    public static final double P = 0.0, I = 0.0, D = 0.0, F = 0.0;  // TODO
+    public static final double TICKS_PER_REV = 2048.0;
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> VOLTAGE_MAP = new InterpolatingTreeMap<>();
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> RPM_MAP = new InterpolatingTreeMap<>();
     static {
