@@ -11,14 +11,15 @@ import frc.robot.commands.sequence.ShootOpenLoop;
 public class TwoCargoAuto extends SequentialCommandGroup {
   public TwoCargoAuto() {
     addCommands(
-      new ShootOpenLoop(.5),
+      new ShootOpenLoop(Constants.Shooter.PERCENT_OPEN_LOOP),
       new IntakeExtend(true),
       new IntakeActivate(Constants.Intake.PERCENT_OPEN_LOOP),
       new DriveOpenLoop(-.1),
       new WaitCommand(1.0),
       new DriveOpenLoop(0.0),
       new WaitCommand(1.0),
-      new ShootOpenLoop(.525)
+      new ShootOpenLoop(Constants.Shooter.PERCENT_OPEN_LOOP)
+     
     );
   }
 }
