@@ -41,7 +41,7 @@ public final class Constants {
   }
 
   public static final class Shooter {
-    public static final double REV_TIME = 2.0;  // Seconds
+    public static final double REV_TIME = 1.5;  // Seconds
     public static final double PERCENT_OPEN_LOOP = .5;  //PERCENT
     public static final double ERROR_ALLOWED_RPM = 250.0;  // TODO best value ~250-1000
     public static final double SPEED_NO_TARGETS = 0.0;  // TODO

@@ -3,16 +3,23 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.Constants;
 
 public class Intake extends SmartSubsystem {
   private final VictorSPX motor;
-  // TODO add pneumatics
+  private final DoubleSolenoid pneumaticControl;
+  private final DoubleSolenoid solenoid2;
 
   public Intake() {
     motor = new VictorSPX(Constants.Ports.INTAKE);
+    pneumaticControl = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+    solenoid2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);
+
     // TODO supply current limiting
-    // TODO create double solnoid
+    // motor.configOpenloopRamp(.25);  // TODO want to try, see if intake acts like it has more torque
   }
 
   public void setIntakeSpeed (double intakeSpeed) {
@@ -20,8 +27,14 @@ public class Intake extends SmartSubsystem {
   }
 
   public void extendIntake (boolean extend) {
-    // TODO if true extend pnuematics and intake
-    // TODO if false retract Pnuematics and intake
+    if (extend == true) {
+      solenoid2.set(Value.kForward);
+      pneumaticControl.set(Value.kForward);
+    }
+    else {
+      solenoid2.set(Value.kReverse);
+      pneumaticControl.set(Value.kReverse);
+    }
   }
 
   public boolean isStalled() {
