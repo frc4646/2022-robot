@@ -37,7 +37,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // AGITATOR = new Agitator();
+    AGITATOR = new Agitator();
     // CLIMBER = new Climber();
     DRIVETRAIN = new Drivetrain();
     FEEDER = new Feeder();

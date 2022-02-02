@@ -11,11 +11,8 @@ public class ShootOpenLoop extends SequentialCommandGroup {
   public ShootOpenLoop(double percentShooter) {
     addCommands(
       new ShooterOpenLoop(percentShooter),
-      new AgitateOpenLoop(1.0),
       new WaitCommand(Constants.Shooter.REV_TIME),
-      new FeederOpenLoop(Constants.Feeder.PERCENT_OPEN_LOOP),
-      new WaitCommand(1.0),
-      new StopShoot()
+      new FeederOpenLoop(Constants.Feeder.PERCENT_OPEN_LOOP)
     );
   }
 }

@@ -74,6 +74,7 @@ public class Drivetrain extends SmartSubsystem {
     motor.setInverted(!isLeft);
     motor.enableVoltageCompensation(12.0);
     motor.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
+    motor.setOpenLoopRampRate(.25);
   }
 
   public void resetEncoders() {

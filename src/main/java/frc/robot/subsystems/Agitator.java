@@ -9,6 +9,7 @@ public class Agitator extends SmartSubsystem {
 
   public Agitator() {
     motor = new VictorSPX(Constants.Ports.AGITATOR);
+    motor.configOpenloopRamp(.25);
   }
 
   public void setOpenLoop(double percent) {

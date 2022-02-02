@@ -18,8 +18,8 @@ public class Intake extends SmartSubsystem {
     pneumaticControl = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
     solenoid2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);
 
+    motor.configOpenloopRamp(.25);
     // TODO supply current limiting
-    // motor.configOpenloopRamp(.25);  // TODO want to try, see if intake acts like it has more torque
   }
 
   public void setIntakeSpeed (double intakeSpeed) {

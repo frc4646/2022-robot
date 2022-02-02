@@ -20,7 +20,7 @@ public class ShooterRevDistance extends CommandBase {
   public void initialize() {
     double rpm = Constants.Shooter.RPM_MAP.getInterpolated(new InterpolatingDouble(distance)).value;
     double percent = Constants.Shooter.VOLTAGE_MAP.getInterpolated(new InterpolatingDouble(distance)).value;
-    subsystem.setTargetVelocity(rpm);
+    subsystem.setTargetRPM(rpm);
     subsystem.setOpenLoop(percent);
   }
 

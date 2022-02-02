@@ -16,7 +16,7 @@ public class ShooterAim extends CommandBase {
   @Override
   public void initialize() {
     if (vision.isTargetPresent()) {
-      subsystem.setClosedLoopVelocity(vision.getShooterVelocityRPM());
+      subsystem.setClosedLoop(vision.getShooterVelocityRPM());
     }
   }
 

@@ -16,7 +16,7 @@ public class ShooterVelocity extends CommandBase {
 
   @Override
   public void initialize() {
-    subsystem.setClosedLoopVelocity(rpm);
+    subsystem.setClosedLoop(rpm);
   }
 
   @Override

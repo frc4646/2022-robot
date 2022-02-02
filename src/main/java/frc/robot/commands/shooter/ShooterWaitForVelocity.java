@@ -16,7 +16,7 @@ public class ShooterWaitForVelocity extends CommandBase {
 
   @Override
   public void initialize() {
-    subsystem.setTargetVelocity(rpm);
+    subsystem.setTargetRPM(rpm);
   }
   
   @Override
