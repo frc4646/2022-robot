@@ -59,7 +59,7 @@ public class Vision extends SmartSubsystem {
     if (isTargetPresent()) {
       return Constants.Shooter.RPM_MAP.getInterpolated(new InterpolatingDouble(getGroundDistanceToHubInches())).value;
     }
-    return Constants.Shooter.SPEED_NO_TARGETS;
+    return Constants.Shooter.NO_TARGETS_RPM;
   }
 
   public boolean isTargetPresent() {

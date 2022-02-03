@@ -21,7 +21,7 @@ public class OperatorControls {
     new JoystickButton(operator, Button.kB.value).whenPressed(new IntakeActivate(Constants.Intake.PERCENT_OPEN_LOOP));
     new JoystickButton(operator, Button.kB.value).whenReleased(new IntakeActivate(0.0));
 
-    new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(new ShootOpenLoop(.5));
+    new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(new ShootOpenLoop());
     new JoystickButton(operator, Button.kLeftBumper.value).whenReleased(new StopShoot());
 
     new JoystickButton(operator, Button.kA.value).whenPressed(new IntakeExtend(true));

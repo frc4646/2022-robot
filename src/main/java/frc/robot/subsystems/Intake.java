@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class Intake extends SmartSubsystem {
@@ -18,6 +20,9 @@ public class Intake extends SmartSubsystem {
     pneumaticControl = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
     solenoid2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);
 
+    motor.setNeutralMode(NeutralMode.Coast);
+    motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
+    motor.enableVoltageCompensation(true);
     motor.configOpenloopRamp(.25);
     // TODO supply current limiting
   }

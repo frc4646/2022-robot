@@ -1,56 +1,74 @@
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.team254.drivers.SparkMaxFactory;
+import frc.team254.drivers.TalonFXFactory;
 
 public class Drivetrain extends SmartSubsystem {
   public static class DataCache {
-    public double distanceL;
-    public double distanceR;
-    public double rpmL;
-    public double rpmR;
+    public double distanceL, distanceR;
+    public double rpmL, rpmR;
     public Rotation2d heading = new Rotation2d();
   }
 
   private final CANSparkMax leftMaster, rightMaster, leftSlave, rightSlave;
-  // private final PigeonIMU gyro;
-  // private final Encoder leftEncoder, rightEncoder;
+  // private final TalonFX masterL, masterR, slaveL, slaveR;
+  private final AHRS gyro;
+  private final DifferentialDriveOdometry  odometry;
   private final SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(Constants.Drivetrain.FEED_FORWARD_GAIN_STATIC, Constants.Drivetrain.FEED_FORWARD_GAIN_VELOCITY, Constants.Drivetrain.FEED_FORWARD_GAIN_ACCEL);
   private DataCache cache = new DataCache();
   
   private boolean isBrakeMode;
+  private Rotation2d gyroOffset;
 
   public Drivetrain() {
     leftMaster = new CANSparkMax(Constants.Ports.DRIVETRAIN_FL, MotorType.kBrushless);
-    leftSlave = new CANSparkMax(Constants.Ports.DRIVETRAIN_BL, MotorType.kBrushless);
+    leftSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.Ports.DRIVETRAIN_BL, leftMaster, false);
     rightMaster = new CANSparkMax(Constants.Ports.DRIVETRAIN_FR, MotorType.kBrushless);
-    rightSlave = new CANSparkMax(Constants.Ports.DRIVETRAIN_BR, MotorType.kBrushless);
-    // leftEncoder = new Encoder(Constants.Digital.DRIVETRAIN_L_ENCODER_A, Constants.Digital.DRIVETRAIN_L_ENCODER_B, false);
-    // rightEncoder = new Encoder(Constants.Digital.DRIVETRAIN_R_ENCODER_A, Constants.Digital.DRIVETRAIN_R_ENCODER_B, true);
-    // gyro = new PigeonIMU(Constants.Ports.GYRO);
-    
+    rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.Ports.DRIVETRAIN_BR, rightMaster, true);
+    // masterL = TalonFXFactory.createDefaultTalon(Constants.Ports.DRIVETRAIN_FL);
+    // masterR = TalonFXFactory.createDefaultTalon(Constants.Ports.DRIVETRAIN_FR);
+    // slaveL = TalonFXFactory.createPermanentSlaveTalon(Constants.Ports.DRIVETRAIN_BL, masterL, false);
+    // slaveR = TalonFXFactory.createPermanentSlaveTalon(Constants.Ports.DRIVETRAIN_BR, masterR, true);
+    gyro = new AHRS();
+
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
 
-    configureMotor(leftMaster, true);
-    configureMotor(leftSlave, true);
-    configureMotor(rightMaster, false);
-    configureMotor(rightSlave, false);
-    // gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 10, 10);
+    configureMotor(leftMaster, true, true);
+    configureMotor(leftSlave, true, false);
+    configureMotor(rightMaster, false, true);
+    configureMotor(rightSlave, false, false);
 
     isBrakeMode = true;
     setBrakeMode(false);
 
-    // leftEncoder.setReverseDirection(true);
-    // rightEncoder.setReverseDirection(false);
     resetEncoders();
+    gyro.reset();
+    odometry = new DifferentialDriveOdometry(cache.heading);
+  }
+
+  public void configureMotor(CANSparkMax motor, boolean isLeft, boolean isMaster) {
+    motor.setInverted(!isLeft);
+    motor.enableVoltageCompensation(12.0);
+    motor.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
+    motor.setOpenLoopRampRate(.1);  // TODO is this a good idea?
+    if (isMaster) {
+      motor.getPIDController().setP(Constants.Drivetrain.P);
+      motor.getPIDController().setI(Constants.Drivetrain.I);
+      motor.getPIDController().setD(Constants.Drivetrain.D);
+      motor.getPIDController().setFF(Constants.Drivetrain.F);
+    }
   }
 
   @Override
@@ -59,7 +77,7 @@ public class Drivetrain extends SmartSubsystem {
     cache.distanceR = rightMaster.getEncoder().getPosition();
     cache.rpmL = leftMaster.getEncoder().getVelocity();
     cache.rpmR = rightMaster.getEncoder().getVelocity();
-    // cached.heading = Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(mGyroOffset);
+    cache.heading = Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(gyroOffset);
   }
 
   @Override
@@ -68,18 +86,10 @@ public class Drivetrain extends SmartSubsystem {
     SmartDashboard.putNumber("Drive Distance R", cache.distanceR);
     SmartDashboard.putNumber("Drive RPM L", cache.rpmL);
     SmartDashboard.putNumber("Drive RPM R", cache.rpmR);
-  }
-
-  public void configureMotor(CANSparkMax motor, boolean isLeft) {
-    motor.setInverted(!isLeft);
-    motor.enableVoltageCompensation(12.0);
-    motor.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
-    motor.setOpenLoopRampRate(.25);
+    SmartDashboard.putNumber("Heading", cache.heading.getDegrees());
   }
 
   public void resetEncoders() {
-    // leftEncoder.reset();
-    // rightEncoder.reset();
     leftMaster.getEncoder().setPosition(0.0);
     rightMaster.getEncoder().setPosition(0.0);
     cache = new DataCache();
@@ -105,6 +115,11 @@ public class Drivetrain extends SmartSubsystem {
     final double leftFeedforward = feedForward.calculate(speeds.leftMetersPerSecond);
     final double rightFeedforward = feedForward.calculate(speeds.rightMetersPerSecond);
     // TODO set each master closed loop setpoint + arbitrary feedforward
+  }
+
+  public void setHeading(Rotation2d heading) {
+    gyroOffset = heading.rotateBy(Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(Rotation2d.fromDegrees(180.0)));
+    cache.heading = heading;
   }
 
   public Rotation2d getHeading() {

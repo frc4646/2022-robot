@@ -6,13 +6,12 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.auto.TestAuto;
 
 public class Robot extends TimedRobot {
-  private Command autonomousCommand;
-  private double timeInitDisabled = Double.NaN;
-
   private RobotContainer robotContainer;
+  private Command autonomousCommand;
+
+  private double timeInitDisabled = Double.NaN;
 
   @Override
   public void robotInit() {

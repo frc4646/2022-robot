@@ -1,12 +1,20 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.team254.drivers.SparkMaxFactory;
 
 public class Shooter extends SmartSubsystem {
   public static class DataCache {
@@ -26,15 +34,19 @@ public class Shooter extends SmartSubsystem {
   private int stableCounts = 0;
 
   public Shooter() {
-    leftMaster = new CANSparkMax(Constants.Ports.SHOOTER_L, MotorType.kBrushless);
-    rightSlave = new CANSparkMax(Constants.Ports.SHOOTER_R, MotorType.kBrushless);
+    leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.Ports.SHOOTER_L);
+    rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.Ports.SHOOTER_R, leftMaster, true);
 
-    rightSlave.follow(leftMaster, true);
     leftMaster.setInverted(true);
     leftMaster.setIdleMode(IdleMode.kCoast);
     rightSlave.setIdleMode(IdleMode.kCoast);
     leftMaster.enableVoltageCompensation(12.0);
     rightSlave.enableVoltageCompensation(12.0);
+
+    leftMaster.getPIDController().setP(Constants.Shooter.P);
+    leftMaster.getPIDController().setI(Constants.Shooter.I);
+    leftMaster.getPIDController().setD(Constants.Shooter.D);
+    leftMaster.getPIDController().setFF(Constants.Shooter.F);
 
     // masterL = TalonFXFactory.createDefaultTalon(Constants.Ports.SHOOTER_L);
     // masterR = TalonFXFactory.createDefaultTalon(Constants.Ports.SHOOTER_R);
@@ -150,4 +162,43 @@ public class Shooter extends SmartSubsystem {
   // private double rpmToNativeUnits(double rpm) {
   //   return rpm / 60.0 / 10.0 * Constants.Shooter.TICKS_PER_REV;
   // }
+
+  public void runTests() {
+    List<Integer> ids = new ArrayList<Integer>();
+    List<DoubleSupplier> encoders = new ArrayList<DoubleSupplier>();
+    ids.add(leftMaster.getDeviceId());
+    ids.add(rightSlave.getDeviceId());
+    encoders.add(() -> leftMaster.getEncoder().getPosition());
+    encoders.add(() -> rightSlave.getEncoder().getPosition());
+    testEncoder(ids, encoders);
+  }
+
+  // TODO Test this!
+  // TODO refactor out to common class
+  private boolean testEncoder(List<Integer> ids, List<DoubleSupplier> encoders) {
+    List<Double> positionsInitial = new ArrayList<Double>();
+    List<Double> positionsFinal = new ArrayList<Double>();
+    boolean result = true;
+    for (DoubleSupplier encoder : encoders) {
+      positionsInitial.add(encoder.getAsDouble());
+    }
+    setOpenLoop(0.05);
+    Timer.delay(0.1);
+    setOpenLoop(0.0);
+    for (DoubleSupplier encoder : encoders) {
+      positionsFinal.add(encoder.getAsDouble());
+    }
+    Iterator<Integer> iterIds = ids.iterator();
+    Iterator<Double> iterPositionsInitial = positionsInitial.iterator();
+    Iterator<Double> iterPositionsFinal = positionsFinal.iterator();
+    while (iterIds.hasNext() && iterPositionsInitial.hasNext() && iterPositionsFinal.hasNext()) {
+      int id = iterIds.next();
+      double delta = iterPositionsFinal.next() - iterPositionsInitial.next();
+      if (delta < 0) {
+        System.out.println(String.format("ERROR: Motor %d out of phase, moved %d ticks", id, delta));
+        result = false;
+      }
+    }
+    return result;
+  }
 }

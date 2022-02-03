@@ -8,7 +8,7 @@ public class FeederHasBall extends CommandBase {
   private final Feeder subsystem = RobotContainer.FEEDER;
 
   public FeederHasBall() {
-    addRequirements(subsystem);
+    // Do not require subsystem so the other command isn't interrupted
   }
 
   @Override

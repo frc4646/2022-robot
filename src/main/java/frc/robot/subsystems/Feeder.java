@@ -5,14 +5,12 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Constants.Digital;
-
-import javax.swing.text.StyledEditorKit.BoldAction;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class Feeder extends SmartSubsystem {
-  public static class DataCache {
+  private static class DataCache {
     public boolean hasBall;
   }
 
@@ -23,6 +21,10 @@ public class Feeder extends SmartSubsystem {
   public Feeder() {
     motor = new VictorSPX(Constants.Ports.FEEDER);
     breakBeam = new DigitalInput(Constants.Digital.FEEDER_BREAK_BEAM);
+
+    motor.setNeutralMode(NeutralMode.Brake);
+    motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
+    motor.enableVoltageCompensation(true);
     motor.configOpenloopRamp(.25);
     // TODO supply current limiting
     // TODO add sensor for if ball is in indexer

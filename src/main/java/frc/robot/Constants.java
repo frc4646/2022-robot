@@ -13,10 +13,6 @@ public final class Constants {
   }
 
   public static final class Digital {
-    // public static final int DRIVETRAIN_L_ENCODER_A = 0;
-    // public static final int DRIVETRAIN_L_ENCODER_B = 1;
-    // public static final int DRIVETRAIN_R_ENCODER_A = 2;
-    // public static final int DRIVETRAIN_R_ENCODER_B = 3;
     public static final int FEEDER_BREAK_BEAM = 0;
   }
 
@@ -33,6 +29,7 @@ public final class Constants {
     public static final double FEED_FORWARD_GAIN_STATIC = 0.0;  // TODO
     public static final double FEED_FORWARD_GAIN_VELOCITY = 0.0;  // TODO
     public static final double FEED_FORWARD_GAIN_ACCEL = 0.0;  // TODO
+    public static final double P = 0.0, I = 0.0, D = 0.0, F = 0.0;  // TODO
   }
 
   public static final class Feeder {
@@ -44,10 +41,12 @@ public final class Constants {
   }
 
   public static final class Shooter {
-    public static final double REV_TIME = 0.5;  // Seconds
-    public static final double PERCENT_OPEN_LOOP = .5;  //PERCENT
-    public static final double ERROR_ALLOWED_RPM = 250.0;  // TODO best value ~250-1000
-    public static final double SPEED_NO_TARGETS = 0.0;  // TODO
+    public static final double OPEN_LOOP_PERCENT = .5;
+    public static final double OPEN_LOOP_REV_SECONDS = 0.5;
+    public static final double OPEN_LOOP_RPM = 2750.0;  // TODO
+
+    public static final double ERROR_ALLOWED_RPM = 250.0;
+    public static final double NO_TARGETS_RPM = 0.0;  // TODO
     public static final double P = 0.0, I = 0.0, D = 0.0, F = 0.0;  // TODO
     public static final double TICKS_PER_REV = 2048.0;
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> VOLTAGE_MAP = new InterpolatingTreeMap<>();
@@ -71,6 +70,7 @@ public final class Constants {
   public static final class Turret {
     public static final double ENCODER_ZERO_MIN = 0.0;  // Raw TODO actual value
     public static final double ENCODER_ZERO_MAX = 0.0;  // Raw TODO actual value
+    public static final double P = 0.0, I = 0.0, D = 0.0, F = 0.0;  // TODO
   }
 
   public static final class Vision {
