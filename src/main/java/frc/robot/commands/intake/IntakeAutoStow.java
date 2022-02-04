@@ -15,6 +15,8 @@ public class IntakeAutoStow extends CommandBase {
 
   @Override
   public void execute() {
-    // TODO put intake away automatically when driving fast, button will take care of extending
+    if (Math.abs(drive.getRPM()) > .75){
+      subsystem.extendIntake(false);
+    }
   }
 }

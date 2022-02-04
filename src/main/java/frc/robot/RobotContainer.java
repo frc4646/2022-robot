@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.commands.drivetrain.DriveTeleop;
+import frc.robot.commands.intake.IntakeAutoStow;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.Agitator;
@@ -50,7 +51,7 @@ public class RobotContainer {
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
-
+    INTAKE.setDefaultCommand(new IntakeAutoStow());
     autoModeSelector = new AutoModeSelector();
   }
 

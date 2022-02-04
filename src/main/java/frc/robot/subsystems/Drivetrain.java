@@ -122,6 +122,10 @@ public class Drivetrain extends SmartSubsystem {
     cache.heading = heading;
   }
 
+  public double getRPM(){
+    return (cache.rpmL + cache.rpmR) / 2.0;
+  }
+
   public Rotation2d getHeading() {
     return cache.heading;
   }
