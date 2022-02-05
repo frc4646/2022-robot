@@ -14,6 +14,7 @@ public class Vision extends SmartSubsystem {
     public double yDegrees;     // Vertical Offset From Crosshair To Target (LL1: -20.5 degrees to 20.5 degrees | LL2: -24.85 to 24.85 degrees)
     public double area;         // Target Area (0% of image to 100% of image)
     public boolean seesTarget;  // Whether the limelight has any valid targets (0 or 1)
+    public double distance;
   }
 
   private final double RPM_MAP_KEY_INVALID = -1.0;
@@ -33,6 +34,7 @@ public class Vision extends SmartSubsystem {
     cache.yDegrees = table.getEntry("ty").getDouble(0.0);
     cache.area = table.getEntry("ta").getDouble(0.0);
     cache.seesTarget = table.getEntry("tv").getDouble(0) == 1.0;
+    cache.distance = getGroundDistanceToHubInches();
   }
 
   @Override
@@ -40,6 +42,7 @@ public class Vision extends SmartSubsystem {
     SmartDashboard.putNumber("Limelight X: ", cache.xDegrees);
     SmartDashboard.putNumber("Limelight Y: ", cache.yDegrees);
     SmartDashboard.putBoolean("Limelight Target: ", cache.seesTarget);
+    SmartDashboard.putNumber("Limelight Distance: ", cache.distance);
   }
 
   public void setLED(LEDMode mode) {
@@ -60,6 +63,10 @@ public class Vision extends SmartSubsystem {
       return Constants.Shooter.RPM_MAP.getInterpolated(new InterpolatingDouble(getGroundDistanceToHubInches())).value;
     }
     return Constants.Shooter.NO_TARGETS_RPM;
+  }
+
+  public double getDegreesX() {
+    return cache.xDegrees;
   }
 
   public boolean isTargetPresent() {

@@ -89,8 +89,8 @@ public static final class Solenoid {
   public static final class Vision {
     public static final double HORIZONTAL_FOV = 54.0;  // Degrees (LL1: 54.0, LL2: 59.6)
     public static final double VERTICAL_FOV = 41.0;  // Degrees (LL1: 41.0, LL2: 49.7)
-    public static final double CAMERA_MOUNTING_HEIGHT = 24.0;  // Inches TODO real value
-    public static final double CAMERA_MOUNTING_ANGLE = 24.0;  // Degrees TODO real value
+    public static final double CAMERA_MOUNTING_HEIGHT = 19.0;  // Inches
+    public static final double CAMERA_MOUNTING_ANGLE = 28.0;  // Degrees
   }
 
   public static final class Field {
