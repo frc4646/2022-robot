@@ -45,7 +45,7 @@ public class OperatorControls {
 
     // Shooter
     makeButton(Button.kLeftBumper).whenPressed(new ShootOpenLoop());
-    makeButton(Button.kLeftBumper).whenReleased(new StopShoot());
+    makeButton(Button.kLeftBumper).whenReleased(new StopShoot().alongWith(new IntakeActivate(0.0), new AgitateOpenLoop(0.0)));
     makeButton(Button.kRightBumper).whenPressed(new LoadCargo());
     makeButton(Button.kRightBumper).whenReleased(new FeederOpenLoop(0.0));
 
