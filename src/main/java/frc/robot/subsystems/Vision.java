@@ -65,4 +65,10 @@ public class Vision extends SmartSubsystem {
   public boolean isTargetPresent() {
     return cache.seesTarget;
   }
+
+  @Override
+  public void runTests() {
+    String sResult = (cache.seesTarget) ? "Okay" : "ERROR";
+    System.out.println(String.format("Vision sees target: %s", sResult));
+  }
 }

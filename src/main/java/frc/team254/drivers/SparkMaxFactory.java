@@ -2,7 +2,6 @@ package frc.team254.drivers;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVLibError;
 
@@ -46,8 +45,7 @@ public class SparkMaxFactory {
 
     private static void handleCANError(int id, REVLibError error, String message) {
         if (error != REVLibError.kOk) {
-            DriverStation.reportError(
-                    "Could not configure spark id: " + id + " error: " + error.toString() + " " + message, false);
+            DriverStation.reportError( "Could not configure spark id: " + id + " error: " + error.toString() + " " + message, false);
         }
     }
 
@@ -60,7 +58,7 @@ public class SparkMaxFactory {
     public static CANSparkMax createSparkMax(int id, Configuration config) {
         // Delay for CAN bus bandwidth to clear up.
         Timer.delay(0.25);
-        CANSparkMax sparkMax = new CANSparkMax(id, MotorType.kBrushless);
+        LazySparkMax sparkMax = new LazySparkMax(id);
         handleCANError(id, sparkMax.setCANTimeout(200), "set timeout");
 
         //sparkMax.restoreFactoryDefaults(config.BURN_FACTORY_DEFAULT_FLASH);

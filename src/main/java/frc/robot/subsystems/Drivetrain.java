@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.util.Test;
 import frc.team254.drivers.SparkMaxFactory;
 import frc.team254.drivers.TalonFXFactory;
 
@@ -24,7 +25,7 @@ public class Drivetrain extends SmartSubsystem {
   private final CANSparkMax leftMaster, rightMaster, leftSlave, rightSlave;
   // private final TalonFX masterL, masterR, slaveL, slaveR;
   private final AHRS gyro;
-  private final DifferentialDriveOdometry  odometry;
+  private final DifferentialDriveOdometry odometry;
   private final SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(Constants.Drivetrain.FEED_FORWARD_GAIN_STATIC, Constants.Drivetrain.FEED_FORWARD_GAIN_VELOCITY, Constants.Drivetrain.FEED_FORWARD_GAIN_ACCEL);
   private DataCache cache = new DataCache();
   
@@ -32,18 +33,15 @@ public class Drivetrain extends SmartSubsystem {
   private Rotation2d gyroOffset;
 
   public Drivetrain() {
-    leftMaster = new CANSparkMax(Constants.Ports.DRIVETRAIN_FL, MotorType.kBrushless);
-    leftSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.Ports.DRIVETRAIN_BL, leftMaster, false);
-    rightMaster = new CANSparkMax(Constants.Ports.DRIVETRAIN_FR, MotorType.kBrushless);
-    rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.Ports.DRIVETRAIN_BR, rightMaster, true);
+    leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL);
+    leftSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, leftMaster, false);
+    rightMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FR);
+    rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BR, rightMaster, true);
     // masterL = TalonFXFactory.createDefaultTalon(Constants.Ports.DRIVETRAIN_FL);
     // masterR = TalonFXFactory.createDefaultTalon(Constants.Ports.DRIVETRAIN_FR);
     // slaveL = TalonFXFactory.createPermanentSlaveTalon(Constants.Ports.DRIVETRAIN_BL, masterL, false);
     // slaveR = TalonFXFactory.createPermanentSlaveTalon(Constants.Ports.DRIVETRAIN_BR, masterR, true);
     gyro = new AHRS();
-
-    leftSlave.follow(leftMaster);
-    rightSlave.follow(rightMaster);
 
     configureMotor(leftMaster, true, true);
     configureMotor(leftSlave, true, false);
@@ -132,5 +130,13 @@ public class Drivetrain extends SmartSubsystem {
 
   public void updateOdometry() {
     // TODO m_odometry.update(m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+  }
+
+  @Override
+  public void runTests() {
+    Test.checkFirmware(new Test.FirmwareSparkMax(this, leftMaster));
+    Test.checkFirmware(new Test.FirmwareSparkMax(this, rightMaster));
+    Test.checkFirmware(new Test.FirmwareSparkMax(this, leftSlave));
+    Test.checkFirmware(new Test.FirmwareSparkMax(this, rightSlave));
   }
 }

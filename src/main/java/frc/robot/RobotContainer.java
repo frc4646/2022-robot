@@ -47,7 +47,7 @@ public class RobotContainer {
     SHOOTER = new Shooter();
     // TURRET = new Turret();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(DRIVETRAIN, FEEDER, INTAKE, SHOOTER, VISION);
+    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, INTAKE, SHOOTER, VISION);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
@@ -61,6 +61,10 @@ public class RobotContainer {
 
   public void updateDashboard() {
     allSubsystems.forEach(SmartSubsystem::updateDashboard);
+  }
+
+  public void runTests() {
+    allSubsystems.forEach(SmartSubsystem::runTests);
   }
 
   public Command getAutonomousCommand() {

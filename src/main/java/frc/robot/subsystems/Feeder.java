@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.util.Test;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -19,7 +20,7 @@ public class Feeder extends SmartSubsystem {
   private DataCache cache = new DataCache();
 
   public Feeder() {
-    motor = new VictorSPX(Constants.Ports.FEEDER);
+    motor = new VictorSPX(Constants.CAN.FEEDER);
     breakBeam = new DigitalInput(Constants.Digital.FEEDER_BREAK_BEAM);
 
     motor.setNeutralMode(NeutralMode.Brake);
@@ -47,4 +48,9 @@ public class Feeder extends SmartSubsystem {
   public boolean isBallPresent() {
     return cache.hasBall;
   } 
+
+  @Override
+  public void runTests() {
+    Test.checkFirmware(new Test.FirmwareTalon(this, motor));
+  }
 }

@@ -14,4 +14,9 @@ public class SmartSubsystem extends SubsystemBase {
    * <i>Improves consistency</i> of command execution by being called <i>after</i> all subsystems run commands.
    */
   public void updateDashboard() {};
+
+    /**
+   * Override to check subsystem when enabling in test mode.
+   */
+  public void runTests() {};
 }

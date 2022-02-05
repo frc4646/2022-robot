@@ -10,7 +10,6 @@ public class ShooterWaitForVelocity extends CommandBase {
   public final double rpm;
 
   public ShooterWaitForVelocity(double wantedRPM) {
-    addRequirements(subsystem);
     rpm = wantedRPM;
   }
 

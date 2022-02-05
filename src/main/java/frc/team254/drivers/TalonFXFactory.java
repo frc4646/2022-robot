@@ -75,7 +75,7 @@ public class TalonFXFactory {
     }
 
     public static TalonFX createTalon(int id, Configuration config) {
-        TalonFX talon = new TalonFX(id);
+        TalonFX talon = new LazyTalonFX(id);
         talon.set(ControlMode.PercentOutput, 0.0);
 
         talon.changeMotionControlFramePeriod(config.MOTION_CONTROL_FRAME_PERIOD_MS);

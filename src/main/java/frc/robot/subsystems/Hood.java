@@ -16,7 +16,7 @@ public class Hood extends SmartSubsystem {
   private final DataCache cache = new DataCache();
 
   public Hood() {
-    motor = new CANSparkMax(Constants.Ports.TURRET, MotorType.kBrushless);
+    motor = new CANSparkMax(Constants.CAN.TURRET, MotorType.kBrushless);
     motor.setIdleMode(IdleMode.kBrake);
   }
 
@@ -32,5 +32,10 @@ public class Hood extends SmartSubsystem {
 
   public void setOpenLoop(double percent) {
     motor.set(percent);
+  }
+
+  @Override
+  public void runTests() {
+    // TODO
   }
 }

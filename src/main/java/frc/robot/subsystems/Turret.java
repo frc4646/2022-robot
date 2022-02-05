@@ -2,11 +2,11 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.team254.drivers.SparkMaxFactory;
 
 public class Turret extends SmartSubsystem {
   public static class DataCache {
@@ -18,7 +18,7 @@ public class Turret extends SmartSubsystem {
   private final DataCache cache = new DataCache();
 
   public Turret() {
-    motor = new CANSparkMax(Constants.Ports.TURRET, MotorType.kBrushless);
+    motor = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.TURRET);
     motor.setIdleMode(IdleMode.kBrake);
     motor.getPIDController().setP(Constants.Turret.P);
     motor.getPIDController().setI(Constants.Turret.I);
@@ -51,5 +51,10 @@ public class Turret extends SmartSubsystem {
 
   public double getPositionRaw() {
     return 0.0;  // TODO
+  }
+
+  @Override
+  public void runTests() {
+    // TODO
   }
 }

@@ -3,15 +3,12 @@ package frc.robot;
 import java.util.Optional;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private Command autonomousCommand;
-
-  private double timeInitDisabled = Double.NaN;
 
   @Override
   public void robotInit() {
@@ -22,7 +19,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     robotContainer.autoModeSelector.reset();
     robotContainer.autoModeSelector.update();
-    timeInitDisabled = Timer.getFPGATimestamp();
+    // TODO new WaitCommand(5.0).andThen(new ClimberRelease().schedule());
   }
 
   @Override
@@ -42,6 +39,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    robotContainer.runTests();
   }
 
   /** This function is called every robot packet, no matter the mode. Use this for items like diagnostics that you want ran during disabled, autonomous, teleoperated and test.
@@ -59,14 +57,9 @@ public class Robot extends TimedRobot {
 
     Optional<Command> autoMode = robotContainer.autoModeSelector.getAutoMode();
     if (autoMode.isPresent()) {
-      System.out.println("Set auto mode to: " + autoMode.get().getClass().toString());
+      // System.out.println("Set auto mode to: " + autoMode.get().getClass().toString());
       autonomousCommand = autoMode.get();
     }
-
-    // if ((Timer.getFPGATimestamp() - timeInitDisabled) > 5.0 && (Timer.getFPGATimestamp() - timeInitDisabled) < 5.5) {
-    //   System.out.println("Releasing climber!");
-    //   robotContainer.CLIMBER.setBrakeMode(false);
-    // }
   }
 
   @Override

@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.util.Test;
 import frc.team254.drivers.SparkMaxFactory;
 
 public class Shooter extends SmartSubsystem {
@@ -34,8 +35,8 @@ public class Shooter extends SmartSubsystem {
   private int stableCounts = 0;
 
   public Shooter() {
-    leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.Ports.SHOOTER_L);
-    rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.Ports.SHOOTER_R, leftMaster, true);
+    leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.SHOOTER_L);
+    rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.SHOOTER_R, leftMaster, true);
 
     leftMaster.setInverted(true);
     leftMaster.setIdleMode(IdleMode.kCoast);
@@ -156,14 +157,19 @@ public class Shooter extends SmartSubsystem {
   }
 
   private double nativeUnitsToRPM(double ticks_per_100_ms) {
-    return ticks_per_100_ms * 10.0 * 60.0 / Constants.Shooter.TICKS_PER_REV;
+    return ticks_per_100_ms;  // sparkmax already rpm
+    // return ticks_per_100_ms * 10.0 * 60.0 / Constants.Shooter.TICKS_PER_REV;
   }
 
   // private double rpmToNativeUnits(double rpm) {
   //   return rpm / 60.0 / 10.0 * Constants.Shooter.TICKS_PER_REV;
   // }
 
+  @Override
   public void runTests() {
+    Test.checkFirmware(new Test.FirmwareSparkMax(this, leftMaster));
+    Test.checkFirmware(new Test.FirmwareSparkMax(this, rightSlave));
+
     List<Integer> ids = new ArrayList<Integer>();
     List<DoubleSupplier> encoders = new ArrayList<DoubleSupplier>();
     ids.add(leftMaster.getDeviceId());
@@ -173,7 +179,6 @@ public class Shooter extends SmartSubsystem {
     testEncoder(ids, encoders);
   }
 
-  // TODO Test this!
   // TODO refactor out to common class
   private boolean testEncoder(List<Integer> ids, List<DoubleSupplier> encoders) {
     List<Double> positionsInitial = new ArrayList<Double>();

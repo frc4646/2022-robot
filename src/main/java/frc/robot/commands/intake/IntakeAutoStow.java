@@ -15,8 +15,8 @@ public class IntakeAutoStow extends CommandBase {
 
   @Override
   public void execute() {
-    if (Math.abs(drive.getRPM()) > .75){
-      subsystem.extendIntake(false);
+    if (Math.abs(drive.getRPM()) > .75) {
+      subsystem.setExtend(false);
     }
   }
 }
