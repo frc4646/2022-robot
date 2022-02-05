@@ -8,11 +8,16 @@ public final class Constants {
 
   public static final class CAN {
     public static final int
-      POWER_DISTRIBUTION_PANEL = 0,  DRIVETRAIN_FL = 1, DRIVETRAIN_BR = 2, DRIVETRAIN_BL = 3, DRIVETRAIN_FR = 4,
-      INTAKE = 5, SHOOTER_L = 6, SHOOTER_R = 7, FEEDER = 8, TURRET = 10, HOOD = 11, AGITATOR = 12;
+      PNEUMATIC_CONTROL_MODULE = 0,
+      POWER_DISTRIBUTION_PANEL = 2,
+      DRIVETRAIN_FL = 21, DRIVETRAIN_BR = 22, DRIVETRAIN_BL = 23, DRIVETRAIN_FR = 24,
+      INTAKE = 5,
+      SHOOTER_L = 6, SHOOTER_R = 7,
+      FEEDER = 8,
+      GYRO = 9,
+      TURRET = 10, HOOD = 11, AGITATOR = 12;
   }
-
-  public static final class Solenoid {
+public static final class Solenoid {
     public static final int
     INTAKE_L_OUT = 0, INTAKE_L_IN = 1, INTAKE_R_OUT = 2, INTAKE_R_IN = 3,
     CLIMBER_L_OUT = 4, CLIMBER_L_IN = 5, CLIMBER_R_OUT = 6, CLIMBER_R_IN = 7;
@@ -20,6 +25,8 @@ public final class Constants {
 
   public static final class Digital {
     public static final int FEEDER_BREAK_BEAM = 0;
+
+
   }
 
   public static final class Drivetrain {

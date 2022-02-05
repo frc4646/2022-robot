@@ -75,7 +75,7 @@ public class Drivetrain extends SmartSubsystem {
     cache.distanceR = rightMaster.getEncoder().getPosition();
     cache.rpmL = leftMaster.getEncoder().getVelocity();
     cache.rpmR = rightMaster.getEncoder().getVelocity();
-    cache.heading = Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(gyroOffset);
+    // cache.heading = Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(gyroOffset);
   }
 
   @Override
