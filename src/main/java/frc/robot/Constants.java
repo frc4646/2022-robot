@@ -10,7 +10,7 @@ public final class Constants {
     public static final int
       PNEUMATIC_CONTROL_MODULE = 0,
       POWER_DISTRIBUTION_PANEL = 2,
-      DRIVETRAIN_FL = 21, DRIVETRAIN_BR = 22, DRIVETRAIN_BL = 23, DRIVETRAIN_FR = 24,
+      DRIVETRAIN_FL = 21, DRIVETRAIN_BL = 22, DRIVETRAIN_BR = 23, DRIVETRAIN_FR = 24,
       INTAKE = 5,
       SHOOTER_L = 6, SHOOTER_R = 7,
       FEEDER = 8,

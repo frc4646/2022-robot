@@ -40,7 +40,12 @@ public class SparkMaxFactory {
 
     // Create a CANTalon with the default (out of the box) configuration.
     public static CANSparkMax createDefaultSparkMax(int id) {
-        return createSparkMax(id, kDefaultConfiguration);
+        return createDefaultSparkMax(id, false);
+    }
+    public static CANSparkMax createDefaultSparkMax(int id, boolean inverted) {
+        final CANSparkMax sparkMax = createSparkMax(id, kDefaultConfiguration);
+        sparkMax.setInverted(inverted);
+        return sparkMax;
     }
 
     private static void handleCANError(int id, REVLibError error, String message) {

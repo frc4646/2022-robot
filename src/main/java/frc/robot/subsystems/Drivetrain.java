@@ -33,10 +33,10 @@ public class Drivetrain extends SmartSubsystem {
   private Rotation2d gyroOffset;
 
   public Drivetrain() {
-    leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL);
-    leftSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, leftMaster, false);
-    rightMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FR);
-    rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BR, rightMaster, true);
+    rightMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL);
+    rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, rightMaster, false);
+    leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FR, true);
+    leftSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BR, leftMaster, false);
     // masterL = TalonFXFactory.createDefaultTalon(Constants.Ports.DRIVETRAIN_FL);
     // masterR = TalonFXFactory.createDefaultTalon(Constants.Ports.DRIVETRAIN_FR);
     // slaveL = TalonFXFactory.createPermanentSlaveTalon(Constants.Ports.DRIVETRAIN_BL, masterL, false);
