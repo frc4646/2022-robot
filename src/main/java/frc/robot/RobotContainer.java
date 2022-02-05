@@ -51,7 +51,7 @@ public class RobotContainer {
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
-    INTAKE.setDefaultCommand(new IntakeAutoStow());
+
     autoModeSelector = new AutoModeSelector();
   }
 

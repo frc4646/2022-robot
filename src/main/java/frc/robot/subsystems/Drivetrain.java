@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -24,7 +23,7 @@ public class Drivetrain extends SmartSubsystem {
 
   private final CANSparkMax leftMaster, rightMaster, leftSlave, rightSlave;
   // private final TalonFX masterL, masterR, slaveL, slaveR;
-  private final AHRS gyro;
+  // private final AHRS gyro;
   private final DifferentialDriveOdometry odometry;
   private final SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(Constants.Drivetrain.FEED_FORWARD_GAIN_STATIC, Constants.Drivetrain.FEED_FORWARD_GAIN_VELOCITY, Constants.Drivetrain.FEED_FORWARD_GAIN_ACCEL);
   private DataCache cache = new DataCache();
@@ -41,7 +40,7 @@ public class Drivetrain extends SmartSubsystem {
     // masterR = TalonFXFactory.createDefaultTalon(Constants.Ports.DRIVETRAIN_FR);
     // slaveL = TalonFXFactory.createPermanentSlaveTalon(Constants.Ports.DRIVETRAIN_BL, masterL, false);
     // slaveR = TalonFXFactory.createPermanentSlaveTalon(Constants.Ports.DRIVETRAIN_BR, masterR, true);
-    gyro = new AHRS();
+    // gyro = new AHRS();
 
     configureMotor(leftMaster, true, true);
     configureMotor(leftSlave, true, false);
@@ -52,7 +51,7 @@ public class Drivetrain extends SmartSubsystem {
     setBrakeMode(false);
 
     resetEncoders();
-    gyro.reset();
+    // gyro.reset();
     odometry = new DifferentialDriveOdometry(cache.heading);
   }
 
@@ -116,7 +115,7 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   public void setHeading(Rotation2d heading) {
-    gyroOffset = heading.rotateBy(Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(Rotation2d.fromDegrees(180.0)));
+    // gyroOffset = heading.rotateBy(Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(Rotation2d.fromDegrees(180.0)));
     cache.heading = heading;
   }
 

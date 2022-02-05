@@ -55,7 +55,7 @@ public static final class Solenoid {
 
   public static final class Shooter {
     public static final double OPEN_LOOP_PERCENT = .5;
-    public static final double OPEN_LOOP_REV_SECONDS = 0.5;
+    public static final double OPEN_LOOP_REV_SECONDS = 1.5;
     public static final double OPEN_LOOP_RPM = 2750.0;  // TODO
 
     public static final double ERROR_ALLOWED_RPM = 250.0;

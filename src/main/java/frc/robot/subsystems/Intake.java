@@ -14,6 +14,8 @@ public class Intake extends SmartSubsystem {
   private final VictorSPX motor;
   private final DoubleSolenoid pneumaticControl, solenoid2;
 
+  private boolean extended = false;
+
   public Intake() {
     motor = new VictorSPX(Constants.CAN.INTAKE);
     pneumaticControl = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.INTAKE_L_OUT, Constants.Solenoid.INTAKE_L_IN);
@@ -39,6 +41,11 @@ public class Intake extends SmartSubsystem {
       solenoid2.set(Value.kReverse);
       pneumaticControl.set(Value.kReverse);
     }
+    extended = extend;
+  }
+
+  public boolean isExtended() {
+    return extended;
   }
 
   public boolean isStalled() {

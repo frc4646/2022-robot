@@ -33,7 +33,8 @@ public class Feeder extends SmartSubsystem {
 
   @Override
   public void cacheSensors () {
-    cache.hasBall = breakBeam.get();
+    //cache.hasBall = breakBeam.get();
+    cache.hasBall = false;  // TODO break beam currently not working
   }
 
   @Override
