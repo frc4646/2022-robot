@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -11,8 +12,11 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.util.Test;
 import frc.team254.drivers.SparkMaxFactory;
@@ -33,6 +37,13 @@ public class Shooter extends SmartSubsystem {
   private double targetVelocityRPM = Double.POSITIVE_INFINITY;
   private double demand = 0.0;
   private int stableCounts = 0;
+
+  private NetworkTableEntry guiRPM_L;
+  private NetworkTableEntry guiRPM_R;
+  private NetworkTableEntry graphRPM;
+  private NetworkTableEntry graphDemand;
+  private NetworkTableEntry graphAmps_L;
+  private NetworkTableEntry graphAmps_R;
 
   public Shooter() {
     leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.SHOOTER_L);
@@ -74,6 +85,19 @@ public class Shooter extends SmartSubsystem {
     // masterR.config_kF(0, Constants.Shooter.F, Constants.CAN_TIMEOUT_LONG);
 
     // TODO limit supply current?
+
+
+    
+    ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+    ShuffleboardLayout layoutRpm = tab.getLayout("RPM", BuiltInLayouts.kList).withSize(4, 8);
+    graphRPM = layoutRpm.add("Shooter RPM Avg", getRPM()).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 0)).getEntry();
+    graphDemand = layoutRpm.add("Shooter RPM Demand", demand).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 0)).getEntry();
+    guiRPM_L = layoutRpm.add("Shooter RPM L", cache.rpmL).getEntry();
+    guiRPM_R = layoutRpm.add("Shooter RPM R", cache.rpmR).getEntry();
+
+    ShuffleboardLayout layoutAmps = tab.getLayout("Amps", BuiltInLayouts.kList).withSize(4, 8);
+    graphAmps_L = layoutAmps.add("Shooter Amps L", cache.ampsStatorL).withWidget(BuiltInWidgets.kGraph).getEntry();
+    graphAmps_R = layoutAmps.add("Shooter Amps R", cache.ampsStatorR).withWidget(BuiltInWidgets.kGraph).getEntry();
   }
 
   @Override
@@ -101,18 +125,26 @@ public class Shooter extends SmartSubsystem {
 
   @Override
   public void updateDashboard() {
+    guiRPM_L.setDouble(cache.rpmL);
+    guiRPM_R.setDouble(cache.rpmR);
+    graphRPM.setDouble(getRPM());
+    graphDemand.setDouble(demand);
+    graphAmps_L.setDouble(cache.ampsStatorL);
+    graphAmps_R.setDouble(cache.ampsStatorR);
+
     // SmartDashboard.putNumber("Shooter Native L", cache.nativeVelocityL);
     // SmartDashboard.putNumber("Shooter Native R", cache.nativeVelocityR);
+
     SmartDashboard.putNumber("Shooter RPM L", cache.rpmL);
     SmartDashboard.putNumber("Shooter RPM R", cache.rpmR);
     SmartDashboard.putNumber("Shooter RPM", getRPM());
     SmartDashboard.putNumber("Shooter Demand", demand);
     SmartDashboard.putNumber("Shooter Amps L", cache.ampsStatorL);
     SmartDashboard.putNumber("Shooter Amps R", cache.ampsStatorR);
-    // SmartDashboard.putNumber("Shooter Amps Supply L", cache.ampsSupplyL);
-    // SmartDashboard.putNumber("Shooter Amps Supply R", cache.ampsSupplyR);
-    // SmartDashboard.putNumber("Shooter Amps Stator L", cache.ampsStatorL);
-    // SmartDashboard.putNumber("Shooter Amps Stator R", cache.ampsStatorR);
+    SmartDashboard.putNumber("Shooter Amps Supply L", cache.ampsSupplyL);
+    SmartDashboard.putNumber("Shooter Amps Supply R", cache.ampsSupplyR);
+    SmartDashboard.putNumber("Shooter Amps Stator L", cache.ampsStatorL);
+    SmartDashboard.putNumber("Shooter Amps Stator R", cache.ampsStatorR);
   }
 
   public void setOpenLoop(double percent) {
