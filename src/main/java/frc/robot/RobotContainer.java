@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
@@ -31,16 +32,15 @@ public class RobotContainer {
   public static Feeder FEEDER;
   public static Hood HOOD;
   public static Intake INTAKE;
+  public static Pneumatics PNEUMATICS;
   public static Shooter SHOOTER;
   public static Turret TURRET;
   public static Vision VISION;
-  public static Pneumatics PNEUMATICS;
   private final List<SmartSubsystem> allSubsystems;
 
   public static Controls CONTROLS;
 
   public final AutoModeSelector autoModeSelector;
-
   private final NetworkTableEntry guiVoltage;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -51,17 +51,18 @@ public class RobotContainer {
     FEEDER = new Feeder();
     // HOOD = new Hood();
     INTAKE = new Intake();
+    PNEUMATICS = new Pneumatics();
     SHOOTER = new Shooter();
     // TURRET = new Turret();
     VISION = new Vision();
-    PNEUMATICS = new Pneumatics();
-    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, INTAKE, SHOOTER, VISION, PNEUMATICS);
+    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, INTAKE, PNEUMATICS, SHOOTER, VISION);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
+    PNEUMATICS.setDefaultCommand(new CompressorAuto());
 
     autoModeSelector = new AutoModeSelector();
-
+    
     guiVoltage = Shuffleboard.getTab("General").add("Voltage", RobotController.getBatteryVoltage()).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 6, "max", 14)).getEntry();
   }
 
@@ -71,7 +72,7 @@ public class RobotContainer {
 
   public void updateDashboard() {
     allSubsystems.forEach(SmartSubsystem::updateDashboard);
-
+    
     guiVoltage.setDouble(RobotController.getBatteryVoltage());
   }
 
