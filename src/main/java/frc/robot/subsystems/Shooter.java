@@ -4,18 +4,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.util.Test;
 import frc.team254.drivers.SparkMaxFactory;
+import frc.team254.util.Util;
 
 public class Shooter extends SmartSubsystem {
   public static class DataCache {
@@ -150,6 +149,10 @@ public class Shooter extends SmartSubsystem {
 
   public boolean isOnTarget() {
     return Math.abs(targetVelocityRPM - getRPM()) < Constants.Shooter.ERROR_ALLOWED_RPM;
+  }
+
+  public boolean isShooting() {
+    return !Util.epsilonEquals(demand, 0.0);
   }
 
   public boolean isStable() {

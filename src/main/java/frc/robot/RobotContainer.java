@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.intake.IntakeAutoStow;
 import frc.robot.controls.AutoModeSelector;
@@ -10,6 +11,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Pneumatics;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SmartSubsystem;
@@ -27,6 +29,7 @@ public class RobotContainer {
   public static Feeder FEEDER;
   public static Hood HOOD;
   public static Intake INTAKE;
+  public static Pneumatics PNEUMATICS;
   public static Shooter SHOOTER;
   public static Turret TURRET;
   public static Vision VISION;
@@ -44,13 +47,15 @@ public class RobotContainer {
     FEEDER = new Feeder();
     // HOOD = new Hood();
     INTAKE = new Intake();
+    PNEUMATICS = new Pneumatics();
     SHOOTER = new Shooter();
     // TURRET = new Turret();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, INTAKE, SHOOTER, VISION);
+    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, INTAKE, PNEUMATICS, SHOOTER, VISION);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
+    PNEUMATICS.setDefaultCommand(new CompressorAuto());
 
     autoModeSelector = new AutoModeSelector();
   }

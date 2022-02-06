@@ -47,7 +47,7 @@ public class Test {
     return result;
   }
 
-  private static String getResultString(boolean result) {
+  public static String getResultString(boolean result) {
     return (result) ? "Okay" : "ERROR";
   }
 }

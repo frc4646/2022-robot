@@ -14,7 +14,6 @@ public final class Constants {
       INTAKE = 5,
       SHOOTER_L = 6, SHOOTER_R = 7,
       FEEDER = 8,
-      GYRO = 9,
       TURRET = 10, HOOD = 11, AGITATOR = 12;
   }
 public static final class Solenoid {
