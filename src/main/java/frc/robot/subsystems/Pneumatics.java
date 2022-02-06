@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.*;
 import frc.robot.Constants;
 import frc.robot.util.Test;
 
@@ -10,11 +12,14 @@ public class Pneumatics extends SmartSubsystem {
   private final Compressor compressor;
   private final PneumaticsControlModule pcm;
 
+  private NetworkTableEntry guiPressureSwitch;
   public Pneumatics() {
     compressor = new Compressor(Constants.CAN.PNEUMATIC_CONTROL_MODULE, PneumaticsModuleType.CTREPCM);
     pcm = new PneumaticsControlModule(Constants.CAN.PNEUMATIC_CONTROL_MODULE);
+    ShuffleboardLayout layout = Shuffleboard.getTab("General").getLayout("Pneumatics", BuiltInLayouts.kList).withSize(2, 4);
+    guiPressureSwitch = layout.add("Pressure Switch", pcm.getPressureSwitch()).getEntry();
   }
-
+  
   /** Enable/disable the {@link Compressor} closed loop, which <i>automatically</i> runs the {@link Compressor} when pressure is low */
   public void setCompressor(boolean enable) {
       if(enable) {
@@ -23,6 +28,12 @@ public class Pneumatics extends SmartSubsystem {
       else {
           compressor.disable();
       }
+  }
+  
+  @Override
+  public void updateDashboard()
+  {
+    guiPressureSwitch.setBoolean(pcm.getPressureSwitch());
   }
 
   @Override

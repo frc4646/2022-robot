@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -8,6 +10,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.util.Test;
@@ -31,6 +35,12 @@ public class Drivetrain extends SmartSubsystem {
   private boolean isBrakeMode;
   private Rotation2d gyroOffset;
 
+  private NetworkTableEntry graphDistanceL;
+  private NetworkTableEntry graphDistanceR;
+  private NetworkTableEntry graphRPML;
+  private NetworkTableEntry graphRPMR;
+  private NetworkTableEntry graphHeading;
+
   public Drivetrain() {
     rightMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL);
     rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, rightMaster, false);
@@ -53,6 +63,14 @@ public class Drivetrain extends SmartSubsystem {
     resetEncoders();
     // gyro.reset();
     odometry = new DifferentialDriveOdometry(cache.heading);
+
+    
+    ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+    graphDistanceL = tab.add("Distance L", cache.distanceL).withWidget(BuiltInWidgets.kGraph).getEntry();
+    graphDistanceR = tab.add("Distance R", cache.distanceR).withWidget(BuiltInWidgets.kGraph).getEntry();
+    graphRPML = tab.add("RPM L", cache.rpmL).withWidget(BuiltInWidgets.kGraph).getEntry();
+    graphRPMR = tab.add("RPM R", cache.rpmR).withWidget(BuiltInWidgets.kGraph).getEntry();
+    graphHeading = tab.add("Heading", cache.heading.getDegrees()).withWidget(BuiltInWidgets.kGraph).getEntry();
   }
 
   public void configureMotor(CANSparkMax motor, boolean isLeft, boolean isMaster) {
@@ -79,11 +97,18 @@ public class Drivetrain extends SmartSubsystem {
 
   @Override
   public void updateDashboard() {
+
+    graphDistanceL.setDouble(cache.distanceL);
+    graphDistanceR.setDouble(cache.distanceR);
+    graphRPML.setDouble(cache.rpmL);
+    graphRPMR.setDouble(cache.rpmR);
+    graphHeading.setDouble(cache.heading.getDegrees());
+
     SmartDashboard.putNumber("Drive Distance L", cache.distanceL);
     SmartDashboard.putNumber("Drive Distance R", cache.distanceR);
-    SmartDashboard.putNumber("Drive RPM L", cache.rpmL);
-    SmartDashboard.putNumber("Drive RPM R", cache.rpmR);
-    SmartDashboard.putNumber("Heading", cache.heading.getDegrees());
+    SmartDashboard.putNumber("Drive RPM L",    cache.rpmL);
+    SmartDashboard.putNumber("Drive RPM R",    cache.rpmR);
+    SmartDashboard.putNumber("Heading",        cache.heading.getDegrees());
   }
 
   public void resetEncoders() {

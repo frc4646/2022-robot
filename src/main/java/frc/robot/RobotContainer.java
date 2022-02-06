@@ -2,7 +2,6 @@ package frc.robot;
 
 import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.drivetrain.DriveTeleop;
-import frc.robot.commands.intake.IntakeAutoStow;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.Agitator;
@@ -19,7 +18,11 @@ import frc.robot.subsystems.Turret;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RobotContainer {
@@ -38,6 +41,7 @@ public class RobotContainer {
   public static Controls CONTROLS;
 
   public final AutoModeSelector autoModeSelector;
+  private final NetworkTableEntry guiVoltage;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -58,6 +62,8 @@ public class RobotContainer {
     PNEUMATICS.setDefaultCommand(new CompressorAuto());
 
     autoModeSelector = new AutoModeSelector();
+    
+    guiVoltage = Shuffleboard.getTab("General").add("Voltage", RobotController.getBatteryVoltage()).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 6, "max", 14)).getEntry();
   }
 
   public void cacheSensors() {
@@ -66,6 +72,8 @@ public class RobotContainer {
 
   public void updateDashboard() {
     allSubsystems.forEach(SmartSubsystem::updateDashboard);
+    
+    guiVoltage.setDouble(RobotController.getBatteryVoltage());
   }
 
   public void runTests() {
