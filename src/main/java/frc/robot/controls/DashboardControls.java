@@ -33,6 +33,12 @@ public class DashboardControls {
     SmartDashboard.putData("tuning/setSetpoints", new ShooterTune());
   }
 
+  /**
+   * Add a List layout to a tab
+   * @param tab
+   * @param name
+   * @return
+   */
   public static ShuffleboardLayout addLayout(String tab, String name) {
     ShuffleboardLayout layout = Shuffleboard.getTab(tab)
       .getLayout(name, BuiltInLayouts.kList)
@@ -42,11 +48,18 @@ public class DashboardControls {
     return layout;
   }
 
-  public static ShuffleboardLayout addLayout(String tab, String name, Sendable... cmds) {
+  /**
+   * Add a List of cmd/subsystem/sendable items to a tab
+   * @param tab
+   * @param name
+   * @param items
+   * @return
+   */
+  public static ShuffleboardLayout addLayout(String tab, String name, Sendable... items) {
     ShuffleboardLayout layout = addLayout(tab, name);
 
-    for (Sendable cmd : cmds) {
-      layout.add(cmd);
+    for (Sendable item : items) {
+      layout.add(item);
     }
 
     return layout;
