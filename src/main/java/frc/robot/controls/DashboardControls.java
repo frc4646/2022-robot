@@ -22,10 +22,10 @@ public class DashboardControls {
 
     addTuningCommands();
 
-    addSubsystem(RobotContainer.SHOOTER, new ShooterTune(), new ShooterOpenLoop(.5));
-    addSubsystem(RobotContainer.INTAKE, new IntakeExtend(true));
-    addSubsystem(RobotContainer.FEEDER, new FeederOpenLoop(.5));
-    addSubsystem("Sequence", new ShootOpenLoop(), new DeployIntake(), new LoadCargo(), new StowIntake());
+    addLayout("Commands", RobotContainer.SHOOTER.getName(), RobotContainer.SHOOTER, new ShooterTune(), new ShooterOpenLoop(.5));
+    addLayout("Commands", RobotContainer.INTAKE.getName(), RobotContainer.INTAKE, new IntakeExtend(true));
+    addLayout("Commands", RobotContainer.FEEDER.getName(), RobotContainer.FEEDER, new FeederOpenLoop(.5));
+    addLayout("Commands", "Sequence", new ShootOpenLoop(), new DeployIntake(), new LoadCargo(), new StowIntake());
   }
 
   public void addTuningCommands() {
@@ -33,32 +33,23 @@ public class DashboardControls {
     SmartDashboard.putData("tuning/setSetpoints", new ShooterTune());
   }
 
-  public ShuffleboardLayout addSubsystem(SmartSubsystem subsystem, CommandBase... cmds) {
-    ShuffleboardLayout layout = Shuffleboard.getTab("Commands")
-      .getLayout(subsystem.getName(), BuiltInLayouts.kList)
-      .withSize(2, 6)
-      .withProperties(Map.of("Label position", "HIDDEN"));
-
-      layout.add(subsystem);
-
-      for (CommandBase cmd : cmds) {
-        layout.add(cmd);
-      }
-
-      return layout;
-  }
-
-  public ShuffleboardLayout addSubsystem(String name, CommandBase... cmds) {
-    ShuffleboardLayout layout = Shuffleboard.getTab("Commands")
+  public static ShuffleboardLayout addLayout(String tab, String name) {
+    ShuffleboardLayout layout = Shuffleboard.getTab(tab)
       .getLayout(name, BuiltInLayouts.kList)
       .withSize(2, 6)
       .withProperties(Map.of("Label position", "HIDDEN"));
 
-      for (CommandBase cmd : cmds) {
-        layout.add(cmd);
-      }
+    return layout;
+  }
 
-      return layout;
+  public static ShuffleboardLayout addLayout(String tab, String name, Sendable... cmds) {
+    ShuffleboardLayout layout = addLayout(tab, name);
+
+    for (Sendable cmd : cmds) {
+      layout.add(cmd);
+    }
+
+    return layout;
   }
 
 }

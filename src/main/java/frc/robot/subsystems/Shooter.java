@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.controls.DashboardControls;
 import frc.robot.util.Test;
 import frc.team254.drivers.SparkMaxFactory;
 import frc.team254.util.Util;
@@ -87,14 +88,13 @@ public class Shooter extends SmartSubsystem {
 
 
     
-    ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
-    ShuffleboardLayout layoutRpm = tab.getLayout("RPM", BuiltInLayouts.kList).withSize(4, 8);
+    ShuffleboardLayout layoutRpm = DashboardControls.addLayout("Shooter", "RPM").withSize(4, 8);
     graphRPM = layoutRpm.add("Shooter RPM Avg", getRPM()).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 0)).getEntry();
     graphDemand = layoutRpm.add("Shooter RPM Demand", demand).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 0)).getEntry();
     guiRPM_L = layoutRpm.add("Shooter RPM L", cache.rpmL).getEntry();
     guiRPM_R = layoutRpm.add("Shooter RPM R", cache.rpmR).getEntry();
 
-    ShuffleboardLayout layoutAmps = tab.getLayout("Amps", BuiltInLayouts.kList).withSize(4, 8);
+    ShuffleboardLayout layoutAmps = DashboardControls.addLayout("Shooter", "Amps").withSize(4, 8);
     graphAmps_L = layoutAmps.add("Shooter Amps L", cache.ampsStatorL).withWidget(BuiltInWidgets.kGraph).getEntry();
     graphAmps_R = layoutAmps.add("Shooter Amps R", cache.ampsStatorR).withWidget(BuiltInWidgets.kGraph).getEntry();
   }
