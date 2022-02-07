@@ -30,6 +30,7 @@ public class Vision extends SmartSubsystem {
   /** See https://docs.limelightvision.io/en/latest/networktables_api.html. */
   @Override
   public void cacheSensors() {
+    // TODO linear filter or median filter a goood idea? See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/index.html
     cache.xDegrees = table.getEntry("tx").getDouble(0.0);
     cache.yDegrees = table.getEntry("ty").getDouble(0.0);
     cache.area = table.getEntry("ta").getDouble(0.0);

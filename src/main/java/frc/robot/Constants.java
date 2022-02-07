@@ -26,8 +26,6 @@ public static final class Solenoid {
 
   public static final class Digital {
     public static final int FEEDER_BREAK_BEAM = 0;
-
-
   }
 
   public static final class Drivetrain {
@@ -35,6 +33,7 @@ public static final class Solenoid {
     public static final double WHEEL_SCRUB_FACTOR = 1.02;
     public static final double WHEEL_DIAMETER = 6.25;  // TODO real value
 
+    public static final double THROTTLE_SLEW_LIMIT = 1.0;  // % output per second
     public static final double THROTTLE_DEADBAND = 0.04;
     public static final double TURNING_DEADBAND = 0.035;
         

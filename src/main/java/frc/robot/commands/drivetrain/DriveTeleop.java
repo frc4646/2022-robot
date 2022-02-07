@@ -1,6 +1,8 @@
 package frc.robot.commands.drivetrain;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.controls.DriverControls;
 import frc.robot.subsystems.Drivetrain;
@@ -10,7 +12,8 @@ import frc.team254.util.OpenLoopCheesyDriveHelper;
 public class DriveTeleop extends CommandBase {
   private final Drivetrain subsystem = RobotContainer.DRIVETRAIN;
   private final DriverControls controls = RobotContainer.CONTROLS.driver;
-  private final OpenLoopCheesyDriveHelper steeringController = OpenLoopCheesyDriveHelper.getInstance();;
+  private final OpenLoopCheesyDriveHelper steeringController = OpenLoopCheesyDriveHelper.getInstance();
+  private final SlewRateLimiter throttleAccelLimiter = new SlewRateLimiter(Constants.Drivetrain.THROTTLE_SLEW_RATE);
 
   public DriveTeleop() {
     addRequirements(subsystem);
@@ -22,7 +25,9 @@ public class DriveTeleop extends CommandBase {
 
   @Override
   public void execute() {
-    final DriveSignal output = steeringController.cheesyDrive(controls.getThrottle(), controls.getTurning(), controls.getQuickturn());
+    // Using Slew Rate Limiter: See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/slew-rate-limiter.html#using-a-slewratelimiter-with-differentialdrive
+    final double throttle = throttleAccelLimiter.calculate(controls.getThrottle());
+    final DriveSignal output = steeringController.cheesyDrive(throttle, controls.getTurning(), controls.getQuickturn());
     subsystem.setOpenLoop(output.getLeft(), output.getRight());
   }
 }
