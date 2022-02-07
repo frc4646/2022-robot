@@ -24,6 +24,7 @@ public class OperatorControls {
   
   public OperatorControls() {
     operator = new XboxController(2);
+    JoystickButton inPit = makeButton(Button.kBack);  // TODO use with .and()
 
     // Agitator
     makeButton(Button.kA).whenPressed(new AgitateOpenLoop(1.0));
@@ -57,8 +58,8 @@ public class OperatorControls {
     // Other
     getRightDPAD().whenActive(new InstantCommand(() -> {setRumble(RumbleType.kRightRumble, 1.0);}));
     getRightDPAD().whenInactive(new InstantCommand(() -> {setRumble(RumbleType.kRightRumble, 0.0);}));
-    makeButton(Button.kBack).whenPressed(new InstantCommand(() -> {setRumble(RumbleType.kLeftRumble, 1.0);}));
-    makeButton(Button.kBack).whenReleased(new InstantCommand(() -> {setRumble(RumbleType.kLeftRumble, 0.0);}));
+    inPit.whenPressed(new InstantCommand(() -> {setRumble(RumbleType.kLeftRumble, 1.0);}));
+    inPit.whenReleased(new InstantCommand(() -> {setRumble(RumbleType.kLeftRumble, 0.0);}));
     makeButton(Button.kStart).whenPressed(new InstantCommand(() -> {setRumble(RumbleType.kRightRumble, 1.0);}));
     makeButton(Button.kStart).whenReleased(new InstantCommand(() -> {setRumble(RumbleType.kRightRumble, 0.0);}));
   }

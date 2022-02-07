@@ -13,6 +13,14 @@ public class Turret extends ServoMotorSubsystem {
   }
 
   @Override
+  public void cacheSensors() {
+    super.cacheSensors();
+    if (hasBeenZeroed()) {
+      // TODO mLED.clearTurretFault();
+    }
+  }
+
+  @Override
   public void updateDashboard() {
     super.updateDashboard();
     SmartDashboard.putBoolean("Turret Limit Switch F", mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1);
