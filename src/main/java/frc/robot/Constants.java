@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.robot.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
 import frc.team254.util.InterpolatingDouble;
 import frc.team254.util.InterpolatingTreeMap;
 
@@ -14,6 +15,7 @@ public final class Constants {
       INTAKE = 5,
       SHOOTER_L = 6, SHOOTER_R = 7,
       FEEDER = 8,
+      CANIFIER = 9,
       TURRET = 10, HOOD = 11, AGITATOR = 12;
   }
 public static final class Solenoid {
@@ -31,6 +33,7 @@ public static final class Solenoid {
   public static final class Drivetrain {
     public static final double WHEEL_TRACK_WIDTH_INCHES = 26.0;
     public static final double WHEEL_SCRUB_FACTOR = 1.02;
+    public static final double WHEEL_DIAMETER = 6.25;  // TODO real value
 
     public static final double THROTTLE_DEADBAND = 0.04;
     public static final double TURNING_DEADBAND = 0.035;
@@ -80,9 +83,35 @@ public static final class Solenoid {
   }
 
   public static final class Turret {
-    public static final double ENCODER_ZERO_MIN = 0.0;  // Raw TODO actual value
-    public static final double ENCODER_ZERO_MAX = 0.0;  // Raw TODO actual value
-    public static final double P = 0.0, I = 0.0, D = 0.0, F = 0.0;  // TODO
+    // public static double kTicksToTop = 0.0;  // Observed ticks from the encoder (zero) position to the top (full range) position
+    // public static double kFullRangeInchesOrDegrees = 0.0;  // Observed real units (inches or degrees) from the encoder (zero) position to the top (full range) position.
+    // public static double kTicksPerInchOrDegree = kTicksToTop / kFullRangeInchesOrDegrees;
+    public static double VELOCITY_MAX = 2200.0;  // TODO real value
+    // public static int MOTION_MAGIC_VELOCITY = VELOCITY_MAX * 0.975;  // .95-.975 might work well
+    // public static int MOTION_MAGIC_ACCELERATION = MOTION_MAGIC_VELOCITY * 3.0;  // 3 or 6 might work well
+    public static double GEAR_RATIO = 24.0 / 8.0 * 240.0 / 14.0;  // Number > 1 means "geared down" TODO real value
+
+    public static final ServoMotorSubsystemConstants SERVO = new ServoMotorSubsystemConstants();
+    static {
+      SERVO.kMasterConstants.id = CAN.TURRET;
+      SERVO.kMasterConstants.invert_motor = false;
+      SERVO.kMasterConstants.invert_sensor_phase = false;
+
+      // Unit == Degrees
+      SERVO.kHomePosition = 180.0;  // TODO real value
+      SERVO.kTicksPerUnitDistance = 2048.0 * GEAR_RATIO / 360.0;
+
+      SERVO.kKf = 1023.0 * VELOCITY_MAX;
+      SERVO.kPositionKp = 0.0;
+      SERVO.kPositionDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
+
+      SERVO.kMinUnitsLimit = 45.0;  // TODO real value
+      SERVO.kMaxUnitsLimit = 315.0;  // TODO real value
+
+      // TODO current limits
+
+      // TODO SERVO.kRecoverPositionOnReset = true;
+    }
   }
 
   public static final class Vision {

@@ -1,60 +1,31 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
-import frc.team254.drivers.SparkMaxFactory;
+import frc.robot.util.Test;
 
-public class Turret extends SmartSubsystem {
-  public static class DataCache {
-    public double amps;
-  }
-
-  private final CANSparkMax motor;
-  // private final RelativeEncoder encoder;
-  private final DataCache cache = new DataCache();
-
-  public Turret() {
-    motor = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.TURRET);
-    motor.setIdleMode(IdleMode.kBrake);
-    motor.getPIDController().setP(Constants.Turret.P);
-    motor.getPIDController().setI(Constants.Turret.I);
-    motor.getPIDController().setD(Constants.Turret.D);
-    motor.getPIDController().setFF(Constants.Turret.F);
-    motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 200);  // Faster position feedback
-
-    // encoder = motor.getAlternateEncoder(1024);  TODO should we use getEncoder or getAlternateEncoder???
-    // TODO see https://github.com/REVrobotics/SPARK-MAX-Examples/blob/master/Java/Alternate%20Encoder/src/main/java/frc/robot/Robot.java
-    // TODO see https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java
-  }
-
-  @Override
-  public void cacheSensors() {
-    cache.amps = motor.getOutputCurrent();
+public class Turret extends ServoMotorSubsystem {
+  public Turret(ServoMotorSubsystemConstants config) {
+    super(config);
+    // TODO uncomment after 4-pin JST connector is wired
+    // TalonUtil.checkError(mMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set forward limit switch: ");
+    // TalonUtil.checkError(mMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set reverse limit switch: ");
+    // mMaster.overrideLimitSwitchesEnable(true);
   }
 
   @Override
   public void updateDashboard() {
-    SmartDashboard.putNumber(this.getName() + " Amps", cache.amps);
+    super.updateDashboard();
+    SmartDashboard.putBoolean("Turret Limit Switch F", mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1);
+    SmartDashboard.putBoolean("Turret Limit Switch R", mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1);
   }
 
-  public void resetEncoders() {
-    // TODO
-  }
-
-  public void setOpenLoop(double percent) {
-    motor.set(percent);
-  }
-
-  public double getPositionRaw() {
-    return 0.0;  // TODO
+  @Override
+  public boolean atHomingLocation() {
+      return false;  // TODO canifier.isTurretHomed();
   }
 
   @Override
   public void runTests() {
-    // TODO
+    Test.checkFirmware(new Test.FirmwareTalon(this, mMaster));
   }
 }
