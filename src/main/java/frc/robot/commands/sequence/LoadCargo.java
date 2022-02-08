@@ -13,8 +13,8 @@ public class LoadCargo extends SequentialCommandGroup {
     addCommands(
       new ParallelDeadlineGroup(
         new FeederHasBall().withTimeout(5.0),
-        new AgitatorAuto(.5),
-        new FeederOpenLoop(0.15)
+        new AgitatorAuto(.5)//,
+        // new FeederOpenLoop(0.15)
       ),
       new ParallelCommandGroup(
         new AgitateOpenLoop(0.0),

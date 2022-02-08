@@ -13,7 +13,7 @@ public class DriveTeleop extends CommandBase {
   private final Drivetrain subsystem = RobotContainer.DRIVETRAIN;
   private final DriverControls controls = RobotContainer.CONTROLS.driver;
   private final OpenLoopCheesyDriveHelper steeringController = OpenLoopCheesyDriveHelper.getInstance();
-  private final SlewRateLimiter throttleAccelLimiter = new SlewRateLimiter(Constants.Drivetrain.THROTTLE_SLEW_RATE);
+  private final SlewRateLimiter throttleAccelLimiter = new SlewRateLimiter(Constants.Drivetrain.THROTTLE_SLEW_LIMIT);
 
   public DriveTeleop() {
     addRequirements(subsystem);
