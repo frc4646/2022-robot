@@ -54,7 +54,7 @@ public class Vision extends SmartSubsystem {
   /** See https://docs.limelightvision.io/en/latest/cs_estimating_distance.html#. */
   public double getGroundDistanceToHubInches() {
     if (isTargetPresent()) {
-      return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians(cache.yDegrees) + Constants.Vision.CAMERA_MOUNTING_ANGLE);
+      return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians( cache.yDegrees + Constants.Vision.CAMERA_MOUNTING_ANGLE));
     }
     return RPM_MAP_KEY_INVALID;
   }

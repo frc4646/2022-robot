@@ -14,6 +14,7 @@ public final class Constants {
       DRIVETRAIN_FL = 21, DRIVETRAIN_BL = 22, DRIVETRAIN_BR = 23, DRIVETRAIN_FR = 24,
       INTAKE = 5,
       SHOOTER_L = 6, SHOOTER_R = 7,
+      TALON_SHOOTER_R = 25,
       FEEDER = 8,
       CANIFIER = 9,
       TURRET = 10, HOOD = 11, AGITATOR = 12;
@@ -116,8 +117,8 @@ public static final class Solenoid {
   public static final class Vision {
     public static final double HORIZONTAL_FOV = 54.0;  // Degrees (LL1: 54.0, LL2: 59.6)
     public static final double VERTICAL_FOV = 41.0;  // Degrees (LL1: 41.0, LL2: 49.7)
-    public static final double CAMERA_MOUNTING_HEIGHT = 19.0;  // Inches
-    public static final double CAMERA_MOUNTING_ANGLE = 28.0;  // Degrees
+    public static final double CAMERA_MOUNTING_HEIGHT = 19.5;  // Inches
+    public static final double CAMERA_MOUNTING_ANGLE = 48.0;  // Degrees
   }
 
   public static final class Field {

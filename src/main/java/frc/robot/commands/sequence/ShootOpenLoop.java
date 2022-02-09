@@ -16,7 +16,7 @@ public class ShootOpenLoop extends SequentialCommandGroup {
       new ParallelCommandGroup(new IntakeActivate(0.5), new AgitateOpenLoop(0.45)),
       new WaitCommand(Constants.Shooter.OPEN_LOOP_REV_SECONDS),
       // new ShooterWaitForVelocity(Constants.Shooter.RPM_OPEN_LOOP),  TODO determine rpm for Shooter.PERCENT_OPEN_LOOP then replace wait command
-      new FeederOpenLoop(Constants.Feeder.PERCENT_OPEN_LOOP)
+      new FeederOpenLoop(1)
     );
   }
 }

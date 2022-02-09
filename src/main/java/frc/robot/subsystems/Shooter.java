@@ -9,6 +9,10 @@ import java.util.function.DoubleSupplier;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,6 +24,7 @@ import frc.robot.util.Test;
 import frc.team254.drivers.SparkMaxFactory;
 import frc.team254.util.Util;
 
+
 public class Shooter extends SmartSubsystem {
   public static class DataCache {
     public double voltsL, voltsR;
@@ -30,7 +35,7 @@ public class Shooter extends SmartSubsystem {
   }
 
   private final CANSparkMax leftMaster, rightSlave;
-  // private final TalonFX masterL, masterR;
+  private final TalonFX /* masterL,*/ masterR;
   private final DataCache cache = new DataCache();
 
   private double targetVelocityRPM = Double.POSITIVE_INFINITY;
@@ -60,18 +65,18 @@ public class Shooter extends SmartSubsystem {
     leftMaster.getPIDController().setFF(Constants.Shooter.F);
 
     // masterL = TalonFXFactory.createDefaultTalon(Constants.Ports.SHOOTER_L);
-    // masterR = TalonFXFactory.createDefaultTalon(Constants.Ports.SHOOTER_R);
-
+    masterR = new TalonFX(Constants.CAN.TALON_SHOOTER_R);
+  
     // masterL.setInverted(true);
     // masterL.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
     // masterL.enableVoltageCompensation(true);
 
-    // masterR.setInverted(false);
-    // masterR.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
-    // masterR.enableVoltageCompensation(true);
+    masterR.setInverted(false);
+    masterR.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
+    masterR.enableVoltageCompensation(true);
 
     // masterL.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT_LONG);
-    // masterR.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT_LONG);
+    masterR.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT_LONG);
 
     // masterL.config_kP(0, Constants.Shooter.P, Constants.CAN_TIMEOUT_LONG);
     // masterL.config_kI(0, Constants.Shooter.I, Constants.CAN_TIMEOUT_LONG);
@@ -100,21 +105,21 @@ public class Shooter extends SmartSubsystem {
 
   @Override
   public void cacheSensors() {
-    cache.rpmL = leftMaster.getEncoder().getVelocity();
-    cache.rpmR = rightSlave.getEncoder().getVelocity();
-    cache.ampsStatorL = leftMaster.getOutputCurrent();
-    cache.ampsStatorR = rightSlave.getOutputCurrent();
+    // cache.rpmL = leftMaster.getEncoder().getVelocity();
+    // cache.rpmR = rightSlave.getEncoder().getVelocity();
+    // cache.ampsStatorL = leftMaster.getOutputCurrent();
+    // cache.ampsStatorR = rightSlave.getOutputCurrent();
 
     // cache.voltageL = masterL.getMotorOutputVoltage();
-    // cache.voltageR = masterR.getMotorOutputVoltage();
+    cache.voltsR = masterR.getMotorOutputVoltage();
     // cache.nativeVelocityL = masterL.getSelectedSensorVelocity(0);
-    // cache.nativeVelocityR = masterR.getSelectedSensorVelocity(0);
-    cache.rpmL = nativeUnitsToRPM(cache.nativeVelocityL);
-    cache.rpmR = nativeUnitsToRPM(cache.nativeVelocityR);
+    cache.nativeVelocityR = masterR.getSelectedSensorVelocity(0);
+    // cache.rpmL = nativeUnitsToRPM(cache.nativeVelocityL);
+    // cache.rpmR = nativeUnitsToRPM(cache.nativeVelocityR);
     // cache.ampsSupplyL = masterL.getSupplyCurrent();
-    // cache.ampsSupplyR = masterR.getSupplyCurrent();
+    cache.ampsSupplyR = masterR.getSupplyCurrent();
     // cache.ampsStatorL = masterL.getStatorCurrent();
-    // cache.ampsStatorR = masterR.getStatorCurrent();
+    cache.ampsStatorR = masterR.getStatorCurrent();
     stableCounts++;
     if (!isOnTarget()) {
       stableCounts = 0;
@@ -146,15 +151,16 @@ public class Shooter extends SmartSubsystem {
   }
 
   public void setOpenLoop(double percent) {
-    leftMaster.set(percent);
+    // leftMaster.set(percent);
+    masterR.set( TalonFXControlMode.PercentOutput, 1.0);
     demand = percent;
   }
 
   public void setClosedLoop(double rpm) {
     setTargetRPM(rpm);
-    leftMaster.getPIDController().setReference(rpm, ControlType.kVelocity);
+    // leftMaster.getPIDController().setReference(rpm, ControlType.kVelocity);
     // masterL.set(ControlMode.Velocity, rpmToNativeUnits(rpm));
-    // masterR.set(ControlMode.Velocity, rpmToNativeUnits(rpm));
+    // masterR.set( TalonFXControlMode.PercentOutput, 1.0);
     demand = rpm;
   }
 
