@@ -16,12 +16,15 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.controls.DashboardControls;
 import frc.robot.util.Test;
 import frc.team254.drivers.SparkMaxFactory;
+import frc.team254.drivers.TalonFXFactory;
+import frc.team254.drivers.TalonUtil;
 import frc.team254.util.Util;
 
 
@@ -65,7 +68,7 @@ public class Shooter extends SmartSubsystem {
     leftMaster.getPIDController().setFF(Constants.Shooter.F);
 
     // masterL = TalonFXFactory.createDefaultTalon(Constants.Ports.SHOOTER_L);
-    masterR = new TalonFX(Constants.CAN.TALON_SHOOTER_R);
+    masterR = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_R);
   
     // masterL.setInverted(true);
     // masterL.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
@@ -75,23 +78,24 @@ public class Shooter extends SmartSubsystem {
     masterR.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
     masterR.enableVoltageCompensation(true);
 
-    // masterL.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT_LONG);
-    masterR.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT_LONG);
+    // TalonUtil.checkError(masterL.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: Could not detect encoder: ");
+    TalonUtil.checkError(masterR.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: Could not detect encoder: ");
 
-    // masterL.config_kP(0, Constants.Shooter.P, Constants.CAN_TIMEOUT_LONG);
-    // masterL.config_kI(0, Constants.Shooter.I, Constants.CAN_TIMEOUT_LONG);
-    // masterL.config_kD(0, Constants.Shooter.D, Constants.CAN_TIMEOUT_LONG);
-    // masterL.config_kF(0, Constants.Shooter.F, Constants.CAN_TIMEOUT_LONG);
+    // TalonUtil.checkError(masterL.config_kP(0, Constants.Shooter.P, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: could not set P: ");
+    // TalonUtil.checkError(masterL.config_kI(0, Constants.Shooter.I, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: could not set I: ");
+    // TalonUtil.checkError(masterL.config_kD(0, Constants.Shooter.D, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: could not set D: ");
+    // TalonUtil.checkError(masterL.config_kF(0, Constants.Shooter.F, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: could not set F: ");
 
-    // masterR.config_kP(0, Constants.Shooter.P, Constants.CAN_TIMEOUT_LONG);
-    // masterR.config_kI(0, Constants.Shooter.I, Constants.CAN_TIMEOUT_LONG);
-    // masterR.config_kD(0, Constants.Shooter.D, Constants.CAN_TIMEOUT_LONG);
-    // masterR.config_kF(0, Constants.Shooter.F, Constants.CAN_TIMEOUT_LONG);
+    TalonUtil.checkError(masterR.config_kP(0, Constants.Shooter.P, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set P: ");
+    TalonUtil.checkError(masterR.config_kI(0, Constants.Shooter.I, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set I: ");
+    TalonUtil.checkError(masterR.config_kD(0, Constants.Shooter.D, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set D: ");
+    TalonUtil.checkError(masterR.config_kF(0, Constants.Shooter.F, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set F: ");
 
     // TODO limit supply current?
+    // SupplyCurrentLimitConfiguration current = new SupplyCurrentLimitConfiguration(true, 40, 100, 0.02);
+    // masterL.configSupplyCurrentLimit(current);
+    // masterR.configSupplyCurrentLimit(current);
 
-
-    
     ShuffleboardLayout layoutRpm = DashboardControls.addLayout("Shooter", "RPM").withSize(4, 8);
     graphRPM = layoutRpm.add("Shooter RPM Avg", getRPM()).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 0)).getEntry();
     graphDemand = layoutRpm.add("Shooter RPM Demand", demand).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 0)).getEntry();
@@ -112,10 +116,10 @@ public class Shooter extends SmartSubsystem {
 
     // cache.voltageL = masterL.getMotorOutputVoltage();
     cache.voltsR = masterR.getMotorOutputVoltage();
-    // cache.nativeVelocityL = masterL.getSelectedSensorVelocity(0);
-    cache.nativeVelocityR = masterR.getSelectedSensorVelocity(0);
+    // cache.nativeVelocityL = masterL.getSelectedSensorVelocity();
+    cache.nativeVelocityR = masterR.getSelectedSensorVelocity();
     // cache.rpmL = nativeUnitsToRPM(cache.nativeVelocityL);
-    // cache.rpmR = nativeUnitsToRPM(cache.nativeVelocityR);
+    cache.rpmR = nativeUnitsToRPM(cache.nativeVelocityR);
     // cache.ampsSupplyL = masterL.getSupplyCurrent();
     cache.ampsSupplyR = masterR.getSupplyCurrent();
     // cache.ampsStatorL = masterL.getStatorCurrent();
@@ -159,8 +163,8 @@ public class Shooter extends SmartSubsystem {
   public void setClosedLoop(double rpm) {
     setTargetRPM(rpm);
     // leftMaster.getPIDController().setReference(rpm, ControlType.kVelocity);
-    // masterL.set(ControlMode.Velocity, rpmToNativeUnits(rpm));
-    // masterR.set( TalonFXControlMode.PercentOutput, 1.0);
+    // masterL.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
+    masterR.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
     demand = rpm;
   }
 
@@ -185,7 +189,7 @@ public class Shooter extends SmartSubsystem {
   }
 
   public boolean isOnTarget() {
-    return Math.abs(targetVelocityRPM - getRPM()) < Constants.Shooter.ERROR_ALLOWED_RPM;
+    return Math.abs(targetVelocityRPM - getRPM()) < Constants.Shooter.RPM_ERROR_ALLOWED;
   }
 
   public boolean isShooting() {
@@ -197,18 +201,19 @@ public class Shooter extends SmartSubsystem {
   }
 
   private double nativeUnitsToRPM(double ticks_per_100_ms) {
-    return ticks_per_100_ms;  // sparkmax already rpm
-    // return ticks_per_100_ms * 10.0 * 60.0 / Constants.Shooter.TICKS_PER_REV;
+    // return ticks_per_100_ms;  // sparkmax already rpm
+    return ticks_per_100_ms * 10.0 * 60.0 / Constants.Shooter.TICKS_PER_REV;
   }
 
-  // private double rpmToNativeUnits(double rpm) {
-  //   return rpm / 60.0 / 10.0 * Constants.Shooter.TICKS_PER_REV;
-  // }
+  private double rpmToNativeUnits(double rpm) {
+    return rpm / 60.0 / 10.0 * Constants.Shooter.TICKS_PER_REV;
+  }
 
   @Override
   public void runTests() {
     Test.checkFirmware(new Test.FirmwareSparkMax(this, leftMaster));
     Test.checkFirmware(new Test.FirmwareSparkMax(this, rightSlave));
+    // TODO falcon firmware
 
     List<Integer> ids = new ArrayList<Integer>();
     List<DoubleSupplier> encoders = new ArrayList<DoubleSupplier>();

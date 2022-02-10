@@ -1,20 +1,15 @@
 package frc.robot.controls;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.commands.feeder.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.sequence.*;
 import frc.robot.commands.shooter.*;
-import frc.robot.subsystems.SmartSubsystem;
 
 public class DashboardControls {
   public DashboardControls() {
@@ -31,6 +26,7 @@ public class DashboardControls {
   public void addTuningCommands() {
     SmartDashboard.putNumber("tuning/shooterVel", 0);
     SmartDashboard.putData("tuning/setSetpoints", new ShooterTune());
+    SmartDashboard.putData("tuning/shooterStop", new ShooterOpenLoop(0.0));
   }
 
   /**
@@ -44,7 +40,6 @@ public class DashboardControls {
       .getLayout(name, BuiltInLayouts.kList)
       .withSize(2, 6)
       .withProperties(Map.of("Label position", "HIDDEN"));
-
     return layout;
   }
 
@@ -57,12 +52,9 @@ public class DashboardControls {
    */
   public static ShuffleboardLayout addLayout(String tab, String name, Sendable... items) {
     ShuffleboardLayout layout = addLayout(tab, name);
-
     for (Sendable item : items) {
       layout.add(item);
     }
-
     return layout;
   }
-
 }

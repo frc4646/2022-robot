@@ -14,7 +14,7 @@ public class TurretAutoZero extends CommandBase {
 
   @Override
   public void initialize() {
-    // double position = subsystem.getPositionRaw();
+    double position = subsystem.getPositionTicks();
     // if (position < Constants.Turret.ENCODER_ZERO_MIN) {
     //   subsystem.setOpenLoop(0.05);
     // }
@@ -28,14 +28,14 @@ public class TurretAutoZero extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    // double position = subsystem.getPositionRaw();
+    double position = subsystem.getPositionTicks();
     // return position >= Constants.Turret.ENCODER_ZERO_MIN || position <= Constants.Turret.ENCODER_ZERO_MAX;
     return false;
   }
 
   @Override
   public void end(boolean interrupted) {
-    // subsystem.setOpenLoop(0.0);
-    // subsystem.resetEncoders();
+    subsystem.setOpenLoop(0.0);
+    subsystem.zeroSensors();
   }
 }

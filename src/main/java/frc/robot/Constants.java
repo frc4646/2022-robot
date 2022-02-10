@@ -13,16 +13,17 @@ public final class Constants {
       POWER_DISTRIBUTION_PANEL = 2,
       DRIVETRAIN_FL = 21, DRIVETRAIN_BL = 22, DRIVETRAIN_BR = 23, DRIVETRAIN_FR = 24,
       INTAKE = 5,
-      SHOOTER_L = 6, SHOOTER_R = 7,
-      TALON_SHOOTER_R = 25,
+      SHOOTER_L = 6, SHOOTER_R = 7, TALON_SHOOTER_R = 25,
       FEEDER = 8,
       CANIFIER = 9,
-      TURRET = 10, HOOD = 11, AGITATOR = 12;
+      TURRET = 10, HOOD = 11, AGITATOR = 12,
+      CLIMBER_L = 13, CLIMBER_R = 14;
   }
-public static final class Solenoid {
+
+  public static final class Solenoid {
     public static final int
-    INTAKE_L_OUT = 0, INTAKE_L_IN = 1, INTAKE_R_OUT = 2, INTAKE_R_IN = 3,
-    CLIMBER_L_OUT = 4, CLIMBER_L_IN = 5, CLIMBER_R_OUT = 6, CLIMBER_R_IN = 7;
+      INTAKE_L_OUT = 0, INTAKE_L_IN = 1, INTAKE_R_OUT = 2, INTAKE_R_IN = 3,
+      CLIMBER_L_OUT = 4, CLIMBER_L_IN = 5, CLIMBER_R_OUT = 6, CLIMBER_R_IN = 7;
   }
 
   public static final class Digital {
@@ -38,13 +39,18 @@ public static final class Solenoid {
     public static final double THROTTLE_DEADBAND = 0.04;
     public static final double TURNING_DEADBAND = 0.035;
         
+    public static final double VOLTAGE_COMPENSATION = 9.0;  // TODO INCREASE BEFORE COMPETITION
     public static final int CURRENT_LIMIT = 30;
     //public static final int kDriveCurrentUnThrottledLimit = 80; // TODO use case?
 
     public static final double FEED_FORWARD_GAIN_STATIC = 0.0;  // TODO
     public static final double FEED_FORWARD_GAIN_VELOCITY = 0.0;  // TODO
     public static final double FEED_FORWARD_GAIN_ACCEL = 0.0;  // TODO
-    public static final double P = 0.0, I = 0.0, D = 0.0, F = 0.0;  // TODO
+    public static final double
+      P = 0.0,
+      I = 0.0,
+      D = 0.0,
+      F = 0.0;  // TODO
   }
 
   public static final class Feeder {
@@ -60,14 +66,19 @@ public static final class Solenoid {
     public static final double OPEN_LOOP_REV_SECONDS = 1.5;
     public static final double OPEN_LOOP_RPM = 2750.0;  // TODO
 
-    public static final double ERROR_ALLOWED_RPM = 250.0;
-    public static final double NO_TARGETS_RPM = 0.0;  // TODO
-    public static final double P = 0.0, I = 0.0, D = 0.0, F = 0.0;  // TODO
+    public static final double RPM_MAX = 6380.0 * .94;
+    public static final double RPM_NO_TARGETS = RPM_MAX / 2.0;
+    public static final double RPM_ERROR_ALLOWED = 250.0;
     public static final double TICKS_PER_REV = 2048.0;
+    public static final double
+      P = 0.0,  // Probably between 0.0075 and 0.25
+      I = 0.0,  // Use 0 if possible. But if we do use non-zero, make sure to use i zone
+      D = 0.0,  // Stay 0
+      F =  TICKS_PER_REV / RPM_MAX / 60.0 * 10.0;  // Equals 0.05029
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> VOLTAGE_MAP = new InterpolatingTreeMap<>();
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> RPM_MAP = new InterpolatingTreeMap<>();
     static {
-      VOLTAGE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(0.42));
+      VOLTAGE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(0.42));  // TODO tune for falcons
       VOLTAGE_MAP.put(new InterpolatingDouble(127.0), new InterpolatingDouble(0.4515));
       VOLTAGE_MAP.put(new InterpolatingDouble(147.0), new InterpolatingDouble(.5));
       VOLTAGE_MAP.put(new InterpolatingDouble(163.0), new InterpolatingDouble(.525));
@@ -124,10 +135,7 @@ public static final class Solenoid {
   public static final class Field {
     public static final double
       HUB_HEIGHT = 104.0, // Inches
-      HUB_DIAMETER = 53.375, // Inches
       VISION_TAPE_BOTTOM = 101.625, // Inches
-      VISION_TAPE_HEIGHT = (HUB_HEIGHT + VISION_TAPE_BOTTOM) / 2.0, // Inches
-      VISION_TAPE_WIDTH = 5.0, // Inches
-      VISION_TAPE_GAP = 5.5; // Inches
+      VISION_TAPE_HEIGHT = (HUB_HEIGHT + VISION_TAPE_BOTTOM) / 2.0; // Inches
   }
 }

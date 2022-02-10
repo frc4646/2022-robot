@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -9,15 +10,18 @@ import frc.robot.Constants;
 import frc.robot.util.Test;
 
 public class Climber extends SmartSubsystem {
-  // TODO motors
+  // private final TalonFX masterL, masterR;
   private final DoubleSolenoid cylinderL, cylinderR;
 
   private boolean isBrakeMode;
 
   public Climber() {
-    // TODO configure motors
+    // masterL = TalonFXFactory.createDefaultTalon(Constants.CAN.CLIMBER_L);
+    // masterR = TalonFXFactory.createDefaultTalon(Constants.CAN.CLIMBER_R);
     cylinderL = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.CLIMBER_L_OUT, Constants.Solenoid.CLIMBER_L_IN);
     cylinderR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.CLIMBER_R_OUT, Constants.Solenoid.CLIMBER_R_IN);
+
+    // TODO configure motors
 
     isBrakeMode = false;
     setBrakeMode(true);
@@ -25,8 +29,9 @@ public class Climber extends SmartSubsystem {
 
   public void setBrakeMode(boolean enable) {
     if (isBrakeMode != enable) {
-      IdleMode mode = enable ? IdleMode.kBrake : IdleMode.kCoast;
-      // TODO set mode on motors
+      NeutralMode mode = enable ? NeutralMode.Brake : NeutralMode.Coast;
+      // masterL.setNeutralMode(mode);
+      // masterR.setNeutralMode(mode);
       isBrakeMode = enable;
     }
   }

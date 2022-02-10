@@ -63,7 +63,6 @@ public class Drivetrain extends SmartSubsystem {
     resetEncoders();
     // gyro.reset();
     odometry = new DifferentialDriveOdometry(cache.heading);
-
     
     ShuffleboardTab tab = Shuffleboard.getTab("Drive");
     graphDistanceL = tab.add("Distance L", cache.distanceL).withWidget(BuiltInWidgets.kGraph).getEntry();
@@ -75,7 +74,7 @@ public class Drivetrain extends SmartSubsystem {
 
   public void configureMotor(CANSparkMax motor, boolean isLeft, boolean isMaster) {
     motor.setInverted(!isLeft);
-    motor.enableVoltageCompensation(12.0);
+    motor.enableVoltageCompensation(Constants.Drivetrain.VOLTAGE_COMPENSATION);
     motor.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
     if (isMaster) {
       motor.getPIDController().setP(Constants.Drivetrain.P);
