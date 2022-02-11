@@ -37,8 +37,8 @@ public class Shooter extends SmartSubsystem {
     public double ampsStatorL, ampsStatorR;
   }
 
-  private final CANSparkMax leftMaster, rightSlave;
-  private final TalonFX /* masterL,*/ masterR;
+  // private final CANSparkMax leftMaster, rightSlave;
+  // private final TalonFX /* masterL,*/ masterR;
   private final DataCache cache = new DataCache();
 
   private double targetVelocityRPM = Double.POSITIVE_INFINITY;
@@ -53,43 +53,43 @@ public class Shooter extends SmartSubsystem {
   private NetworkTableEntry graphAmps_R;
 
   public Shooter() {
-    leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.SHOOTER_L);
-    rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.SHOOTER_R, leftMaster, true);
+    // leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.SHOOTER_L);
+    // rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.SHOOTER_R, leftMaster, true);
 
-    leftMaster.setInverted(true);
-    leftMaster.setIdleMode(IdleMode.kCoast);
-    rightSlave.setIdleMode(IdleMode.kCoast);
-    leftMaster.enableVoltageCompensation(12.0);
-    rightSlave.enableVoltageCompensation(12.0);
+    // leftMaster.setInverted(true);
+    // leftMaster.setIdleMode(IdleMode.kCoast);
+    // rightSlave.setIdleMode(IdleMode.kCoast);
+    // leftMaster.enableVoltageCompensation(12.0);
+    // rightSlave.enableVoltageCompensation(12.0);
 
-    leftMaster.getPIDController().setP(Constants.Shooter.P);
-    leftMaster.getPIDController().setI(Constants.Shooter.I);
-    leftMaster.getPIDController().setD(Constants.Shooter.D);
-    leftMaster.getPIDController().setFF(Constants.Shooter.F);
+    // leftMaster.getPIDController().setP(Constants.Shooter.P);
+    // leftMaster.getPIDController().setI(Constants.Shooter.I);
+    // leftMaster.getPIDController().setD(Constants.Shooter.D);
+    // leftMaster.getPIDController().setFF(Constants.Shooter.F);
 
     // masterL = TalonFXFactory.createDefaultTalon(Constants.Ports.SHOOTER_L);
-    masterR = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_R);
+    // masterR = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_R);
   
     // masterL.setInverted(true);
     // masterL.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
     // masterL.enableVoltageCompensation(true);
 
-    masterR.setInverted(false);
-    masterR.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
-    masterR.enableVoltageCompensation(true);
+    // masterR.setInverted(false);
+    // masterR.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
+    // masterR.enableVoltageCompensation(true);
 
     // TalonUtil.checkError(masterL.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: Could not detect encoder: ");
-    TalonUtil.checkError(masterR.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: Could not detect encoder: ");
+    // TalonUtil.checkError(masterR.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: Could not detect encoder: ");
 
     // TalonUtil.checkError(masterL.config_kP(0, Constants.Shooter.P, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: could not set P: ");
     // TalonUtil.checkError(masterL.config_kI(0, Constants.Shooter.I, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: could not set I: ");
     // TalonUtil.checkError(masterL.config_kD(0, Constants.Shooter.D, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: could not set D: ");
     // TalonUtil.checkError(masterL.config_kF(0, Constants.Shooter.F, Constants.CAN_TIMEOUT_LONG), "Shooter MasterL: could not set F: ");
 
-    TalonUtil.checkError(masterR.config_kP(0, Constants.Shooter.P, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set P: ");
-    TalonUtil.checkError(masterR.config_kI(0, Constants.Shooter.I, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set I: ");
-    TalonUtil.checkError(masterR.config_kD(0, Constants.Shooter.D, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set D: ");
-    TalonUtil.checkError(masterR.config_kF(0, Constants.Shooter.F, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set F: ");
+    // TalonUtil.checkError(masterR.config_kP(0, Constants.Shooter.P, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set P: ");
+    // TalonUtil.checkError(masterR.config_kI(0, Constants.Shooter.I, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set I: ");
+    // TalonUtil.checkError(masterR.config_kD(0, Constants.Shooter.D, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set D: ");
+    // TalonUtil.checkError(masterR.config_kF(0, Constants.Shooter.F, Constants.CAN_TIMEOUT_LONG), "Shooter MasterR: could not set F: ");
 
     // TODO limit supply current?
     // SupplyCurrentLimitConfiguration current = new SupplyCurrentLimitConfiguration(true, 40, 100, 0.02);
@@ -115,15 +115,15 @@ public class Shooter extends SmartSubsystem {
     // cache.ampsStatorR = rightSlave.getOutputCurrent();
 
     // cache.voltageL = masterL.getMotorOutputVoltage();
-    cache.voltsR = masterR.getMotorOutputVoltage();
+    // cache.voltsR = masterR.getMotorOutputVoltage();
     // cache.nativeVelocityL = masterL.getSelectedSensorVelocity();
-    cache.nativeVelocityR = masterR.getSelectedSensorVelocity();
+    // cache.nativeVelocityR = masterR.getSelectedSensorVelocity();
     // cache.rpmL = nativeUnitsToRPM(cache.nativeVelocityL);
-    cache.rpmR = nativeUnitsToRPM(cache.nativeVelocityR);
+    // cache.rpmR = nativeUnitsToRPM(cache.nativeVelocityR);
     // cache.ampsSupplyL = masterL.getSupplyCurrent();
-    cache.ampsSupplyR = masterR.getSupplyCurrent();
+    // cache.ampsSupplyR = masterR.getSupplyCurrent();
     // cache.ampsStatorL = masterL.getStatorCurrent();
-    cache.ampsStatorR = masterR.getStatorCurrent();
+    // cache.ampsStatorR = masterR.getStatorCurrent();
     stableCounts++;
     if (!isOnTarget()) {
       stableCounts = 0;
@@ -156,7 +156,7 @@ public class Shooter extends SmartSubsystem {
 
   public void setOpenLoop(double percent) {
     // leftMaster.set(percent);
-    masterR.set( TalonFXControlMode.PercentOutput, 1.0);
+    // masterR.set( TalonFXControlMode.PercentOutput, 1.0);
     demand = percent;
   }
 
@@ -164,7 +164,7 @@ public class Shooter extends SmartSubsystem {
     setTargetRPM(rpm);
     // leftMaster.getPIDController().setReference(rpm, ControlType.kVelocity);
     // masterL.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
-    masterR.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
+    // masterR.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
     demand = rpm;
   }
 
@@ -211,16 +211,16 @@ public class Shooter extends SmartSubsystem {
 
   @Override
   public void runTests() {
-    Test.checkFirmware(new Test.FirmwareSparkMax(this, leftMaster));
-    Test.checkFirmware(new Test.FirmwareSparkMax(this, rightSlave));
+    // Test.checkFirmware(new Test.FirmwareSparkMax(this, leftMaster));
+    // Test.checkFirmware(new Test.FirmwareSparkMax(this, rightSlave));
     // TODO falcon firmware
 
     List<Integer> ids = new ArrayList<Integer>();
     List<DoubleSupplier> encoders = new ArrayList<DoubleSupplier>();
-    ids.add(leftMaster.getDeviceId());
-    ids.add(rightSlave.getDeviceId());
-    encoders.add(() -> leftMaster.getEncoder().getPosition());
-    encoders.add(() -> rightSlave.getEncoder().getPosition());
+    // ids.add(leftMaster.getDeviceId());
+    // ids.add(rightSlave.getDeviceId());
+    // encoders.add(() -> leftMaster.getEncoder().getPosition());
+    // encoders.add(() -> rightSlave.getEncoder().getPosition());
     testEncoder(ids, encoders);
   }
 

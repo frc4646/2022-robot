@@ -16,7 +16,7 @@ public final class Constants {
       SHOOTER_L = 6, SHOOTER_R = 7, TALON_SHOOTER_R = 25,
       FEEDER = 8,
       CANIFIER = 9,
-      TURRET = 10, HOOD = 11, AGITATOR = 12,
+      TURRET =26, HOOD = 11, AGITATOR = 12,
       CLIMBER_L = 13, CLIMBER_R = 14;
   }
 
@@ -33,7 +33,7 @@ public final class Constants {
   public static final class Drivetrain {
     public static final double WHEEL_TRACK_WIDTH_INCHES = 26.0;
     public static final double WHEEL_SCRUB_FACTOR = 1.02;
-    public static final double WHEEL_DIAMETER = 6.25;  // TODO real value
+    public static final double WHEEL_DIAMETER = 6.0;  // TODO real value
 
     public static final double THROTTLE_SLEW_LIMIT = 1.0;  // % output per second
     public static final double THROTTLE_DEADBAND = 0.04;
@@ -100,7 +100,7 @@ public final class Constants {
     public static double VELOCITY_MAX = 2200.0;  // TODO real value
     // public static int MOTION_MAGIC_VELOCITY = VELOCITY_MAX * 0.975;  // .95-.975 might work well
     // public static int MOTION_MAGIC_ACCELERATION = MOTION_MAGIC_VELOCITY * 3.0;  // 3 or 6 might work well
-    public static double GEAR_RATIO = 24.0 / 8.0 * 240.0 / 14.0;  // Number > 1 means "geared down" TODO real value
+    public static double GEAR_RATIO = 24.0 / 8.0 * 240.0 / 14.0;  // Number > 1 means "geared down" Real: 14:72 & 16:154
 
     public static final ServoMotorSubsystemConstants SERVO = new ServoMotorSubsystemConstants();
     static {

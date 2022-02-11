@@ -49,13 +49,13 @@ public class RobotContainer {
     // CLIMBER = new Climber();
     DRIVETRAIN = new Drivetrain();
     FEEDER = new Feeder();
-    // HOOD = new Hood();
+    HOOD = new Hood();
     INTAKE = new Intake();
     PNEUMATICS = new Pneumatics();
     SHOOTER = new Shooter();
-    // TURRET = new Turret();
+    TURRET = new Turret();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, INTAKE, PNEUMATICS, SHOOTER, VISION);
+    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, HOOD, INTAKE, PNEUMATICS, SHOOTER, TURRET, VISION);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());

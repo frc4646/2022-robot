@@ -11,12 +11,14 @@ import frc.robot.Constants;
 import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.agitator.AgitatorAuto;
 import frc.robot.commands.feeder.FeederOpenLoop;
+import frc.robot.commands.hood.Hoodextend;
 import frc.robot.commands.intake.IntakeActivate;
 import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.LoadCargo;
 import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.StopShoot;
 import frc.robot.commands.sequence.StowIntake;
+import frc.robot.commands.turret.TurretOpenLoop;
 
 public class OperatorControls {
   private final double LEFT_DEADBAND = 0.8;
@@ -39,8 +41,8 @@ public class OperatorControls {
     makeButton(Button.kY).whenReleased(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
     makeButton(Button.kX).debounce(.1).whenActive(new ParallelCommandGroup(new DeployIntake(), new LoadCargo()));
     makeButton(Button.kX).debounce(.1).whenInactive(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
-    makeButton(Button.kB).whenPressed(new IntakeActivate(Constants.Intake.PERCENT_OPEN_LOOP));
-    makeButton(Button.kB).whenReleased(new IntakeActivate(0.0));
+    makeButton(Button.kB).whenPressed(new Hoodextend(true));
+    makeButton(Button.kB).whenReleased(new Hoodextend(false));
     getUpDPAD().whenActive(new IntakeActivate(-Constants.Intake.PERCENT_OPEN_LOOP));
     getUpDPAD().whenInactive(new IntakeActivate(0.0));
 
@@ -51,13 +53,13 @@ public class OperatorControls {
     makeButton(Button.kRightBumper).whenReleased(new FeederOpenLoop(0.0));
 
     // Turret
-    // Leave commented until motor connected getLeftStickLeft().whenActive(new TurretOpenLoop(0.3));
-    // Leave commented until motor connected getLeftStickRight().whenActive(new TurretOpenLoop(-0.3));
-    // Leave commented until motor connected getLeftStickOff().whenActive(new TurretOpenLoop(0.0));
+    getLeftStickLeft().whenActive(new TurretOpenLoop(0.3));  // Probalby 0.3
+    getLeftStickRight().whenActive(new TurretOpenLoop(-0.3));  // Probalby -0.3
+    getLeftStickOff().whenActive(new TurretOpenLoop(0.0));
 
     // Other
-    getRightDPAD().whenActive(new InstantCommand(() -> {setRumble(RumbleType.kRightRumble, 1.0);}));
-    getRightDPAD().whenInactive(new InstantCommand(() -> {setRumble(RumbleType.kRightRumble, 0.0);}));
+    // getRightDPAD().whenActive(new Hoodextend(true));
+    // getRightDPAD().whenInactive(new Hoodextend (false));
     inPit.whenPressed(new InstantCommand(() -> {setRumble(RumbleType.kLeftRumble, 1.0);}));
     inPit.whenReleased(new InstantCommand(() -> {setRumble(RumbleType.kLeftRumble, 0.0);}));
     makeButton(Button.kStart).whenPressed(new InstantCommand(() -> {setRumble(RumbleType.kRightRumble, 1.0);}));
@@ -96,14 +98,14 @@ public class OperatorControls {
   protected Trigger getUpDPAD() {
     return new Trigger() {
       @Override
-      public boolean get() { int position = operator.getPOV(0); return position == 315 || position == 0 || position == 45; }
+      public boolean get() { int position = operator.getPOV(0); return position == 0; }
     };
   }
 
   protected Trigger getDownDPAD() {
     return new Trigger() {
       @Override
-      public boolean get() { int position = operator.getPOV(0); return position == 135 || position == 180 || position == 225; }
+      public boolean get() { int position = operator.getPOV(0); return position == 180; }
     };
   }
 
