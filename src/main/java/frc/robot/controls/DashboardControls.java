@@ -24,7 +24,7 @@ public class DashboardControls {
   }
 
   public void addTuningCommands() {
-    SmartDashboard.putNumber("tuning/shooterVel", 0);
+    SmartDashboard.putNumber("Tune Shooter", 0);
     SmartDashboard.putData("tuning/setSetpoints", new ShooterTune());
     SmartDashboard.putData("tuning/shooterStop", new ShooterOpenLoop(0.0));
   }

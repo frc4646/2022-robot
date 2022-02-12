@@ -23,20 +23,20 @@ public class Test {
 
   public static class FirmwareTalon extends Firmware {
     public FirmwareTalon(SubsystemBase subsystem, BaseMotorController device) {
-      super(subsystem, device.getDeviceID(), device.getFirmwareVersion(), 0x2200);
+      super(subsystem, device.getDeviceID(), device.getFirmwareVersion(), 0x1600);  // 0x16 is 22
     }
   }
 
   public static class FirmwareSparkMax extends Firmware {
     public FirmwareSparkMax(SubsystemBase subsystem, CANSparkMax device) {
-      super(subsystem, device.getDeviceId(), device.getFirmwareVersion(), 0x01050200);
+      super(subsystem, device.getDeviceId(), device.getFirmwareVersion(), 0x01050002);
     }
   }
 
   /** Check if motor controllers need a software update */
   public static boolean checkFirmware(Firmware firmware) {
     boolean result = firmware.actual == firmware.expected;
-    System.out.println(String.format("%s device %d firmware %s, expected %s: %s", firmware.subsystem, firmware.deviceID, firmware.actual, firmware.expected, getResultString(result)));
+    System.out.println(String.format("%s device %d firmware 0x%X, expected 0x%X: %s", firmware.subsystem, firmware.deviceID, firmware.actual, firmware.expected, getResultString(result)));
     return result;
   }
 

@@ -14,16 +14,16 @@ import frc.robot.util.Test;
 public class Infrastructure extends SmartSubsystem {
   private final Compressor compressor;
   private final PneumaticsControlModule pcm;
-  private NetworkTableEntry dashPressureSwitch, dashCompressor, dashVoltage;
+  // private NetworkTableEntry dashPressureSwitch, dashCompressor, dashVoltage;
 
   public Infrastructure() {
     compressor = new Compressor(Constants.CAN.PNEUMATIC_CONTROL_MODULE, PneumaticsModuleType.CTREPCM);
     pcm = new PneumaticsControlModule(Constants.CAN.PNEUMATIC_CONTROL_MODULE);
     
-    ShuffleboardLayout layout = Shuffleboard.getTab("General").getLayout("Pneumatics", BuiltInLayouts.kList).withSize(2, 4);
-    dashPressureSwitch = layout.add("Pressure Switch", pcm.getPressureSwitch()).getEntry();
-    dashCompressor = layout.add("Compressor", compressor.enabled()).getEntry();    
-    dashVoltage = Shuffleboard.getTab("General").add("Voltage", RobotController.getBatteryVoltage()).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 6, "max", 14)).getEntry();
+    // ShuffleboardLayout layout = Shuffleboard.getTab("General").getLayout("Pneumatics", BuiltInLayouts.kList).withSize(2, 4);
+    // dashPressureSwitch = layout.add("Pressure Switch", pcm.getPressureSwitch()).getEntry();
+    // dashCompressor = layout.add("Compressor", compressor.enabled()).getEntry();    
+    // dashVoltage = Shuffleboard.getTab("General").add("Voltage", RobotController.getBatteryVoltage()).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 6, "max", 14)).getEntry();
   }
   
   /** Enable/disable the {@link Compressor} closed loop, which <i>automatically</i> runs the {@link Compressor} when pressure is low */
@@ -38,9 +38,9 @@ public class Infrastructure extends SmartSubsystem {
   
   @Override
   public void updateDashboard() {
-    dashPressureSwitch.setBoolean(pcm.getPressureSwitch());
-    dashCompressor.setBoolean(compressor.enabled());
-    dashVoltage.setDouble(RobotController.getBatteryVoltage());
+    // dashPressureSwitch.setBoolean(pcm.getPressureSwitch());
+    // dashCompressor.setBoolean(compressor.enabled());
+    // dashVoltage.setDouble(RobotController.getBatteryVoltage());
   }
 
   @Override
@@ -49,7 +49,6 @@ public class Infrastructure extends SmartSubsystem {
     boolean isConnected = !pcm.getCompressorNotConnectedStickyFault();
     boolean isNotShorted = !pcm.getCompressorShortedStickyFault();
     boolean isBatteryFull = RobotController.getBatteryVoltage() > 13.0;
-    pcm.clearAllStickyFaults();
     
     System.out.println(String.format("Compressor connected: %s", Test.getResultString(isConnected)));
     System.out.println(String.format("Compressor current: %s", Test.getResultString(isCurrentLowEnough)));

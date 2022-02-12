@@ -93,8 +93,5 @@ public class Vision extends SmartSubsystem {
   @Override
   public void runTests() {
     System.out.println(String.format("Vision sees target: %s", Test.getResultString(cache.seesTarget)));
-    // setLED(LEDMode.BLINK);
-    // Timer.delay(1.0);
-    // setLED(LEDMode.OFF);
   }
 }

@@ -6,11 +6,11 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 
 public class OnDisabledDelayed extends CommandBase {
-  private final Climber climber = RobotContainer.CLIMBER;
+  //private final Climber climber = RobotContainer.CLIMBER;
   private final Drivetrain drive = RobotContainer.DRIVETRAIN;
 
   public OnDisabledDelayed() {
-    addRequirements(climber);
+    //addRequirements(climber);
   }
 
   @Override

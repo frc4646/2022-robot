@@ -13,6 +13,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Infrastructure;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Vision.LEDMode;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SmartSubsystem;
 import frc.robot.subsystems.Turret;
@@ -20,6 +21,7 @@ import frc.robot.subsystems.Turret;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RobotContainer {
@@ -85,7 +87,11 @@ public class RobotContainer {
   }
 
   public void runTests() {
+    VISION.setLED(LEDMode.BLINK);
+    Timer.delay(3.0);
+    System.out.println("============================TESTING============================");
     allSubsystems.forEach(SmartSubsystem::runTests);
+    System.out.println("============================TESTING============================");
   }
 
   public Command getAutonomousCommand() {
