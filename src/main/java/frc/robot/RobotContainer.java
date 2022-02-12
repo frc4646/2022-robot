@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.commands.CompressorAuto;
+import frc.robot.commands.OnDisabledDelayed;
 import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
@@ -22,6 +23,9 @@ import java.util.List;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RobotContainer {
+  private final double TIME_CLIMBER_REQUIRED_TO_HOLD = 5.0;
+  private final double TIME_ON_DISABLE_DELAYED = TIME_CLIMBER_REQUIRED_TO_HOLD * 2.0;
+
   public static Agitator AGITATOR;
   public static Climber CLIMBER;
   public static Drivetrain DRIVETRAIN;
@@ -57,6 +61,8 @@ public class RobotContainer {
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
 
     autoModeSelector = new AutoModeSelector();
+
+    // TODO TURRET.forceZero();
   }
 
   public void cacheSensors() {
@@ -75,6 +81,7 @@ public class RobotContainer {
 
   public void onDisable() {
     allSubsystems.forEach(SmartSubsystem::onDisable);
+    new OnDisabledDelayed().withTimeout(TIME_ON_DISABLE_DELAYED).schedule();
   }
 
   public void runTests() {
