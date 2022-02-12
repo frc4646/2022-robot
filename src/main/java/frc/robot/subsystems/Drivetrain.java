@@ -1,10 +1,7 @@
 package frc.robot.subsystems;
 
-import java.util.Map;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,40 +13,31 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.util.Test;
 import frc.team254.drivers.SparkMaxFactory;
-import frc.team254.drivers.TalonFXFactory;
+import frc.team254.util.Util;
 
 public class Drivetrain extends SmartSubsystem {
   public static class DataCache {
     public double distanceL, distanceR;
     public double rpmL, rpmR;
     public Rotation2d heading = new Rotation2d();
+    public Rotation2d pitch = new Rotation2d();  // Positive is nose up
   }
 
   private final CANSparkMax leftMaster, rightMaster, leftSlave, rightSlave;
-  // private final TalonFX masterL, masterR, slaveL, slaveR;
   // private final AHRS gyro;
   private final DifferentialDriveOdometry odometry;
   private final SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(Constants.Drivetrain.FEED_FORWARD_GAIN_STATIC, Constants.Drivetrain.FEED_FORWARD_GAIN_VELOCITY, Constants.Drivetrain.FEED_FORWARD_GAIN_ACCEL);
   private DataCache cache = new DataCache();
+  private final NetworkTableEntry dashDistanceL, dashDistanceR, dashRPML, dashRPMR, dashHeading, dashPitch;
   
   private boolean isBrakeMode;
   private Rotation2d gyroOffset;
-
-  private NetworkTableEntry graphDistanceL;
-  private NetworkTableEntry graphDistanceR;
-  private NetworkTableEntry graphRPML;
-  private NetworkTableEntry graphRPMR;
-  private NetworkTableEntry graphHeading;
 
   public Drivetrain() {
     rightMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL);
     rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, rightMaster, false);
     leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FR, true);
     leftSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BR, leftMaster, false);
-    // masterL = TalonFXFactory.createDefaultTalon(Constants.Ports.DRIVETRAIN_FL);
-    // masterR = TalonFXFactory.createDefaultTalon(Constants.Ports.DRIVETRAIN_FR);
-    // slaveL = TalonFXFactory.createPermanentSlaveTalon(Constants.Ports.DRIVETRAIN_BL, masterL, false);
-    // slaveR = TalonFXFactory.createPermanentSlaveTalon(Constants.Ports.DRIVETRAIN_BR, masterR, true);
     // gyro = new AHRS();
 
     configureMotor(leftMaster, true, true);
@@ -65,11 +53,12 @@ public class Drivetrain extends SmartSubsystem {
     odometry = new DifferentialDriveOdometry(cache.heading);
     
     ShuffleboardTab tab = Shuffleboard.getTab("Drive");
-    graphDistanceL = tab.add("Distance L", cache.distanceL).withWidget(BuiltInWidgets.kGraph).getEntry();
-    graphDistanceR = tab.add("Distance R", cache.distanceR).withWidget(BuiltInWidgets.kGraph).getEntry();
-    graphRPML = tab.add("RPM L", cache.rpmL).withWidget(BuiltInWidgets.kGraph).getEntry();
-    graphRPMR = tab.add("RPM R", cache.rpmR).withWidget(BuiltInWidgets.kGraph).getEntry();
-    graphHeading = tab.add("Heading", cache.heading.getDegrees()).withWidget(BuiltInWidgets.kGraph).getEntry();
+    dashDistanceL = tab.add("Distance L", cache.distanceL).withWidget(BuiltInWidgets.kGraph).getEntry();
+    dashDistanceR = tab.add("Distance R", cache.distanceR).withWidget(BuiltInWidgets.kGraph).getEntry();
+    dashRPML = tab.add("RPM L", cache.rpmL).withWidget(BuiltInWidgets.kGraph).getEntry();
+    dashRPMR = tab.add("RPM R", cache.rpmR).withWidget(BuiltInWidgets.kGraph).getEntry();
+    dashHeading = tab.add("Heading", cache.heading.getDegrees()).withWidget(BuiltInWidgets.kGraph).getEntry();
+    dashPitch = tab.add("Pitch", cache.pitch.getDegrees()).withWidget(BuiltInWidgets.kGraph).getEntry();
   }
 
   public void configureMotor(CANSparkMax motor, boolean isLeft, boolean isMaster) {
@@ -91,22 +80,24 @@ public class Drivetrain extends SmartSubsystem {
     cache.rpmL = leftMaster.getEncoder().getVelocity();
     cache.rpmR = rightMaster.getEncoder().getVelocity();
     // cache.heading = Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(gyroOffset);
+    // cache.pitch = Rotation2d.fromDegrees(gyro.getPitch());
   }
 
   @Override
   public void updateDashboard() {
-
-    graphDistanceL.setDouble(cache.distanceL);
-    graphDistanceR.setDouble(cache.distanceR);
-    graphRPML.setDouble(cache.rpmL);
-    graphRPMR.setDouble(cache.rpmR);
-    graphHeading.setDouble(cache.heading.getDegrees());
+    dashDistanceL.setDouble(cache.distanceL);
+    dashDistanceR.setDouble(cache.distanceR);
+    dashRPML.setDouble(cache.rpmL);
+    dashRPMR.setDouble(cache.rpmR);
+    dashHeading.setDouble(cache.heading.getDegrees());
+    dashPitch.setDouble(cache.pitch.getDegrees());
 
     SmartDashboard.putNumber("Drive Distance L", cache.distanceL);
     SmartDashboard.putNumber("Drive Distance R", cache.distanceR);
-    SmartDashboard.putNumber("Drive RPM L",    cache.rpmL);
-    SmartDashboard.putNumber("Drive RPM R",    cache.rpmR);
-    SmartDashboard.putNumber("Heading",        cache.heading.getDegrees());
+    SmartDashboard.putNumber("Drive RPM L", cache.rpmL);
+    SmartDashboard.putNumber("Drive RPM R", cache.rpmR);
+    SmartDashboard.putNumber("Drive Heading", cache.heading.getDegrees());
+    SmartDashboard.putNumber("Drive Pitch", cache.pitch.getDegrees());
   }
 
   public void resetEncoders() {
@@ -134,7 +125,8 @@ public class Drivetrain extends SmartSubsystem {
   public void setClosedLoopVelocity(DifferentialDriveWheelSpeeds speeds) {
     final double leftFeedforward = feedForward.calculate(speeds.leftMetersPerSecond);
     final double rightFeedforward = feedForward.calculate(speeds.rightMetersPerSecond);
-    // TODO set each master closed loop setpoint + arbitrary feedforward
+    // TODO leftMaster.getPIDController().setReference(value, ctrl, pidSlot, arbFeedforward)
+    // TODO rightMaster.getPIDController().setReference(value, ctrl, pidSlot, arbFeedforward)
   }
 
   public void setHeading(Rotation2d heading) {
@@ -150,15 +142,22 @@ public class Drivetrain extends SmartSubsystem {
     return cache.heading;
   }
 
+  public Rotation2d getPitch() {
+    return cache.pitch;
+  }
+
   public void updateOdometry() {
     // TODO m_odometry.update(m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
   }
 
   @Override
   public void runTests() {
+    boolean isRobotFlat = Util.epsilonEquals(cache.pitch.getDegrees(), 0.0, 1.0);
+
     Test.checkFirmware(new Test.FirmwareSparkMax(this, leftMaster));
     Test.checkFirmware(new Test.FirmwareSparkMax(this, rightMaster));
     Test.checkFirmware(new Test.FirmwareSparkMax(this, leftSlave));
     Test.checkFirmware(new Test.FirmwareSparkMax(this, rightSlave));
+    System.out.println(String.format("Gyro pitch: %s", Test.getResultString(isRobotFlat)));
   }
 }

@@ -9,6 +9,7 @@ public class StowIntake extends SequentialCommandGroup {
   public StowIntake() {
     addCommands(
       new IntakeExtend(false),
+      // TODO try waiting a bit, then reversing the intake so cargo not stuck on bumper
       new WaitCommand(0.0),
       new IntakeActivate(0.0)
     );

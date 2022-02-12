@@ -6,7 +6,6 @@ import frc.robot.subsystems.Shooter;
 
 public class ShooterOpenLoop extends InstantCommand {
   public Shooter subsystem = RobotContainer.SHOOTER;
-
   public final double output;
 
   public ShooterOpenLoop(double percent) {

@@ -129,7 +129,6 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
 
     mMaster.setInverted(mConstants.kMasterConstants.invert_motor);
     mMaster.setSensorPhase(mConstants.kMasterConstants.invert_sensor_phase);
-    mMaster.setNeutralMode(NeutralMode.Brake);
     mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10, 20);
     mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 1000, 20);
     mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, mConstants.kStatusFrame8UpdateRate, 20);
@@ -138,10 +137,11 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     for (int i = 0; i < mSlaves.length; ++i) {
       mSlaves[i] = TalonFXFactory.createPermanentSlaveTalon(mConstants.kSlaveConstants[i].id, mConstants.kMasterConstants.id);
       mSlaves[i].setInverted(mConstants.kSlaveConstants[i].invert_motor);  // TODO change to new follow/oppose master invert type
-      mSlaves[i].setNeutralMode(NeutralMode.Brake);
       mSlaves[i].follow(mMaster);
     }
 
+    isBrakeMode = false;
+    setBrakeMode(true);
     setOpenLoop(0.0);
     mMaster.set(ControlMode.PercentOutput, 0.0);  // Send a neutral command
   }
@@ -174,6 +174,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   protected ControlState mControlState = ControlState.OPEN_LOOP;
   protected boolean mHasBeenZeroed = false;
   protected StickyFaults mFaults = new StickyFaults();
+  private boolean isBrakeMode;
 
   @Override
   public void cacheSensors() {
@@ -309,6 +310,17 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
       mControlState = ControlState.OPEN_LOOP;
     }
     mMaster.set(ControlMode.PercentOutput, mPeriodicIO.demand, DemandType.ArbitraryFeedForward, mPeriodicIO.feedforward);
+  }
+
+  public void setBrakeMode(boolean enable) {
+    if (isBrakeMode != enable) {
+      NeutralMode mode = enable ? NeutralMode.Brake : NeutralMode.Coast;
+      mMaster.setNeutralMode(mode);
+      for (int i = 0; i < mSlaves.length; ++i) {
+        mSlaves[i].setNeutralMode(mode);
+      }
+      isBrakeMode = enable;
+    }
   }
 
   // ------------------------------ GETTERS ------------------------------

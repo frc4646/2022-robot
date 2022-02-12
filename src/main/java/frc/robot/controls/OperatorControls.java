@@ -11,7 +11,7 @@ import frc.robot.Constants;
 import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.agitator.AgitatorAuto;
 import frc.robot.commands.feeder.FeederOpenLoop;
-import frc.robot.commands.hood.Hoodextend;
+import frc.robot.commands.hood.HoodExtend;
 import frc.robot.commands.intake.IntakeActivate;
 import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.LoadCargo;
@@ -41,9 +41,9 @@ public class OperatorControls {
     makeButton(Button.kY).whenReleased(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
     makeButton(Button.kX).debounce(.1).whenActive(new ParallelCommandGroup(new DeployIntake(), new LoadCargo()));
     makeButton(Button.kX).debounce(.1).whenInactive(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
-    makeButton(Button.kB).whenPressed(new Hoodextend(true));
-    makeButton(Button.kB).whenReleased(new Hoodextend(false));
-    getUpDPAD().whenActive(new IntakeActivate(-Constants.Intake.PERCENT_OPEN_LOOP));
+    makeButton(Button.kB).whenPressed(new HoodExtend(true));
+    makeButton(Button.kB).whenReleased(new HoodExtend(false));
+    getUpDPAD().whenActive(new IntakeActivate(-Constants.Intake.OPEN_LOOP_PERCENT));
     getUpDPAD().whenInactive(new IntakeActivate(0.0));
 
     // Shooter
@@ -64,6 +64,10 @@ public class OperatorControls {
     inPit.whenReleased(new InstantCommand(() -> {setRumble(RumbleType.kLeftRumble, 0.0);}));
     makeButton(Button.kStart).whenPressed(new InstantCommand(() -> {setRumble(RumbleType.kRightRumble, 1.0);}));
     makeButton(Button.kStart).whenReleased(new InstantCommand(() -> {setRumble(RumbleType.kRightRumble, 0.0);}));
+  }
+
+  public double getTurretJog() {
+      return -operator.getRawAxis(XboxController.Axis.kLeftX.value);
   }
 
   public void setRumble(RumbleType side, double percent) {
@@ -98,14 +102,14 @@ public class OperatorControls {
   protected Trigger getUpDPAD() {
     return new Trigger() {
       @Override
-      public boolean get() { int position = operator.getPOV(0); return position == 0; }
+      public boolean get() { int position = operator.getPOV(0); return position == 315 || position == 0 || position == 45; }
     };
   }
 
   protected Trigger getDownDPAD() {
     return new Trigger() {
       @Override
-      public boolean get() { int position = operator.getPOV(0); return position == 180; }
+      public boolean get() { int position = operator.getPOV(0); return position == 135 || position == 180 || position == 225; }
     };
   }
 

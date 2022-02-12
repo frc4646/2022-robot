@@ -16,15 +16,22 @@ public class ShooterTune extends CommandBase {
 
   @Override
   public void initialize() {
-    double setpoint = (double) SmartDashboard.getNumber("Tune Shooter", 1);
-    subsystem.setOpenLoop(setpoint);  // TODO use velocity mode once we have an encoder
-    //subsystem.setSpeed(setpoint);
+    double setpoint = SmartDashboard.getNumber("Tune Shooter", 0.0);
+    subsystem.setClosedLoop(setpoint);
+  }
 
-    System.out.println("Making shot,"
-      + " range: " + vision.getGroundDistanceToHubInches()
-      + " rpm: " + subsystem.getRPM()
-      + " volts: " + subsystem.getVoltage()
-      + " amps supply: " + subsystem.getAmpsSupply()
-      + " amps stator: " + subsystem.getAmpsStator());
+  @Override
+  public boolean isFinished() {
+    return subsystem.isStable();
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    System.out.println("Tune,"
+    + " range: " + vision.getGroundDistanceToHubInches()
+    + " rpm: " + subsystem.getRPM()
+    + " volts: " + subsystem.getVoltage()
+    + " amps supply: " + subsystem.getAmpsSupply()
+    + " amps stator: " + subsystem.getAmpsStator());
   }
 }

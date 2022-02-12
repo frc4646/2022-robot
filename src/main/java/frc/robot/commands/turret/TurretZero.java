@@ -5,10 +5,10 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Turret;
 
-public class TurretAutoZero extends CommandBase {
+public class TurretZero extends CommandBase {
   private final Turret subsystem = RobotContainer.TURRET;
 
-  public TurretAutoZero() {
+  public TurretZero() {
     addRequirements(subsystem);
   }
 

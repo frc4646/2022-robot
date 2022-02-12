@@ -156,20 +156,17 @@ public class Shooter extends SmartSubsystem {
 
   public void setOpenLoop(double percent) {
     // leftMaster.set(percent);
-    // masterR.set( TalonFXControlMode.PercentOutput, 1.0);
+    // masterL.set(TalonFXControlMode.PercentOutput, percent);
+    // masterR.set(TalonFXControlMode.PercentOutput, percent);
     demand = percent;
   }
 
   public void setClosedLoop(double rpm) {
-    setTargetRPM(rpm);
+    targetVelocityRPM = rpm;
     // leftMaster.getPIDController().setReference(rpm, ControlType.kVelocity);
     // masterL.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
     // masterR.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
     demand = rpm;
-  }
-
-  public void setTargetRPM(double rpm) {
-    targetVelocityRPM = rpm;
   }
 
   public double getAmpsSupply() {

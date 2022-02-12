@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.util.Test;
 import frc.team254.util.InterpolatingDouble;
 
 public class Vision extends SmartSubsystem {
@@ -14,6 +15,7 @@ public class Vision extends SmartSubsystem {
     public double yDegrees;     // Vertical Offset From Crosshair To Target (LL1: -20.5 degrees to 20.5 degrees | LL2: -24.85 to 24.85 degrees)
     public double area;         // Target Area (0% of image to 100% of image)
     public boolean seesTarget;  // Whether the limelight has any valid targets (0 or 1)
+    public int modeLED;
     public double distance;
   }
 
@@ -31,6 +33,7 @@ public class Vision extends SmartSubsystem {
   @Override
   public void cacheSensors() {
     // TODO linear filter or median filter a goood idea? See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/index.html
+    cache.modeLED = (int) table.getEntry("ledMode").getDouble(1.0);
     cache.xDegrees = table.getEntry("tx").getDouble(0.0);
     cache.yDegrees = table.getEntry("ty").getDouble(0.0);
     cache.area = table.getEntry("ta").getDouble(0.0);
@@ -46,9 +49,22 @@ public class Vision extends SmartSubsystem {
     SmartDashboard.putNumber("Limelight Distance: ", cache.distance);
   }
 
+  @Override
+  public void onEnable(boolean isAutonomous) {
+    setLED(LEDMode.ON);
+  }
+
+  @Override
+  public void onDisable() {
+    setLED(LEDMode.OFF);
+  }
+
   public void setLED(LEDMode mode) {
     int ledMode = mode.ordinal();
-    table.getEntry("ledMode").setNumber(ledMode);
+    if (ledMode != cache.modeLED) {
+      table.getEntry("ledMode").setNumber(ledMode);
+      cache.modeLED = ledMode;
+    }
   }
 
   /** See https://docs.limelightvision.io/en/latest/cs_estimating_distance.html#. */
@@ -76,7 +92,9 @@ public class Vision extends SmartSubsystem {
 
   @Override
   public void runTests() {
-    String sResult = (cache.seesTarget) ? "Okay" : "ERROR";
-    System.out.println(String.format("Vision sees target: %s", sResult));
+    System.out.println(String.format("Vision sees target: %s", Test.getResultString(cache.seesTarget)));
+    // setLED(LEDMode.BLINK);
+    // Timer.delay(1.0);
+    // setLED(LEDMode.OFF);
   }
 }

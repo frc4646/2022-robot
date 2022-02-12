@@ -9,15 +9,11 @@ public final class Constants {
 
   public static final class CAN {
     public static final int
-      PNEUMATIC_CONTROL_MODULE = 0,
-      POWER_DISTRIBUTION_PANEL = 2,
+      PNEUMATIC_CONTROL_MODULE = 0, POWER_DISTRIBUTION_PANEL = 2,
       DRIVETRAIN_FL = 21, DRIVETRAIN_BL = 22, DRIVETRAIN_BR = 23, DRIVETRAIN_FR = 24,
-      INTAKE = 5,
       SHOOTER_L = 6, SHOOTER_R = 7, TALON_SHOOTER_R = 25,
-      FEEDER = 8,
-      CANIFIER = 9,
-      TURRET =26, HOOD = 11, AGITATOR = 12,
-      CLIMBER_L = 13, CLIMBER_R = 14;
+      CLIMBER_L = 13, CLIMBER_R = 14,
+      INTAKE = 5, FEEDER = 8, TURRET = 26, HOOD = 11, AGITATOR = 12, CANIFIER = 9;
   }
 
   public static final class Solenoid {
@@ -30,10 +26,14 @@ public final class Constants {
     public static final int FEEDER_BREAK_BEAM = 0;
   }
 
+  public static final class Agitator {
+    public static final double OPEN_LOOP_RAMP = 0.25;  // TODO tune
+  }
+
   public static final class Drivetrain {
     public static final double WHEEL_TRACK_WIDTH_INCHES = 26.0;
     public static final double WHEEL_SCRUB_FACTOR = 1.02;
-    public static final double WHEEL_DIAMETER = 6.0;  // TODO real value
+    public static final double WHEEL_DIAMETER = 6.0;
 
     public static final double THROTTLE_SLEW_LIMIT = 1.0;  // % output per second
     public static final double THROTTLE_DEADBAND = 0.04;
@@ -54,11 +54,13 @@ public final class Constants {
   }
 
   public static final class Feeder {
-    public static final double PERCENT_OPEN_LOOP = 0.5;
+    public static final double OPEN_LOOP_PERCENT = 0.5;
+    public static final double OPEN_LOOP_RAMP = 0.25;  // TODO tune
   }
 
   public static final class Intake {
-    public static final double PERCENT_OPEN_LOOP = 1.0;
+    public static final double OPEN_LOOP_PERCENT = 1.0;
+    public static final double OPEN_LOOP_RAMP = 0.25;  // TODO tune
   }
 
   public static final class Shooter {

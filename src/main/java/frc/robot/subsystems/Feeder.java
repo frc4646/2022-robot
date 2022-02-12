@@ -26,7 +26,7 @@ public class Feeder extends SmartSubsystem {
     motor.setNeutralMode(NeutralMode.Brake);
     motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
     motor.enableVoltageCompensation(true);
-    motor.configOpenloopRamp(.25);
+    motor.configOpenloopRamp(Constants.Feeder.OPEN_LOOP_RAMP);
     // TODO supply current limiting
     // TODO add sensor for if ball is in indexer
   }

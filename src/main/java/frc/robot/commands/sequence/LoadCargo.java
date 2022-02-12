@@ -14,7 +14,7 @@ public class LoadCargo extends SequentialCommandGroup {
       new ParallelDeadlineGroup(
         new FeederHasBall(),
         new AgitatorAuto(.5),
-         new FeederOpenLoop(.30)
+        new FeederOpenLoop(.30)  // TODO try simplifying using FeederLoadCargo
       ),
       new ParallelCommandGroup(
         new AgitateOpenLoop(0.0),

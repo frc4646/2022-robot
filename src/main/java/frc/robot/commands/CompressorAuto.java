@@ -3,11 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Pneumatics;
+import frc.robot.subsystems.Infrastructure;
 import frc.robot.subsystems.Shooter;
 
 public class CompressorAuto extends CommandBase {
-  private final Pneumatics subsystem = RobotContainer.PNEUMATICS;
+  private final Infrastructure subsystem = RobotContainer.INFRASTRUCTURE;
   private final Shooter shooter = RobotContainer.SHOOTER;
   private boolean isTeleop = true;
 

@@ -15,7 +15,7 @@ public class Agitator extends SmartSubsystem {
     motor.setNeutralMode(NeutralMode.Brake);
     motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
     motor.enableVoltageCompensation(true);
-    motor.configOpenloopRamp(.25);
+    motor.configOpenloopRamp(Constants.Agitator.OPEN_LOOP_RAMP);
   }
 
   public void setOpenLoop(double percent) {

@@ -6,17 +6,6 @@ import frc.robot.subsystems.Shooter;
 
 public class ShooterWaitForVelocity extends CommandBase {
   public final Shooter subsystem = RobotContainer.SHOOTER;
-
-  public final double rpm;
-
-  public ShooterWaitForVelocity(double wantedRPM) {
-    rpm = wantedRPM;
-  }
-
-  @Override
-  public void initialize() {
-    subsystem.setTargetRPM(rpm);
-  }
   
   @Override
   public boolean isFinished() {

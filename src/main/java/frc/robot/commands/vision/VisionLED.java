@@ -1,23 +1,21 @@
 package frc.robot.commands.vision;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.LEDMode;
 
-public class VisionLED extends InstantCommand {
+public class VisionLED extends CommandBase {
   private final Vision subsystem = RobotContainer.VISION;
+  private final LEDMode mode;
 
-  private final boolean output;
-
-  public VisionLED(boolean enable) {
+  public VisionLED(LEDMode mode) {
     addRequirements(subsystem);
-    output = enable;
+    this.mode = mode;
   }
 
   @Override
   public void initialize() {
-    LEDMode mode = (output) ? LEDMode.ON : LEDMode.OFF;
     subsystem.setLED(mode);
   }
 }

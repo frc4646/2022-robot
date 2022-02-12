@@ -10,7 +10,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Pneumatics;
+import frc.robot.subsystems.Infrastructure;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SmartSubsystem;
@@ -18,11 +18,7 @@ import frc.robot.subsystems.Turret;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RobotContainer {
@@ -32,7 +28,7 @@ public class RobotContainer {
   public static Feeder FEEDER;
   public static Hood HOOD;
   public static Intake INTAKE;
-  public static Pneumatics PNEUMATICS;
+  public static Infrastructure INFRASTRUCTURE;
   public static Shooter SHOOTER;
   public static Turret TURRET;
   public static Vision VISION;
@@ -41,7 +37,6 @@ public class RobotContainer {
   public static Controls CONTROLS;
 
   public final AutoModeSelector autoModeSelector;
-  private final NetworkTableEntry guiVoltage;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -50,20 +45,18 @@ public class RobotContainer {
     DRIVETRAIN = new Drivetrain();
     FEEDER = new Feeder();
     HOOD = new Hood();
+    INFRASTRUCTURE = new Infrastructure();
     INTAKE = new Intake();
-    PNEUMATICS = new Pneumatics();
     SHOOTER = new Shooter();
     TURRET = new Turret();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, HOOD, INTAKE, PNEUMATICS, SHOOTER, TURRET, VISION);
+    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
-    PNEUMATICS.setDefaultCommand(new CompressorAuto());
+    INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
 
     autoModeSelector = new AutoModeSelector();
-    
-    guiVoltage = Shuffleboard.getTab("General").add("Voltage", RobotController.getBatteryVoltage()).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 6, "max", 14)).getEntry();
   }
 
   public void cacheSensors() {
@@ -72,8 +65,16 @@ public class RobotContainer {
 
   public void updateDashboard() {
     allSubsystems.forEach(SmartSubsystem::updateDashboard);
-    
-    guiVoltage.setDouble(RobotController.getBatteryVoltage());
+  }
+
+  public void onEnable(boolean isAutonomous) {
+    for(SmartSubsystem subsystem : allSubsystems) {
+      subsystem.onEnable(isAutonomous);
+    }
+  }
+
+  public void onDisable() {
+    allSubsystems.forEach(SmartSubsystem::onDisable);
   }
 
   public void runTests() {

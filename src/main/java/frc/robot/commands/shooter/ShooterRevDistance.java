@@ -8,7 +8,6 @@ import frc.team254.util.InterpolatingDouble;
 
 public class ShooterRevDistance extends CommandBase {
   public final Shooter subsystem = RobotContainer.SHOOTER;
-
   public final double distance;
 
   public ShooterRevDistance(double distance) {
@@ -19,9 +18,7 @@ public class ShooterRevDistance extends CommandBase {
   @Override
   public void initialize() {
     double rpm = Constants.Shooter.RPM_MAP.getInterpolated(new InterpolatingDouble(distance)).value;
-    double percent = Constants.Shooter.VOLTAGE_MAP.getInterpolated(new InterpolatingDouble(distance)).value;
-    subsystem.setTargetRPM(rpm);
-    subsystem.setOpenLoop(percent);
+    subsystem.setClosedLoop(rpm);
   }
 
   @Override

@@ -6,7 +6,6 @@ import frc.robot.subsystems.Shooter;
 
 public class ShooterVelocity extends CommandBase {
   private Shooter subsystem = RobotContainer.SHOOTER;
-
   private final double rpm;
 
   public ShooterVelocity(double rpm) {
@@ -21,6 +20,6 @@ public class ShooterVelocity extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return subsystem.isOnTarget();
+    return subsystem.isStable();
   }
 }

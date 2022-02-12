@@ -5,8 +5,11 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.OnDisabledDelayed;
 
 public class Robot extends TimedRobot {
+  private final double TIME_CLIMBER_REQUIRED_TO_HOLD = 5.0;
+  private final double TIME_ON_DISABLE_DELAYED = TIME_CLIMBER_REQUIRED_TO_HOLD * 2.0;
   private RobotContainer robotContainer;
   private Command autonomousCommand;
 
@@ -18,13 +21,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    robotContainer.onDisable();
     robotContainer.autoModeSelector.reset();
     robotContainer.autoModeSelector.update();
-    // TODO new WaitCommand(5.0).andThen(new ClimberRelease().schedule());
+    new OnDisabledDelayed().withTimeout(TIME_ON_DISABLE_DELAYED).schedule();
   }
 
   @Override
   public void autonomousInit() {
+    robotContainer.onEnable(true);
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
@@ -35,11 +40,13 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();  // If we want the auto command to continue until interrupted by another command, comment this line out.
     }
+    robotContainer.onEnable(false);
   }
 
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    robotContainer.onEnable(false);
     robotContainer.runTests();
   }
 

@@ -22,6 +22,6 @@ public class ShooterAim extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return subsystem.isOnTarget();
+    return subsystem.isStable();
   }
 }

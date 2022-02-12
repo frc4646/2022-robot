@@ -13,7 +13,7 @@ public class TwoCargoAuto extends SequentialCommandGroup {
     addCommands(
       new ShootOpenLoop(),
       new IntakeExtend(true),
-      new IntakeActivate(Constants.Intake.PERCENT_OPEN_LOOP),
+      new IntakeActivate(Constants.Intake.OPEN_LOOP_PERCENT),
       new DriveOpenLoop(-.1),
       new WaitCommand(1.0),
       new DriveOpenLoop(0.0),

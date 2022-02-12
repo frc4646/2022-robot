@@ -11,7 +11,6 @@ public class Turret extends ServoMotorSubsystem {
     // TalonUtil.checkError(mMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set forward limit switch: ");
     // TalonUtil.checkError(mMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set reverse limit switch: ");
     // mMaster.overrideLimitSwitchesEnable(true);
-
   }
 
   @Override
@@ -27,6 +26,16 @@ public class Turret extends ServoMotorSubsystem {
     super.updateDashboard();
     SmartDashboard.putBoolean("Turret Limit Switch F", mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1);
     SmartDashboard.putBoolean("Turret Limit Switch R", mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1);
+  }
+
+  @Override
+  public void onEnable(boolean isAutonomous) {
+    setBrakeMode(true);
+  }
+
+  @Override
+  public void onDisable() {
+    setBrakeMode(false);
   }
 
   @Override
