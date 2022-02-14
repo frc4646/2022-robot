@@ -22,7 +22,7 @@ public class Intake extends SmartSubsystem {
     solenoidR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.INTAKE_R_OUT, Constants.Solenoid.INTAKE_R_IN);
 
     motor.setNeutralMode(NeutralMode.Coast);
-    motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
+    motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
     motor.enableVoltageCompensation(true);
     motor.configOpenloopRamp(Constants.Intake.OPEN_LOOP_RAMP);
     // TODO supply current limiting

@@ -1,11 +1,17 @@
 package frc.robot;
 
+import com.ctre.phoenix.led.CANdleConfiguration;
+import com.ctre.phoenix.led.CANdle.LEDStripType;
+import com.ctre.phoenix.led.CANdle.VBatOutputMode;
+
+import frc.robot.subsystems.Diagnostics;
 import frc.robot.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
+import frc.robot.util.DiagnosticState;
 import frc.team254.util.InterpolatingDouble;
 import frc.team254.util.InterpolatingTreeMap;
 
 public final class Constants {
-  public static int CAN_TIMEOUT_LONG = 100;
+  public static int CAN_TIMEOUT = 100;
 
   public static final class CAN {
     public static final int
@@ -13,7 +19,7 @@ public final class Constants {
       DRIVETRAIN_FL = 21, DRIVETRAIN_BL = 22, DRIVETRAIN_BR = 23, DRIVETRAIN_FR = 24,
       SHOOTER_L = 6, SHOOTER_R = 7, TALON_SHOOTER_L = 25, TALON_SHOOTER_R = 27,
       CLIMBER_L = 13, CLIMBER_R = 14,
-      INTAKE = 5, FEEDER = 8, TURRET = 26, HOOD = 11, AGITATOR = 12, CANIFIER = 9;
+      INTAKE = 5, FEEDER = 8, TURRET = 26, HOOD = 11, AGITATOR = 12, CANIFIER = 9, CANDLE = 15;
   }
 
   public static final class Solenoid {
@@ -30,7 +36,29 @@ public final class Constants {
     public static final double OPEN_LOOP_RAMP = 0.25;  // TODO tune
   }
 
+  public static final class Diagnostic {
+    public static final int LED_COUNT = 300;
+    public static final CANdleConfiguration LED_CONFIG = new CANdleConfiguration();
+    static {
+      LED_CONFIG.statusLedOffWhenActive = true;
+      LED_CONFIG.disableWhenLOS = false;
+      LED_CONFIG.stripType = LEDStripType.GRB;
+      LED_CONFIG.brightnessScalar = 0.1;
+      LED_CONFIG.vBatOutputMode = VBatOutputMode.Modulated;
+    }
+
+    public static final double RUMBLE_PERCENT = 0.1;  // TODO tune
+    public static final DiagnosticState
+      FAULT_CARGO = new DiagnosticState(Diagnostics.toColor(255, 0, 255, 0.1)),
+      FAULT_TURRET = new DiagnosticState(Diagnostics.toColor(255, 255, 0, 1.0), true),
+      AIMING = new DiagnosticState(Diagnostics.toColor(0, 255, 255, .1)),
+      CLIMBING = new DiagnosticState(Diagnostics.toColor(0, 255, 255, 0.5)),
+      SHOOTING = new DiagnosticState(Diagnostics.toColor(255, 0, 0, .1));
+  }
+
   public static final class Drivetrain {
+    public static final boolean TUNING = false;
+
     public static final double WHEEL_TRACK_WIDTH_INCHES = 26.0;
     public static final double WHEEL_SCRUB_FACTOR = 1.02;
     public static final double WHEEL_DIAMETER = 6.0;
@@ -54,17 +82,19 @@ public final class Constants {
   }
 
   public static final class Feeder {
-    public static final double OPEN_LOOP_PERCENT = 0.5;
+    public static final double OPEN_LOOP = 0.5;
     public static final double OPEN_LOOP_RAMP = 0.25;  // TODO tune
   }
 
   public static final class Intake {
-    public static final double OPEN_LOOP_PERCENT = 1.0;
+    public static final double OPEN_LOOP = 1.0;
     public static final double OPEN_LOOP_RAMP = 0.25;  // TODO tune
   }
 
   public static final class Shooter {
-    public static final double OPEN_LOOP_PERCENT = .5;
+    public static final boolean TUNING = false;
+
+    public static final double OPEN_LOOP = .5;
     public static final double OPEN_LOOP_REV_SECONDS = 1.5;
     public static final double OPEN_LOOP_RPM = 2750.0;  // TODO
 
@@ -96,6 +126,12 @@ public final class Constants {
   }
 
   public static final class Turret {
+    public static final boolean TUNING = false;
+
+    public static final double OPEN_LOOP = 0.3;
+    public static final double OPEN_LOOP_DEADBAND = 0.8;
+    public static final double OPEN_LOOP_GAIN = 4.0;
+
     // public static double kTicksToTop = 0.0;  // Observed ticks from the encoder (zero) position to the top (full range) position
     // public static double kFullRangeInchesOrDegrees = 0.0;  // Observed real units (inches or degrees) from the encoder (zero) position to the top (full range) position.
     // public static double kTicksPerInchOrDegree = kTicksToTop / kFullRangeInchesOrDegrees;

@@ -8,12 +8,18 @@ import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.util.Test;
 
 public class Infrastructure extends SmartSubsystem {
+  public static class DataCache {
+    public double battery;
+  }
+
   private final Compressor compressor;
   private final PneumaticsControlModule pcm;
+  private final DataCache cache = new DataCache();
   // private NetworkTableEntry dashPressureSwitch, dashCompressor, dashVoltage;
 
   public Infrastructure() {
@@ -25,22 +31,27 @@ public class Infrastructure extends SmartSubsystem {
     // dashCompressor = layout.add("Compressor", compressor.enabled()).getEntry();    
     // dashVoltage = Shuffleboard.getTab("General").add("Voltage", RobotController.getBatteryVoltage()).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 6, "max", 14)).getEntry();
   }
+
+  @Override
+  public void cacheSensors() {
+    cache.battery = RobotController.getBatteryVoltage();
+  }
   
   /** Enable/disable the {@link Compressor} closed loop, which <i>automatically</i> runs the {@link Compressor} when pressure is low */
   public void setCompressor(boolean enable) {
-      if(enable) {
-          compressor.enableDigital();
-      }
-      else {
-          compressor.disable();
-      }
+    if(enable) {
+      compressor.enableDigital();
+    } else {
+      compressor.disable();
+    }
   }
   
   @Override
   public void updateDashboard() {
     // dashPressureSwitch.setBoolean(pcm.getPressureSwitch());
     // dashCompressor.setBoolean(compressor.enabled());
-    // dashVoltage.setDouble(RobotController.getBatteryVoltage());
+    // dashVoltage.setDouble(RobotController.getBatteryVoltage());    
+    SmartDashboard.putNumber("Battery", cache.battery);
   }
 
   @Override
@@ -50,9 +61,9 @@ public class Infrastructure extends SmartSubsystem {
     boolean isNotShorted = !pcm.getCompressorShortedStickyFault();
     boolean isBatteryFull = RobotController.getBatteryVoltage() > 13.0;
     
-    System.out.println(String.format("Compressor connected: %s", Test.getResultString(isConnected)));
-    System.out.println(String.format("Compressor current: %s", Test.getResultString(isCurrentLowEnough)));
-    System.out.println(String.format("Compressor shorted: %s", Test.getResultString(isNotShorted)));
-    System.out.println(String.format("Battery voltage: %s", Test.getResultString(isBatteryFull)));
+    Test.add("Compressor Connected", isConnected);
+    Test.add("Compressor Current", isCurrentLowEnough);
+    Test.add("Compressor Shorted", isNotShorted);
+    Test.add("Battery Voltage", isBatteryFull);
   }
 }

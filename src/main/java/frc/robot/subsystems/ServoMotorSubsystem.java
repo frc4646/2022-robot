@@ -86,37 +86,37 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     mMaster = TalonFXFactory.createDefaultTalon(mConstants.kMasterConstants.id);
     mSlaves = new TalonFX[mConstants.kSlaveConstants.length];
 
-    TalonUtil.checkError(mMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not detect encoder: ");
+    TalonUtil.checkError(mMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), getName() + ": Could not detect encoder: ");
 
     mForwardSoftLimitTicks = (mConstants.kMaxUnitsLimit - mConstants.kHomePosition) * mConstants.kTicksPerUnitDistance;
     mReverseSoftLimitTicks = (mConstants.kMinUnitsLimit - mConstants.kHomePosition) * mConstants.kTicksPerUnitDistance;
-    TalonUtil.checkError(mMaster.configForwardSoftLimitThreshold(mForwardSoftLimitTicks, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set forward soft limit: ");
-    TalonUtil.checkError(mMaster.configForwardSoftLimitEnable(true, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not enable forward soft limit: ");
-    TalonUtil.checkError(mMaster.configReverseSoftLimitThreshold(mReverseSoftLimitTicks, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set reverse soft limit: ");
-    TalonUtil.checkError(mMaster.configReverseSoftLimitEnable(true, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not enable reverse soft limit: ");
+    TalonUtil.checkError(mMaster.configForwardSoftLimitThreshold(mForwardSoftLimitTicks, Constants.CAN_TIMEOUT), getName() + ": Could not set forward soft limit: ");
+    TalonUtil.checkError(mMaster.configForwardSoftLimitEnable(true, Constants.CAN_TIMEOUT), getName() + ": Could not enable forward soft limit: ");
+    TalonUtil.checkError(mMaster.configReverseSoftLimitThreshold(mReverseSoftLimitTicks, Constants.CAN_TIMEOUT), getName() + ": Could not set reverse soft limit: ");
+    TalonUtil.checkError(mMaster.configReverseSoftLimitEnable(true, Constants.CAN_TIMEOUT), getName() + ": Could not enable reverse soft limit: ");
 
-    TalonUtil.checkError(mMaster.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set voltage compensation saturation: ");
+    TalonUtil.checkError(mMaster.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT), getName() + ": Could not set voltage compensation saturation: ");
 
-    TalonUtil.checkError(mMaster.config_kP(kMotionProfileSlot, mConstants.kKp, Constants.CAN_TIMEOUT_LONG), getName() + ": could not set kP: ");
-    TalonUtil.checkError(mMaster.config_kI(kMotionProfileSlot, mConstants.kKi, Constants.CAN_TIMEOUT_LONG), getName() + ": could not set kI: ");
-    TalonUtil.checkError(mMaster.config_kD(kMotionProfileSlot, mConstants.kKd, Constants.CAN_TIMEOUT_LONG), getName() + ": could not set kD: ");
-    TalonUtil.checkError(mMaster.config_kF(kMotionProfileSlot, mConstants.kKf, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set kF: ");
-    TalonUtil.checkError(mMaster.configMaxIntegralAccumulator(kMotionProfileSlot, mConstants.kMaxIntegralAccumulator, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set max integral: ");
-    TalonUtil.checkError(mMaster.config_IntegralZone(kMotionProfileSlot, mConstants.kIZone, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set i zone: ");
-    TalonUtil.checkError(mMaster.configAllowableClosedloopError(kMotionProfileSlot, mConstants.kDeadband, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set deadband: ");
-    TalonUtil.checkError(mMaster.configMotionCruiseVelocity(mConstants.kCruiseVelocity, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set cruise velocity: ");
-    TalonUtil.checkError(mMaster.configMotionAcceleration(mConstants.kAcceleration, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set acceleration: ");
+    TalonUtil.checkError(mMaster.config_kP(kMotionProfileSlot, mConstants.kKp, Constants.CAN_TIMEOUT), getName() + ": could not set kP: ");
+    TalonUtil.checkError(mMaster.config_kI(kMotionProfileSlot, mConstants.kKi, Constants.CAN_TIMEOUT), getName() + ": could not set kI: ");
+    TalonUtil.checkError(mMaster.config_kD(kMotionProfileSlot, mConstants.kKd, Constants.CAN_TIMEOUT), getName() + ": could not set kD: ");
+    TalonUtil.checkError(mMaster.config_kF(kMotionProfileSlot, mConstants.kKf, Constants.CAN_TIMEOUT), getName() + ": Could not set kF: ");
+    TalonUtil.checkError(mMaster.configMaxIntegralAccumulator(kMotionProfileSlot, mConstants.kMaxIntegralAccumulator, Constants.CAN_TIMEOUT), getName() + ": Could not set max integral: ");
+    TalonUtil.checkError(mMaster.config_IntegralZone(kMotionProfileSlot, mConstants.kIZone, Constants.CAN_TIMEOUT), getName() + ": Could not set i zone: ");
+    TalonUtil.checkError(mMaster.configAllowableClosedloopError(kMotionProfileSlot, mConstants.kDeadband, Constants.CAN_TIMEOUT), getName() + ": Could not set deadband: ");
+    TalonUtil.checkError(mMaster.configMotionCruiseVelocity(mConstants.kCruiseVelocity, Constants.CAN_TIMEOUT), getName() + ": Could not set cruise velocity: ");
+    TalonUtil.checkError(mMaster.configMotionAcceleration(mConstants.kAcceleration, Constants.CAN_TIMEOUT), getName() + ": Could not set acceleration: ");
 
-    TalonUtil.checkError(mMaster.config_kP(kPositionPIDSlot, mConstants.kPositionKp, Constants.CAN_TIMEOUT_LONG), getName() + ": could not set kP: ");
-    TalonUtil.checkError(mMaster.config_kI(kPositionPIDSlot, mConstants.kPositionKi, Constants.CAN_TIMEOUT_LONG), getName() + ": could not set kI: ");
-    TalonUtil.checkError(mMaster.config_kD(kPositionPIDSlot, mConstants.kPositionKd, Constants.CAN_TIMEOUT_LONG), getName() + ": could not set kD: ");
-    TalonUtil.checkError(mMaster.config_kF(kPositionPIDSlot, mConstants.kPositionKf, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set kF: ");
-    TalonUtil.checkError(mMaster.configMaxIntegralAccumulator(kPositionPIDSlot, mConstants.kPositionMaxIntegralAccumulator, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set max integral: ");
-    TalonUtil.checkError(mMaster.config_IntegralZone(kPositionPIDSlot, mConstants.kPositionIZone, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set i zone: ");
-    TalonUtil.checkError(mMaster.configAllowableClosedloopError(kPositionPIDSlot, mConstants.kPositionDeadband, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set deadband: ");
+    TalonUtil.checkError(mMaster.config_kP(kPositionPIDSlot, mConstants.kPositionKp, Constants.CAN_TIMEOUT), getName() + ": could not set kP: ");
+    TalonUtil.checkError(mMaster.config_kI(kPositionPIDSlot, mConstants.kPositionKi, Constants.CAN_TIMEOUT), getName() + ": could not set kI: ");
+    TalonUtil.checkError(mMaster.config_kD(kPositionPIDSlot, mConstants.kPositionKd, Constants.CAN_TIMEOUT), getName() + ": could not set kD: ");
+    TalonUtil.checkError(mMaster.config_kF(kPositionPIDSlot, mConstants.kPositionKf, Constants.CAN_TIMEOUT), getName() + ": Could not set kF: ");
+    TalonUtil.checkError(mMaster.configMaxIntegralAccumulator(kPositionPIDSlot, mConstants.kPositionMaxIntegralAccumulator, Constants.CAN_TIMEOUT), getName() + ": Could not set max integral: ");
+    TalonUtil.checkError(mMaster.config_IntegralZone(kPositionPIDSlot, mConstants.kPositionIZone, Constants.CAN_TIMEOUT), getName() + ": Could not set i zone: ");
+    TalonUtil.checkError(mMaster.configAllowableClosedloopError(kPositionPIDSlot, mConstants.kPositionDeadband, Constants.CAN_TIMEOUT), getName() + ": Could not set deadband: ");
 
-    TalonUtil.checkError(mMaster.configOpenloopRamp(mConstants.kRampRate, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set voltage ramp rate: ");
-    TalonUtil.checkError(mMaster.configClosedloopRamp(mConstants.kRampRate, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set closed loop ramp rate: ");
+    TalonUtil.checkError(mMaster.configOpenloopRamp(mConstants.kRampRate, Constants.CAN_TIMEOUT), getName() + ": Could not set voltage ramp rate: ");
+    TalonUtil.checkError(mMaster.configClosedloopRamp(mConstants.kRampRate, Constants.CAN_TIMEOUT), getName() + ": Could not set closed loop ramp rate: ");
 
     SupplyCurrentLimitConfiguration limitsSupply = new SupplyCurrentLimitConfiguration(mConstants.kEnableSupplyCurrentLimit, mConstants.kSupplyContinuousCurrentLimit, mConstants.kSupplyPeakCurrentLimit, mConstants.kSupplyPeakCurrentDuration);
     StatorCurrentLimitConfiguration limitsStator = new StatorCurrentLimitConfiguration(mConstants.kEnableStatorCurrentLimit, mConstants.kStatorContinuousCurrentLimit, mConstants.kStatorPeakCurrentLimit, mConstants.kStatorPeakCurrentDuration);
@@ -124,7 +124,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     TalonUtil.checkError(mMaster.configStatorCurrentLimit(limitsStator), getName() + ": Could not set stator current limit.");
 
     mMaster.configVoltageMeasurementFilter(8);
-    TalonUtil.checkError(mMaster.configVoltageCompSaturation(mConstants.kMaxVoltage, Constants.CAN_TIMEOUT_LONG), getName() + ": Could not set voltage comp saturation.");
+    TalonUtil.checkError(mMaster.configVoltageCompSaturation(mConstants.kMaxVoltage, Constants.CAN_TIMEOUT), getName() + ": Could not set voltage comp saturation.");
     mMaster.enableVoltageCompensation(true);
 
     mMaster.setInverted(mConstants.kMasterConstants.invert_motor);
@@ -253,13 +253,13 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   }
 
   public void zeroSensors() {
-    mMaster.setSelectedSensorPosition(0, 0, Constants.CAN_TIMEOUT_LONG);
+    mMaster.setSelectedSensorPosition(0, 0, Constants.CAN_TIMEOUT);
     mPeriodicIO.absolute_pulse_offset = getAbsoluteEncoderRawPosition();
     mHasBeenZeroed = true;
   }
 
   public void forceZero() {
-    mMaster.setSelectedSensorPosition(0, 0, Constants.CAN_TIMEOUT_LONG);
+    mMaster.setSelectedSensorPosition(0, 0, Constants.CAN_TIMEOUT);
     mPeriodicIO.absolute_pulse_offset = getAbsoluteEncoderRawPosition();
   }
 
@@ -273,7 +273,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
 
       // Reset encoder position to estimated position from absolute encoder
       if (mConstants.kRecoverPositionOnReset) {
-        mMaster.setSelectedSensorPosition(estimateSensorPositionFromAbsolute(), 0, Constants.CAN_TIMEOUT_LONG);
+        mMaster.setSelectedSensorPosition(estimateSensorPositionFromAbsolute(), 0, Constants.CAN_TIMEOUT);
       }
     }
     for (TalonFX slave : mSlaves) {
@@ -285,42 +285,35 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
 
   // ------------------------------ SETTERS: MOTORS ------------------------------
   public void setSetpointMotionMagic(double units, double feedforward_v) {
-    mPeriodicIO.demand = constrainTicks(homeAwareUnitsToTicks(units));
+    mPeriodicIO.demand = constrainTicks(homedUnitsToTicks(units));
     mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kKf + mConstants.kKd / 100.0) / 1023.0;
-    if (mControlState != ControlState.MOTION_MAGIC) {
-      mMaster.selectProfileSlot(kMotionProfileSlot, 0);
-      mControlState = ControlState.MOTION_MAGIC;
-    }
+    setControlMode(ControlState.MOTION_MAGIC);
     mMaster.set(ControlMode.MotionMagic, mPeriodicIO.demand, DemandType.ArbitraryFeedForward, mPeriodicIO.feedforward);
   }
 
   public void setSetpointPositionPID(double units, double feedforward_v) {
-    mPeriodicIO.demand = constrainTicks(homeAwareUnitsToTicks(units));
+    mPeriodicIO.demand = constrainTicks(homedUnitsToTicks(units));
     mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kKf + mConstants.kKd / 100.0) / 1023.0;
-    if (mControlState != ControlState.POSITION_PID) {
-      mMaster.selectProfileSlot(kPositionPIDSlot, 0);
-      mControlState = ControlState.POSITION_PID;
-    }
+    setControlMode(ControlState.POSITION_PID);
     mMaster.set(ControlMode.Position, mPeriodicIO.demand, DemandType.ArbitraryFeedForward, mPeriodicIO.feedforward);
   }
 
   public void setOpenLoop(double percentage) {
     mPeriodicIO.demand = percentage;
-    if (mControlState != ControlState.OPEN_LOOP) {
-      mControlState = ControlState.OPEN_LOOP;
-    }
+    setControlMode(ControlState.OPEN_LOOP);
     mMaster.set(ControlMode.PercentOutput, mPeriodicIO.demand, DemandType.ArbitraryFeedForward, mPeriodicIO.feedforward);
   }
 
   public void setBrakeMode(boolean enable) {
-    if (isBrakeMode != enable) {
-      NeutralMode mode = enable ? NeutralMode.Brake : NeutralMode.Coast;
-      mMaster.setNeutralMode(mode);
-      for (int i = 0; i < mSlaves.length; ++i) {
-        mSlaves[i].setNeutralMode(mode);
-      }
-      isBrakeMode = enable;
+    if (isBrakeMode == enable) {
+      return;  // Already in this mode
     }
+    NeutralMode mode = enable ? NeutralMode.Brake : NeutralMode.Coast;
+    mMaster.setNeutralMode(mode);
+    for (int i = 0; i < mSlaves.length; ++i) {
+      mSlaves[i].setNeutralMode(mode);
+    }
+    isBrakeMode = enable;
   }
 
   // ------------------------------ GETTERS ------------------------------
@@ -334,7 +327,6 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     if (mMaster.getControlMode() != ControlMode.MotionMagic) {
       return getPosition();
     }
-
     double predicted_units = ticksToHomedUnits(mPeriodicIO.active_trajectory_position + lookahead_secs * mPeriodicIO.active_trajectory_velocity + 0.5 * mPeriodicIO.active_trajectory_acceleration * lookahead_secs * lookahead_secs);
     if (mPeriodicIO.demand >= mPeriodicIO.active_trajectory_position) {
       return Math.min(predicted_units, ticksToHomedUnits(mPeriodicIO.demand));
@@ -343,31 +335,13 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   }
 
   /** In "Units" */
-  public double getPosition() {
-    return ticksToHomedUnits(mPeriodicIO.position_ticks);
-  }
-
+  public double getPosition() { return ticksToHomedUnits(mPeriodicIO.position_ticks); }
   /** In "Units per second" */
-  public double getVelocity() {
-    return ticksToUnits(mPeriodicIO.velocity_ticks_per_100ms) * 10.0;
-  }  
- 
-  public double getSetpoint() {
-    return (mControlState == ControlState.MOTION_MAGIC || mControlState == ControlState.POSITION_PID) ? ticksToUnits(mPeriodicIO.demand) : Double.NaN;
-  }
-
-  public double getSetpointHomed() {
-    return (mControlState == ControlState.MOTION_MAGIC || mControlState == ControlState.POSITION_PID) ? ticksToHomedUnits(mPeriodicIO.demand) : Double.NaN;
-  }
-
-  public double getPositionTicks() {
-    return mPeriodicIO.position_ticks;
-  }
-
-  public boolean hasBeenZeroed() {
-    return mHasBeenZeroed;
-  }
-
+  public double getVelocity() { return ticksToUnits(mPeriodicIO.velocity_ticks_per_100ms) * 10.0; } 
+  public double getSetpoint() { return (mControlState == ControlState.MOTION_MAGIC || mControlState == ControlState.POSITION_PID) ? ticksToUnits(mPeriodicIO.demand) : Double.NaN; }
+  public double getSetpointHomed() { return (mControlState == ControlState.MOTION_MAGIC || mControlState == ControlState.POSITION_PID) ? ticksToHomedUnits(mPeriodicIO.demand) : Double.NaN; }
+  public double getPositionTicks() { return mPeriodicIO.position_ticks; }
+  public boolean hasBeenZeroed() { return mHasBeenZeroed; }
   /** @return absolute encoders raw ticks bounded to one rotation */
   protected double getAbsoluteEncoderRawPosition() {
     double abs_raw_with_rollover = mMaster.getSensorCollection().getIntegratedSensorAbsolutePosition();
@@ -375,31 +349,21 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   }
 
   // ------------------------------ UNIT CONVERSION ------------------------------
-  protected double ticksToUnits(double ticks) {
-    return ticks / mConstants.kTicksPerUnitDistance;
-  }
+  protected double ticksToUnits(double ticks) { return ticks / mConstants.kTicksPerUnitDistance; }
+  protected double unitsToTicks(double units) { return units * mConstants.kTicksPerUnitDistance; }
+  protected double ticksToHomedUnits(double ticks) { return ticksToUnits(ticks) + mConstants.kHomePosition; }
+  protected double homedUnitsToTicks(double units) { return unitsToTicks(units - mConstants.kHomePosition); }
+  protected double ticksPer100msToUnitsPerSecond(double ticks_per_100ms) { return ticksToUnits(ticks_per_100ms) * 10.0; }
+  protected double unitsPerSecondToTicksPer100ms(double units_per_second) { return unitsToTicks(units_per_second) / 10.0; }
+  protected double constrainTicks(double ticks) { return Util.limit(ticks, mReverseSoftLimitTicks, mForwardSoftLimitTicks); }
 
-  protected double ticksToHomedUnits(double ticks) {
-    return ticksToUnits(ticks) + mConstants.kHomePosition;
-  }
-
-  protected double unitsToTicks(double units) {
-    return units * mConstants.kTicksPerUnitDistance;
-  }
-
-  protected double homeAwareUnitsToTicks(double units) {
-    return unitsToTicks(units - mConstants.kHomePosition);
-  }
-
-  protected double constrainTicks(double ticks) {
-    return Util.limit(ticks, mReverseSoftLimitTicks, mForwardSoftLimitTicks);
-  }
-
-  protected double ticksPer100msToUnitsPerSecond(double ticks_per_100ms) {
-    return ticksToUnits(ticks_per_100ms) * 10.0;
-  }
-
-  protected double unitsPerSecondToTicksPer100ms(double units_per_second) {
-    return unitsToTicks(units_per_second) / 10.0;
+  protected void setControlMode(ControlState mode) {
+    if (mControlState == mode) {
+      return;  // Already in this mode
+    }
+    if (mode != ControlState.OPEN_LOOP) {
+      mMaster.selectProfileSlot(mode == ControlState.MOTION_MAGIC ? kMotionProfileSlot : kPositionPIDSlot, 0);
+    }
+    mControlState = mode;
   }
 }

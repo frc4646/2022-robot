@@ -20,7 +20,7 @@ public class FeederLoadCargo extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return subsystem.isBallPresent();
+    return subsystem.isCargoPresent();
   }
 
   @Override

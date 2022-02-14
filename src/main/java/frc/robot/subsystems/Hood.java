@@ -31,7 +31,7 @@ public class Hood extends SmartSubsystem {
 
   @Override
   public void updateDashboard() {
-    SmartDashboard.putNumber(this.getName() + " Amps", cache.amps);
+    //SmartDashboard.putNumber(this.getName() + " Amps", cache.amps);
   }
 
   public void setOpenLoop(double percent) {

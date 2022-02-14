@@ -43,10 +43,10 @@ public class Vision extends SmartSubsystem {
 
   @Override
   public void updateDashboard() {
-    SmartDashboard.putNumber("Limelight X: ", cache.xDegrees);
-    SmartDashboard.putNumber("Limelight Y: ", cache.yDegrees);
-    SmartDashboard.putBoolean("Limelight Target: ", cache.seesTarget);
-    SmartDashboard.putNumber("Limelight Distance: ", cache.distance);
+    SmartDashboard.putNumber("Vision X: ", cache.xDegrees);
+    SmartDashboard.putNumber("Vision Y: ", cache.yDegrees);
+    SmartDashboard.putBoolean("Vision Target: ", cache.seesTarget);
+    SmartDashboard.putNumber("Vision Distance: ", cache.distance);
   }
 
   @Override
@@ -70,7 +70,7 @@ public class Vision extends SmartSubsystem {
   /** See https://docs.limelightvision.io/en/latest/cs_estimating_distance.html#. */
   public double getGroundDistanceToHubInches() {
     if (isTargetPresent()) {
-      return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians( cache.yDegrees + Constants.Vision.CAMERA_MOUNTING_ANGLE));
+      return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians(cache.yDegrees + Constants.Vision.CAMERA_MOUNTING_ANGLE));
     }
     return RPM_MAP_KEY_INVALID;
   }
@@ -92,6 +92,6 @@ public class Vision extends SmartSubsystem {
 
   @Override
   public void runTests() {
-    System.out.println(String.format("Vision sees target: %s", Test.getResultString(cache.seesTarget)));
+    Test.add("Vision Target", cache.seesTarget);
   }
 }

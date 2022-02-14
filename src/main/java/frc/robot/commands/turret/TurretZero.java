@@ -1,7 +1,6 @@
 package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Turret;
 
@@ -14,23 +13,12 @@ public class TurretZero extends CommandBase {
 
   @Override
   public void initialize() {
-    double position = subsystem.getPositionTicks();
-    // if (position < Constants.Turret.ENCODER_ZERO_MIN) {
-    //   subsystem.setOpenLoop(0.05);
-    // }
-    // else if (position > Constants.Turret.ENCODER_ZERO_MAX) {
-    //   subsystem.setOpenLoop(-0.05);
-    // }
-    // else {
-    //   // Do nothing - Already at zero position
-    // }
+    // TODO
   }
 
   @Override
   public boolean isFinished() {
-    double position = subsystem.getPositionTicks();
-    // return position >= Constants.Turret.ENCODER_ZERO_MIN || position <= Constants.Turret.ENCODER_ZERO_MAX;
-    return false;
+    return subsystem.hasBeenZeroed();
   }
 
   @Override

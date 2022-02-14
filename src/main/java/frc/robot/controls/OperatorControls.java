@@ -3,13 +3,11 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.commands.agitator.AgitateOpenLoop;
-import frc.robot.commands.agitator.AgitatorAuto;
 import frc.robot.commands.feeder.FeederOpenLoop;
 import frc.robot.commands.hood.HoodExtend;
 import frc.robot.commands.intake.IntakeActivate;
@@ -19,83 +17,100 @@ import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.StopShoot;
 import frc.robot.commands.sequence.StowIntake;
 import frc.robot.commands.turret.TurretOpenLoop;
+import frc.team254.CardinalDirection;
 
 public class OperatorControls {
-  private final double LEFT_DEADBAND = 0.8;
   private final XboxController operator;
+  private final Trigger padUp, padDown, padLeft, padRight, leftStickL, leftStickR, leftStickOff;
+  private final JoystickButton buttonA, buttonB, buttonX, buttonY, bumperL, bumperR, Fn, start;
+  private CardinalDirection lastCardinal;
   
   public OperatorControls() {
     operator = new XboxController(2);
-    JoystickButton inPit = makeButton(Button.kBack);  // TODO use with .and()
+    buttonA = makeButton(Button.kA); buttonB = makeButton(Button.kB); buttonX = makeButton(Button.kX); buttonY = makeButton(Button.kY);
+    bumperL = makeButton(Button.kLeftBumper); bumperR = makeButton(Button.kRightBumper);
+    Fn = makeButton(Button.kBack); start = makeButton(Button.kStart);
+    padUp = getUpDPAD(); padDown = getDownDPAD(); padLeft = getLeftDPAD(); padRight = getRightDPAD();
+    leftStickL = getLeftStickLeft(); leftStickR = getLeftStickRight(); leftStickOff = getLeftStickOff();
 
     // Agitator
-    makeButton(Button.kA).whenPressed(new AgitateOpenLoop(1.0));
-    makeButton(Button.kA).whenReleased(new AgitateOpenLoop(0.0));
-    getDownDPAD().whenActive(new AgitateOpenLoop(-0.5));
-    getDownDPAD().whenInactive(new AgitateOpenLoop(0.0));
-    getLeftDPAD().whenActive(new AgitatorAuto(0.5));
-    getLeftDPAD().whenInactive(new AgitateOpenLoop(0.0));
+    buttonA.whenPressed(new AgitateOpenLoop(1.0));
+    buttonA.whenReleased(new AgitateOpenLoop(0.0));
+    buttonA.and(Fn).whenActive(new AgitateOpenLoop(-1.0));
+
+    // Climber
+    // start.and(Fn) TODO climb mode
 
     // Intake
-    makeButton(Button.kY).whenPressed(new ParallelCommandGroup(new DeployIntake(), new LoadCargo()));
-    makeButton(Button.kY).whenReleased(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
-    makeButton(Button.kX).debounce(.1).whenActive(new ParallelCommandGroup(new DeployIntake(), new LoadCargo()));
-    makeButton(Button.kX).debounce(.1).whenInactive(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
-    makeButton(Button.kB).whenPressed(new HoodExtend(true));
-    makeButton(Button.kB).whenReleased(new HoodExtend(false));
-    getUpDPAD().whenActive(new IntakeActivate(-Constants.Intake.OPEN_LOOP_PERCENT));
-    getUpDPAD().whenInactive(new IntakeActivate(0.0));
+    buttonY.whenPressed(new ParallelCommandGroup(new DeployIntake(), new LoadCargo()));
+    buttonY.whenReleased(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
+    buttonY.and(Fn).whenActive(new IntakeActivate(-Constants.Intake.OPEN_LOOP));
+    buttonX.debounce(.1).whenActive(new ParallelCommandGroup(new DeployIntake(), new LoadCargo()));  // TODO tune if debounce better
+    buttonX.debounce(.1).whenInactive(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
+    buttonX.and(Fn).whenActive(new IntakeActivate(-Constants.Intake.OPEN_LOOP));
+    buttonB.whenPressed(new HoodExtend(true));
+    buttonB.whenReleased(new HoodExtend(false));
 
     // Shooter
-    makeButton(Button.kLeftBumper).whenPressed(new ShootOpenLoop());
-    makeButton(Button.kLeftBumper).whenReleased(new StopShoot().alongWith(new IntakeActivate(0.0), new AgitateOpenLoop(0.0)));
-    makeButton(Button.kRightBumper).whenPressed(new LoadCargo());
-    makeButton(Button.kRightBumper).whenReleased(new FeederOpenLoop(0.0));
+    bumperL.whenPressed(new ShootOpenLoop());
+    bumperL.whenReleased(new StopShoot().alongWith(new IntakeActivate(0.0), new AgitateOpenLoop(0.0)));
+    bumperR.whenPressed(new LoadCargo());
+    bumperR.whenReleased(new FeederOpenLoop(0.0));
 
     // Turret
-    getLeftStickLeft().whenActive(new TurretOpenLoop(0.3));  // Probalby 0.3
-    getLeftStickRight().whenActive(new TurretOpenLoop(-0.3));  // Probalby -0.3
-    getLeftStickOff().whenActive(new TurretOpenLoop(0.0));
-
-    // Other
-    // getRightDPAD().whenActive(new Hoodextend(true));
-    // getRightDPAD().whenInactive(new Hoodextend (false));
-    inPit.whenPressed(new InstantCommand(() -> {setRumble(RumbleType.kLeftRumble, 1.0);}));
-    inPit.whenReleased(new InstantCommand(() -> {setRumble(RumbleType.kLeftRumble, 0.0);}));
-    makeButton(Button.kStart).whenPressed(new InstantCommand(() -> {setRumble(RumbleType.kRightRumble, 1.0);}));
-    makeButton(Button.kStart).whenReleased(new InstantCommand(() -> {setRumble(RumbleType.kRightRumble, 0.0);}));
+    leftStickL.whenActive(new TurretOpenLoop(Constants.Turret.OPEN_LOOP));
+    leftStickR.whenActive(new TurretOpenLoop(-Constants.Turret.OPEN_LOOP));
+    leftStickOff.whenActive(new TurretOpenLoop(0.0));
+    // TODO dpad turret snap to robot angle
+    // TODO move to zero
   }
 
-  public double getTurretJog() {
-      return -operator.getRawAxis(XboxController.Axis.kLeftX.value);
+  public double getTurretStick() {
+      return operator.getRawAxis(XboxController.Axis.kLeftX.value);
+  }
+  
+  public CardinalDirection getTurretSnap() {
+    return CardinalDirection.NONE;  // TODO
+    // int dPad = operator.getDPad();
+    // CardinalDirection newCardinal = dPad == -1 ? CardinalDirection.NONE : CardinalDirection.findClosest(Rotation2d.fromDegrees(-dPad));
+    // if (newCardinal != CardinalDirection.NONE && CardinalDirection.isDiagonal(newCardinal)) {
+    //   newCardinal = lastCardinal;
+    // }
+    // boolean valid = mDPadValid.update(Timer.getFPGATimestamp(), newCardinal != CardinalDirection.NONE && (lastCardinal == CardinalDirection.NONE || newCardinal == lastCardinal));
+    // if (valid) {
+    //     if (lastCardinal == CardinalDirection.NONE) {
+    //         lastCardinal = newCardinal;
+    //     }
+    //     return lastCardinal;
+    // } else {
+    //     lastCardinal = newCardinal;
+    // }
+    // return CardinalDirection.NONE;
   }
 
-  public void setRumble(RumbleType side, double percent) {
-    operator.setRumble(side, percent);
-  }
-
-  protected JoystickButton makeButton(Button button) {
-    return new JoystickButton(operator, button.value);
+  public void setRumble(boolean wantLeft, double percent) {
+    RumbleType half = wantLeft ? RumbleType.kLeftRumble : RumbleType.kRightRumble;
+    operator.setRumble(half, percent);
   }
 
   protected Trigger getLeftStickLeft() {
     return new Trigger() {
       @Override
-      public boolean get() { return operator.getRawAxis(XboxController.Axis.kLeftX.value) <= -LEFT_DEADBAND; }
+      public boolean get() { return getTurretStick() <= -Constants.Turret.OPEN_LOOP_DEADBAND; }
     };
   }
   
   protected Trigger getLeftStickRight() {
     return new Trigger() {
       @Override
-      public boolean get() { return operator.getRawAxis(XboxController.Axis.kLeftX.value) >= LEFT_DEADBAND; }
+      public boolean get() { return getTurretStick() >= Constants.Turret.OPEN_LOOP_DEADBAND; }
     };
   }
 
   protected Trigger getLeftStickOff() {
     return new Trigger() {
       @Override
-      public boolean get() { return Math.abs(operator.getRawAxis(XboxController.Axis.kLeftX.value)) < LEFT_DEADBAND; }
+      public boolean get() { return Math.abs(getTurretStick()) < Constants.Turret.OPEN_LOOP_DEADBAND; }
     };
   }
 
@@ -125,5 +140,9 @@ public class OperatorControls {
       @Override
       public boolean get() { int position = operator.getPOV(0); return position == 90; }
     };
+  }  
+
+  protected JoystickButton makeButton(Button button) {
+    return new JoystickButton(operator, button.value);
   }
 }

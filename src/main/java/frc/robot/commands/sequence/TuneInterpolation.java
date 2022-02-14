@@ -10,7 +10,7 @@ public class TuneInterpolation extends SequentialCommandGroup {
   public TuneInterpolation() {
     addCommands(
       new ShooterTune(),
-      new FeederOpenLoop(Constants.Feeder.OPEN_LOOP_PERCENT),
+      new FeederOpenLoop(Constants.Feeder.OPEN_LOOP),
       new WaitCommand(1.0)
     );
   }

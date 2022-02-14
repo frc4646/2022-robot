@@ -24,8 +24,11 @@ public class Turret extends ServoMotorSubsystem {
   @Override
   public void updateDashboard() {
     super.updateDashboard();
-    SmartDashboard.putBoolean("Turret Limit Switch F", mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1);
-    SmartDashboard.putBoolean("Turret Limit Switch R", mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1);
+    SmartDashboard.putBoolean("Turret Limit F", mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1);
+    SmartDashboard.putBoolean("Turret Limit R", mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1);
+    if (Constants.Turret.TUNING) {
+      SmartDashboard.putNumber("Turret Error", mPeriodicIO.error_ticks);
+    }
   }
 
   @Override
@@ -40,7 +43,7 @@ public class Turret extends ServoMotorSubsystem {
 
   @Override
   public boolean atHomingLocation() {
-      return false;  // TODO canifier.isTurretHomed();
+    return false;  // TODO canifier.isTurretHomed();
   }
 
   @Override

@@ -15,9 +15,9 @@ public class TurretWhileDisabled extends CommandBase {
   public void execute() {
     subsystem.resetIfAtHome();
     if (!subsystem.hasBeenZeroed()) {
-        // mLED.setTurretFault();
+      // mLED.setTurretFault();
     } else {
-        // mLED.clearTurretFault();
+      // mLED.clearTurretFault();
     }
   }
 

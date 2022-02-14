@@ -6,6 +6,7 @@ import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.Agitator;
+import frc.robot.subsystems.Diagnostics;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
@@ -14,6 +15,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Infrastructure;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.LEDMode;
+import frc.robot.util.Test;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SmartSubsystem;
 import frc.robot.subsystems.Turret;
@@ -30,6 +32,7 @@ public class RobotContainer {
 
   public static Agitator AGITATOR;
   public static Climber CLIMBER;
+  public static Diagnostics DIAGNOSTICS;
   public static Drivetrain DRIVETRAIN;
   public static Feeder FEEDER;
   public static Hood HOOD;
@@ -48,6 +51,7 @@ public class RobotContainer {
   public RobotContainer() {
     AGITATOR = new Agitator();
     // CLIMBER = new Climber();
+    // DIAGNOSTICS = new Diagnostics();
     DRIVETRAIN = new Drivetrain();
     FEEDER = new Feeder();
     HOOD = new Hood();
@@ -56,11 +60,12 @@ public class RobotContainer {
     SHOOTER = new Shooter();
     TURRET = new Turret();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION);
+    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION/*, DIAGNOSTICS */);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
+    // DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
 
     autoModeSelector = new AutoModeSelector();
 
@@ -89,9 +94,9 @@ public class RobotContainer {
   public void runTests() {
     VISION.setLED(LEDMode.BLINK);
     Timer.delay(3.0);
-    System.out.println("============================TESTING============================");
+    Test.reset();
     allSubsystems.forEach(SmartSubsystem::runTests);
-    System.out.println("============================TESTING============================");
+    Test.results();
   }
 
   public Command getAutonomousCommand() {

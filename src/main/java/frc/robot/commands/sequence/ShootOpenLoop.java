@@ -12,7 +12,7 @@ import frc.robot.commands.shooter.ShooterOpenLoop;
 public class ShootOpenLoop extends SequentialCommandGroup {
   public ShootOpenLoop() {
     addCommands(
-      new ShooterOpenLoop(Constants.Shooter.OPEN_LOOP_PERCENT),
+      new ShooterOpenLoop(Constants.Shooter.OPEN_LOOP),
       new ParallelCommandGroup(new IntakeActivate(0.5), new AgitateOpenLoop(0.45)),
       new WaitCommand(Constants.Shooter.OPEN_LOOP_REV_SECONDS),
       // new ShooterWaitForVelocity(Constants.Shooter.RPM_OPEN_LOOP),  TODO determine rpm for Shooter.PERCENT_OPEN_LOOP then replace wait command

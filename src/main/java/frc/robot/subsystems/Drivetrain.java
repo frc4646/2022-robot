@@ -93,12 +93,14 @@ public class Drivetrain extends SmartSubsystem {
     // dashHeading.setDouble(cache.heading.getDegrees());
     // dashPitch.setDouble(cache.pitch.getDegrees());
 
-    SmartDashboard.putNumber("Drive Distance L", cache.distanceL);
-    SmartDashboard.putNumber("Drive Distance R", cache.distanceR);
-    SmartDashboard.putNumber("Drive RPM L", cache.rpmL);
-    SmartDashboard.putNumber("Drive RPM R", cache.rpmR);
     SmartDashboard.putNumber("Drive Heading", cache.heading.getDegrees());
     SmartDashboard.putNumber("Drive Pitch", cache.pitch.getDegrees());
+    if (Constants.Drivetrain.TUNING) {
+      SmartDashboard.putNumber("Drive Distance L", cache.distanceL);
+      SmartDashboard.putNumber("Drive Distance R", cache.distanceR);
+      SmartDashboard.putNumber("Drive RPM L", cache.rpmL);
+      SmartDashboard.putNumber("Drive RPM R", cache.rpmR);
+    }
   }
 
   public void resetEncoders() {
@@ -108,14 +110,15 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   public void setBrakeMode(boolean enable) {
-    if (isBrakeMode != enable) {
-      IdleMode mode = enable ? IdleMode.kBrake : IdleMode.kCoast;
-      leftMaster.setIdleMode(mode);
-      leftSlave.setIdleMode(mode);
-      rightMaster.setIdleMode(mode);
-      rightSlave.setIdleMode(mode);
-      isBrakeMode = enable;
+    if (isBrakeMode == enable) {
+      return;  // Already in this mode
     }
+    IdleMode mode = enable ? IdleMode.kBrake : IdleMode.kCoast;
+    leftMaster.setIdleMode(mode);
+    leftSlave.setIdleMode(mode);
+    rightMaster.setIdleMode(mode);
+    rightSlave.setIdleMode(mode);
+    isBrakeMode = enable;
   }
 
   public void setOpenLoop(double left, double right) {
@@ -133,6 +136,10 @@ public class Drivetrain extends SmartSubsystem {
   public void setHeading(Rotation2d heading) {
     // gyroOffset = heading.rotateBy(Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(Rotation2d.fromDegrees(180.0)));
     cache.heading = heading;
+  }
+
+  public double getDistance() {
+    return (cache.distanceL + cache.distanceR) / 2.0;
   }
 
   public double getRPM(){
@@ -159,6 +166,6 @@ public class Drivetrain extends SmartSubsystem {
     Test.checkFirmware(new Test.FirmwareSparkMax(this, rightMaster));
     Test.checkFirmware(new Test.FirmwareSparkMax(this, leftSlave));
     Test.checkFirmware(new Test.FirmwareSparkMax(this, rightSlave));
-    System.out.println(String.format("Gyro pitch: %s", Test.getResultString(isRobotFlat)));
+    Test.add("Gyro Pitch", isRobotFlat);
   }
 }

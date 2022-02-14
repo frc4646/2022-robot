@@ -54,13 +54,20 @@ public class Climber extends SmartSubsystem {
     setBrakeMode(true);
   }
 
+  @Override
+  public void updateDashboard() {    
+    //SmartDashboard.putBoolean("Climber Limit L", masterL.getSensorCollection().isRevLimitSwitchClosed() == 1);
+    //SmartDashboard.putBoolean("Climber Limit R", masterR.getSensorCollection().isRevLimitSwitchClosed() == 1);
+  }
+
   public void setBrakeMode(boolean enable) {
-    if (isBrakeMode != enable) {
-      NeutralMode mode = enable ? NeutralMode.Brake : NeutralMode.Coast;
-      // masterL.setNeutralMode(mode);
-      // masterR.setNeutralMode(mode);
-      isBrakeMode = enable;
+    if (isBrakeMode == enable) {
+      return;  // Already in this mode
     }
+    NeutralMode mode = enable ? NeutralMode.Brake : NeutralMode.Coast;
+    // masterL.setNeutralMode(mode);
+    // masterR.setNeutralMode(mode);
+    isBrakeMode = enable;
   }
 
   public void setOpenLoop(double percent) {

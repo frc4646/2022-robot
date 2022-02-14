@@ -13,7 +13,7 @@ public class Agitator extends SmartSubsystem {
   public Agitator() {
     motor = new VictorSPX(Constants.CAN.AGITATOR);
     motor.setNeutralMode(NeutralMode.Brake);
-    motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT_LONG);
+    motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
     motor.enableVoltageCompensation(true);
     motor.configOpenloopRamp(Constants.Agitator.OPEN_LOOP_RAMP);
   }
