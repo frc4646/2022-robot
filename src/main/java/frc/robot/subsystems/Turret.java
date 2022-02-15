@@ -24,10 +24,10 @@ public class Turret extends ServoMotorSubsystem {
   @Override
   public void updateDashboard() {
     super.updateDashboard();
-    SmartDashboard.putBoolean("Turret Limit F", mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1);
-    SmartDashboard.putBoolean("Turret Limit R", mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1);
+    SmartDashboard.putBoolean("Turret: Limit F", mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1);
+    SmartDashboard.putBoolean("Turret: Limit R", mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1);
     if (Constants.Turret.TUNING) {
-      SmartDashboard.putNumber("Turret Error", mPeriodicIO.error_ticks);
+      SmartDashboard.putNumber("Turret: Error", mPeriodicIO.error_ticks);
     }
   }
 

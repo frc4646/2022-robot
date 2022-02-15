@@ -37,13 +37,13 @@ public final class Constants {
   }
 
   public static final class Diagnostic {
-    public static final int LED_COUNT = 300;
+    public static final int LED_COUNT = 58;
     public static final CANdleConfiguration LED_CONFIG = new CANdleConfiguration();
     static {
       LED_CONFIG.statusLedOffWhenActive = true;
       LED_CONFIG.disableWhenLOS = false;
       LED_CONFIG.stripType = LEDStripType.GRB;
-      LED_CONFIG.brightnessScalar = 0.1;
+      LED_CONFIG.brightnessScalar = 1.0;
       LED_CONFIG.vBatOutputMode = VBatOutputMode.Modulated;
     }
 

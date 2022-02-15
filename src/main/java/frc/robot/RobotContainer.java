@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.OnDisabledDelayed;
+import frc.robot.commands.SignalDriveTeam;
 import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
@@ -51,21 +52,21 @@ public class RobotContainer {
   public RobotContainer() {
     AGITATOR = new Agitator();
     // CLIMBER = new Climber();
-    // DIAGNOSTICS = new Diagnostics();
+    DIAGNOSTICS = new Diagnostics();
     DRIVETRAIN = new Drivetrain();
     FEEDER = new Feeder();
     HOOD = new Hood();
     INFRASTRUCTURE = new Infrastructure();
     INTAKE = new Intake();
     SHOOTER = new Shooter();
-    TURRET = new Turret();
+    // TURRET = new Turret();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION/*, DIAGNOSTICS */);
+    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, /*TURRET,*/ VISION, DIAGNOSTICS);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
-    // DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
+    DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
 
     autoModeSelector = new AutoModeSelector();
 

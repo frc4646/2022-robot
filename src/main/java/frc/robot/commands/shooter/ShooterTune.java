@@ -16,7 +16,7 @@ public class ShooterTune extends CommandBase {
 
   @Override
   public void initialize() {
-    double setpoint = SmartDashboard.getNumber("Tune Shooter", 0.0);
+    double setpoint = SmartDashboard.getNumber("Tune: Setpoint", 0.0);
     subsystem.setClosedLoop(setpoint);
   }
 

@@ -55,6 +55,7 @@ public class SignalDriveTeam extends CommandBase {
   }
 
   private boolean isTurretFaultPresent() {
-    return !turret.hasBeenZeroed();
+    return false;  // TODO
+    // return !turret.hasBeenZeroed();
   }
 }

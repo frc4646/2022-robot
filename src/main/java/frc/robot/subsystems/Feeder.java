@@ -47,7 +47,7 @@ public class Feeder extends SmartSubsystem {
 
   @Override
   public void updateDashboard() {    
-    SmartDashboard.putBoolean("Feeder Cargo", isCargoPresent());
+    SmartDashboard.putBoolean("Feeder: Cargo", isCargoPresent());
   }
 
   public void setOpenLoop(double percent) {

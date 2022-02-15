@@ -58,9 +58,9 @@ public class OperatorControls {
     bumperR.whenReleased(new FeederOpenLoop(0.0));
 
     // Turret
-    leftStickL.whenActive(new TurretOpenLoop(Constants.Turret.OPEN_LOOP));
-    leftStickR.whenActive(new TurretOpenLoop(-Constants.Turret.OPEN_LOOP));
-    leftStickOff.whenActive(new TurretOpenLoop(0.0));
+    // leftStickL.whenActive(new TurretOpenLoop(Constants.Turret.OPEN_LOOP));
+    // leftStickR.whenActive(new TurretOpenLoop(-Constants.Turret.OPEN_LOOP));
+    // leftStickOff.whenActive(new TurretOpenLoop(0.0));
     // TODO dpad turret snap to robot angle
     // TODO move to zero
   }

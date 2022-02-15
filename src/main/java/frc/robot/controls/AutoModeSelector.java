@@ -32,13 +32,13 @@ public class AutoModeSelector {
     startingPositionSelector.setDefaultOption("Left", StartingPosition.LEFT);
     startingPositionSelector.addOption("Right", StartingPosition.RIGHT);
     startingPositionSelector.addOption("Center", StartingPosition.CENTER);
-    SmartDashboard.putData("Starting Position", startingPositionSelector);
+    SmartDashboard.putData("Auto: Position", startingPositionSelector);
 
     modeSelector = new SendableChooser<>();
     modeSelector.setDefaultOption("Do Nothing", DesiredMode.DO_NOTHING);
     modeSelector.addOption("2 Cargo Mode", DesiredMode.TWO_CARGO_MODE);
     modeSelector.addOption("Test Mode", DesiredMode.TEST_AUTO);
-    SmartDashboard.putData("Auto Mode", modeSelector);
+    SmartDashboard.putData("Auto: Mode", modeSelector);
   }
 
   public void update() {

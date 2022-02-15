@@ -93,13 +93,13 @@ public class Drivetrain extends SmartSubsystem {
     // dashHeading.setDouble(cache.heading.getDegrees());
     // dashPitch.setDouble(cache.pitch.getDegrees());
 
-    SmartDashboard.putNumber("Drive Heading", cache.heading.getDegrees());
-    SmartDashboard.putNumber("Drive Pitch", cache.pitch.getDegrees());
+    SmartDashboard.putNumber("Drive: Heading", cache.heading.getDegrees());
+    SmartDashboard.putNumber("Drive: Pitch", cache.pitch.getDegrees());
     if (Constants.Drivetrain.TUNING) {
-      SmartDashboard.putNumber("Drive Distance L", cache.distanceL);
-      SmartDashboard.putNumber("Drive Distance R", cache.distanceR);
-      SmartDashboard.putNumber("Drive RPM L", cache.rpmL);
-      SmartDashboard.putNumber("Drive RPM R", cache.rpmR);
+      SmartDashboard.putNumber("Drive: Distance L", cache.distanceL);
+      SmartDashboard.putNumber("Drive: Distance R", cache.distanceR);
+      SmartDashboard.putNumber("Drive: RPM L", cache.rpmL);
+      SmartDashboard.putNumber("Drive: RPM R", cache.rpmR);
     }
   }
 

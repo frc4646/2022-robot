@@ -33,6 +33,8 @@ import frc.robot.util.Test;
 public class Diagnostics extends SmartSubsystem {
   public static Animation toColor(int red, int green, int blue) { return toColor(red, green, blue, .25); }  // TODO tune
   public static Animation toColor(int red, int green, int blue, double percentFade) { return new SingleFadeAnimation(red, green, blue, 0, percentFade, Constants.Diagnostic.LED_COUNT); }
+  public static double BRIGHT = 1.0;
+  public static double FAST = 1.0;
 
   public static final Animation 
     OFF = toColor(0, 0, 0),
@@ -42,7 +44,7 @@ public class Diagnostics extends SmartSubsystem {
     RED_SOLID = toColor(255, 0, 0);
 
   private final CANdle candle;
-  private final OperatorControls operator;
+  // private final OperatorControls operator;
   private Animation modeDefault = OFF, robotState = OFF;
   private boolean isCriticalIssuePresent = false;
   
@@ -50,18 +52,18 @@ public class Diagnostics extends SmartSubsystem {
     candle = new CANdle(Constants.CAN.CANDLE);
     candle.configAllSettings(Constants.Diagnostic.LED_CONFIG, Constants.CAN_TIMEOUT);
     // TODO configure status frames    
-    operator = RobotContainer.CONTROLS.operator;
+    // operator = RobotContainer.CONTROLS.operator;
     DriverStation.silenceJoystickConnectionWarning(true);
   }
 
   @Override
   public void updateDashboard() {
     // TODO reduce calls to CAN HAL?
-    candle.animate(robotState);
+    // candle.animate(robotState);
     //candle.modulateVBatOutput(joystick.getRightY());
     double rumble = (DriverStation.isDisabled() && isCriticalIssuePresent) ? Constants.Diagnostic.RUMBLE_PERCENT : 0.0;
-    operator.setRumble(true, rumble);  // tune which side is better
-    operator.setRumble(false, rumble);
+    // operator.setRumble(true, rumble);  // tune which side is better
+    // operator.setRumble(false, rumble);
   }
 
   @Override
@@ -101,21 +103,22 @@ public class Diagnostics extends SmartSubsystem {
     CANdleFaults faults = new CANdleFaults();
     candle.getFaults(faults);
 
-    Test.add("Candle Fault", !faults.hasAnyFault());
+    Test.add("Candle: Fault", !faults.hasAnyFault());
 
-    Animation COLOR_FLOW = new ColorFlowAnimation(128, 20, 70, 0, 0.7, Constants.Diagnostic.LED_COUNT, Direction.Forward);
-    Animation FIRE = new FireAnimation(0.5, 0.7, Constants.Diagnostic.LED_COUNT, 0.7, 0.5);
-    Animation LARSON = new LarsonAnimation(0, 255, 46, 0, 1, Constants.Diagnostic.LED_COUNT, BounceMode.Front, 3);
-    Animation RAINBOW = new RainbowAnimation(1, 0.1, Constants.Diagnostic.LED_COUNT);
-    Animation RGB_FADE = new RgbFadeAnimation(0.7, 0.4, Constants.Diagnostic.LED_COUNT);
-    Animation SINGLE_FADE = new SingleFadeAnimation(50, 2, 200, 0, 0.5, Constants.Diagnostic.LED_COUNT);
-    Animation STROBE = new StrobeAnimation(240, 10, 180, 0, 98.0 / 256.0, Constants.Diagnostic.LED_COUNT);
-    Animation TWINKLE = new TwinkleAnimation(30, 70, 60, 0, 0.4, Constants.Diagnostic.LED_COUNT, TwinklePercent.Percent6);
-    Animation TWINKLE_OFF = new TwinkleOffAnimation(70, 90, 175, 0, 0.8, Constants.Diagnostic.LED_COUNT, TwinkleOffPercent.Percent100);
+    Animation COLOR_FLOW = new ColorFlowAnimation(128, 20, 70, 0, FAST, Constants.Diagnostic.LED_COUNT, Direction.Forward);
+    Animation FIRE = new FireAnimation(BRIGHT, 0.7, Constants.Diagnostic.LED_COUNT, 0.7, 0.5);
+    Animation LARSON = new LarsonAnimation(255, 0, 0, 0, FAST, Constants.Diagnostic.LED_COUNT, BounceMode.Front, 7);
+    Animation RAINBOW = new RainbowAnimation(BRIGHT, 0.1, Constants.Diagnostic.LED_COUNT);
+    Animation RGB_FADE = new RgbFadeAnimation(BRIGHT, FAST, Constants.Diagnostic.LED_COUNT);
+    Animation SINGLE_FADE = new SingleFadeAnimation(50, 2, 200, 0, FAST, Constants.Diagnostic.LED_COUNT);
+    Animation STROBE = new StrobeAnimation(255, 0, 0, 0, 98.0 / 256.0, Constants.Diagnostic.LED_COUNT);
+    Animation TWINKLE = new TwinkleAnimation(255, 0, 0, 0, FAST, Constants.Diagnostic.LED_COUNT, TwinklePercent.Percent6);
+    Animation TWINKLE_OFF = new TwinkleOffAnimation(255, 0, 0, 0, FAST, Constants.Diagnostic.LED_COUNT, TwinkleOffPercent.Percent100);
     List<Animation> ALL_ANIMATIONS = Arrays.asList(COLOR_FLOW, FIRE, LARSON, RAINBOW, RGB_FADE, SINGLE_FADE, STROBE, TWINKLE, TWINKLE_OFF);
   
     for(Animation animation : ALL_ANIMATIONS) {
-      SmartDashboard.putString("Candle", animation.getClass().getSimpleName());
+      Test.add("Candle:  " + animation.getClass().getSimpleName(), true);
+      candle.animate(animation);
       Timer.delay(5.0);
     }
   }

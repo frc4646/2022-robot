@@ -30,8 +30,8 @@ public class Test {
   
   /** Summarize test report */
   public static boolean results() {
-    System.out.println("Pass   " + numPass + " Tests");
-    System.out.println("Fail   " + numFail + " Tests");
+    System.out.println("Pass: " + numPass + " Tests");
+    System.out.println("Fail: " + numFail + " Tests");
     banner();
     return numFail == 0;
   }

@@ -17,16 +17,16 @@ public class DashboardControls {
 
     addTuningCommands();
 
-    addLayout("Commands", RobotContainer.SHOOTER.getName(), RobotContainer.SHOOTER, new ShooterTune(), new ShooterOpenLoop(.5));
-    addLayout("Commands", RobotContainer.INTAKE.getName(), RobotContainer.INTAKE, new IntakeExtend(true));
-    addLayout("Commands", RobotContainer.FEEDER.getName(), RobotContainer.FEEDER, new FeederOpenLoop(.5));
-    addLayout("Commands", "Sequence", new ShootOpenLoop(), new DeployIntake(), new LoadCargo(), new StowIntake());
+    // addLayout("Commands", RobotContainer.SHOOTER.getName(), RobotContainer.SHOOTER, new ShooterTune(), new ShooterOpenLoop(.5));
+    // addLayout("Commands", RobotContainer.INTAKE.getName(), RobotContainer.INTAKE, new IntakeExtend(true));
+    // addLayout("Commands", RobotContainer.FEEDER.getName(), RobotContainer.FEEDER, new FeederOpenLoop(.5));
+    // addLayout("Commands", "Sequence", new ShootOpenLoop(), new DeployIntake(), new LoadCargo(), new StowIntake());
   }
 
   public void addTuningCommands() {
-    SmartDashboard.putNumber("Tune Shooter", 0);
-    SmartDashboard.putData("tuning/setSetpoints", new ShooterTune());
-    SmartDashboard.putData("tuning/shooterStop", new ShooterOpenLoop(0.0));
+    SmartDashboard.putNumber("Tune: Setpoint", 0);
+    SmartDashboard.putData("Tune: Shooter Run", new ShooterTune());
+    SmartDashboard.putData("Tune: Shooter Stop", new ShooterOpenLoop(0.0));
   }
 
   /**
