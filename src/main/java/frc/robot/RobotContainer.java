@@ -94,9 +94,9 @@ public class RobotContainer {
 
   public void runTests() {
     VISION.setLED(LEDMode.BLINK);
-    Timer.delay(3.0);
     Test.reset();
-    allSubsystems.forEach(SmartSubsystem::runTests);
+    Timer.delay(3.0);
+    allSubsystems.forEach(SmartSubsystem::runTests);  // TODO try as lambda command so its cancellable
     Test.results();
   }
 

@@ -61,9 +61,9 @@ public class Infrastructure extends SmartSubsystem {
     boolean isNotShorted = !pcm.getCompressorShortedStickyFault();
     boolean isBatteryFull = RobotController.getBatteryVoltage() > 13.0;
     
-    Test.add("Compressor Connected", isConnected);
-    Test.add("Compressor Current", isCurrentLowEnough);
-    Test.add("Compressor Shorted", isNotShorted);
-    Test.add("Battery Voltage", isBatteryFull);
+    Test.add(this, "Compressor - Connected", isConnected);
+    Test.add(this, "Compressor - Current", isCurrentLowEnough);
+    Test.add(this, "Compressor - Shorted", isNotShorted);
+    Test.add(this, "Battery - Voltage", isBatteryFull);
   }
 }

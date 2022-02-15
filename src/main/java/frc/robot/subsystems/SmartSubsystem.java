@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SmartSubsystem extends SubsystemBase {
@@ -29,4 +30,7 @@ public class SmartSubsystem extends SubsystemBase {
    * Override to check subsystem when enabling in test mode.
    */
   public void runTests() {}
+
+  @Override
+  public void initSendable(SendableBuilder builder) { /* Do Nothing */ }
 }

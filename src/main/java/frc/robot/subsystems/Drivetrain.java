@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Arrays;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -13,8 +15,10 @@ import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.util.Test;
+import frc.robot.util.TestMotors.MotorConfig;
+import frc.robot.util.TestMotors.MotorTestSparkMax;
+import frc.robot.util.TestMotors.TestConfig;
 import frc.team254.drivers.SparkMaxFactory;
-import frc.team254.util.Util;
 
 public class Drivetrain extends SmartSubsystem {
   public static class DataCache {
@@ -24,7 +28,7 @@ public class Drivetrain extends SmartSubsystem {
     public Rotation2d pitch = new Rotation2d();  // Positive is nose up
   }
 
-  private final CANSparkMax leftMaster, rightMaster, leftSlave, rightSlave;
+  private final CANSparkMax masterL, masterR, slaveL, slaveR;
   private final AHRS gyro;
   private final DifferentialDriveOdometry odometry;
   private final SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(Constants.Drivetrain.FEED_FORWARD_GAIN_STATIC, Constants.Drivetrain.FEED_FORWARD_GAIN_VELOCITY, Constants.Drivetrain.FEED_FORWARD_GAIN_ACCEL);
@@ -35,16 +39,16 @@ public class Drivetrain extends SmartSubsystem {
   private Rotation2d gyroOffset = Rotation2d.fromDegrees(0.0);
 
   public Drivetrain() {
-    rightMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL);
-    rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, rightMaster, false);
-    leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FR, true);
-    leftSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BR, leftMaster, false);
+    masterR = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL);
+    slaveR = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, masterR, false);
+    masterL = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FR, true);
+    slaveL = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BR, masterL, false);
     gyro = new AHRS();
 
-    configureMotor(leftMaster, true, true);
-    configureMotor(leftSlave, true, false);
-    configureMotor(rightMaster, false, true);
-    configureMotor(rightSlave, false, false);
+    configureMotor(masterL, true, true);
+    configureMotor(slaveL, true, false);
+    configureMotor(masterR, false, true);
+    configureMotor(slaveR, false, false);
 
     isBrakeMode = true;
     setBrakeMode(false);
@@ -76,10 +80,10 @@ public class Drivetrain extends SmartSubsystem {
 
   @Override
   public void cacheSensors() {
-    cache.distanceL = leftMaster.getEncoder().getPosition();
-    cache.distanceR = rightMaster.getEncoder().getPosition();
-    cache.rpmL = leftMaster.getEncoder().getVelocity();
-    cache.rpmR = rightMaster.getEncoder().getVelocity();
+    cache.distanceL = masterL.getEncoder().getPosition();
+    cache.distanceR = masterR.getEncoder().getPosition();
+    cache.rpmL = masterL.getEncoder().getVelocity();
+    cache.rpmR = masterR.getEncoder().getVelocity();
     cache.heading = Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(gyroOffset);
     cache.pitch = Rotation2d.fromDegrees(gyro.getPitch());
   }
@@ -104,8 +108,8 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   public void resetEncoders() {
-    leftMaster.getEncoder().setPosition(0.0);
-    rightMaster.getEncoder().setPosition(0.0);
+    masterL.getEncoder().setPosition(0.0);
+    masterR.getEncoder().setPosition(0.0);
     cache = new DataCache();
   }
 
@@ -114,21 +118,21 @@ public class Drivetrain extends SmartSubsystem {
       return;  // Already in this mode
     }
     IdleMode mode = enable ? IdleMode.kBrake : IdleMode.kCoast;
-    leftMaster.setIdleMode(mode);
-    leftSlave.setIdleMode(mode);
-    rightMaster.setIdleMode(mode);
-    rightSlave.setIdleMode(mode);
+    masterL.setIdleMode(mode);
+    slaveL.setIdleMode(mode);
+    masterR.setIdleMode(mode);
+    slaveR.setIdleMode(mode);
     isBrakeMode = enable;
   }
 
   public void setOpenLoop(double left, double right) {
-    leftMaster.set(left);
-    rightMaster.set(right);
+    masterL.set(left);
+    masterR.set(right);
   }
 
   public void setClosedLoopVelocity(DifferentialDriveWheelSpeeds speeds) {
-    final double leftFeedforward = feedForward.calculate(speeds.leftMetersPerSecond);
-    final double rightFeedforward = feedForward.calculate(speeds.rightMetersPerSecond);
+    double leftFeedforward = feedForward.calculate(speeds.leftMetersPerSecond);
+    double rightFeedforward = feedForward.calculate(speeds.rightMetersPerSecond);
     // TODO leftMaster.getPIDController().setReference(value, ctrl, pidSlot, arbFeedforward)
     // TODO rightMaster.getPIDController().setReference(value, ctrl, pidSlot, arbFeedforward)
   }
@@ -160,12 +164,18 @@ public class Drivetrain extends SmartSubsystem {
 
   @Override
   public void runTests() {
-    boolean isRobotFlat = Util.epsilonEquals(cache.pitch.getDegrees(), 0.0, 1.0);
+    Test.checkFirmware(this, masterL);
+    Test.checkFirmware(this, masterR);
+    Test.checkFirmware(this, slaveL);
+    Test.checkFirmware(this, slaveR);
+    Test.add(this, "Gyro - Pitch (Robot Is Flat)", Math.abs(cache.pitch.getDegrees()) < 5.0);
 
-    Test.checkFirmware(new Test.FirmwareSparkMax(this, leftMaster));
-    Test.checkFirmware(new Test.FirmwareSparkMax(this, rightMaster));
-    Test.checkFirmware(new Test.FirmwareSparkMax(this, leftSlave));
-    Test.checkFirmware(new Test.FirmwareSparkMax(this, rightSlave));
-    Test.add("Gyro Pitch", isRobotFlat);
+    setBrakeMode(false);
+    MotorTestSparkMax.checkMotors(this,
+      Arrays.asList(new MotorConfig<>("MasterL", masterL), new MotorConfig<>("SlaveL", slaveL)),
+      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, masterL.getEncoder()::getVelocity));
+    MotorTestSparkMax.checkMotors(this,
+      Arrays.asList(new MotorConfig<>("MasterR", masterR), new MotorConfig<>("SlaveR", slaveR)),
+      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, masterR.getEncoder()::getVelocity));
   }
 }

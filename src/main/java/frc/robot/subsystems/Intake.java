@@ -49,7 +49,7 @@ public class Intake extends SmartSubsystem {
 
   @Override
   public void runTests() {
-    Test.checkFirmware(new Test.FirmwareTalon(this, motor));
+    Test.checkFirmware(this, motor);
     Test.checkSolenoid(this, solenoidL);
     Test.checkSolenoid(this, solenoidR);
   }

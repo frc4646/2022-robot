@@ -5,8 +5,9 @@ import com.ctre.phoenix.CANifierStatusFrame;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.Test;
 
-public class Canifier extends SubsystemBase {
+public class Canifier extends SmartSubsystem {
   public static class DataCache {
     double red = 0.0;
     double green = 0.0;
@@ -31,5 +32,10 @@ public class Canifier extends SubsystemBase {
     canifier.setLEDOutput(cache.red, CANifier.LEDChannel.LEDChannelA);
     canifier.setLEDOutput(cache.green, CANifier.LEDChannel.LEDChannelB);
     canifier.setLEDOutput(cache.blue, CANifier.LEDChannel.LEDChannelC);
+  }
+
+  @Override
+  public void runTests() {
+    Test.checkFirmware(this, canifier);
   }
 }

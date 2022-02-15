@@ -51,7 +51,7 @@ public class AutoModeSelector {
     }
 
     if (modeDesiredCached != desiredMode || startingPosition != startingPositionCached) {
-      System.out.println("Auto selection changed, updating creator: desiredMode->" + desiredMode.name() + ", starting position->" + startingPosition.name());
+      System.out.println("Auto: Mode->" + desiredMode.name() + ", Position->" + startingPosition.name());
       mode = getAutoModeForParams(desiredMode, startingPosition);
     }
     modeDesiredCached = desiredMode;

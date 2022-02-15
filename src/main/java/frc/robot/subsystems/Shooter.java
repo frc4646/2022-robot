@@ -36,8 +36,8 @@ public class Shooter extends SmartSubsystem {
     public double errorL, errorR;
   }
 
-  private final CANSparkMax leftMaster;
-  // private final CANSparkMax rightSlave;
+  // private final CANSparkMax leftMaster;
+  private final CANSparkMax rightMaster;
   // private final TalonFX masterL, masterR;
   private final DataCache cache = new DataCache();
   // private NetworkTableEntry guiRPM_L, guiRPM_R, graphRPM, graphDemand, graphAmps_L, graphAmps_R;
@@ -47,18 +47,23 @@ public class Shooter extends SmartSubsystem {
   private int stableCounts = 0;
 
   public Shooter() {
-    leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.SHOOTER_L);
-    leftMaster.setInverted(true);
-    leftMaster.setIdleMode(IdleMode.kCoast);
-    leftMaster.enableVoltageCompensation(12.0);
-    leftMaster.getPIDController().setP(Constants.Shooter.P);
-    leftMaster.getPIDController().setI(Constants.Shooter.I);
-    leftMaster.getPIDController().setD(Constants.Shooter.D);
-    leftMaster.getPIDController().setFF(Constants.Shooter.F);
+    // leftMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.SHOOTER_L);
+    // leftMaster.setInverted(true);
+    // leftMaster.setIdleMode(IdleMode.kCoast);
+    // leftMaster.enableVoltageCompensation(12.0);
+    // leftMaster.getPIDController().setP(Constants.Shooter.P);
+    // leftMaster.getPIDController().setI(Constants.Shooter.I);
+    // leftMaster.getPIDController().setD(Constants.Shooter.D);
+    // leftMaster.getPIDController().setFF(Constants.Shooter.F);
 
-    // rightSlave = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.SHOOTER_R, leftMaster, true);
-    // rightSlave.setIdleMode(IdleMode.kCoast);
-    // rightSlave.enableVoltageCompensation(12.0);
+    rightMaster = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.SHOOTER_R);
+    rightMaster.setInverted(false);
+    rightMaster.setIdleMode(IdleMode.kCoast);
+    rightMaster.enableVoltageCompensation(12.0);
+    rightMaster.getPIDController().setP(Constants.Shooter.P);
+    rightMaster.getPIDController().setI(Constants.Shooter.I);
+    rightMaster.getPIDController().setD(Constants.Shooter.D);
+    rightMaster.getPIDController().setFF(Constants.Shooter.F);
 
     // masterL = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_L);
     // masterR = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_R);
@@ -102,10 +107,10 @@ public class Shooter extends SmartSubsystem {
 
   @Override
   public void cacheSensors() {
-    cache.rpmL = leftMaster.getEncoder().getVelocity();
-    cache.ampsStatorL = leftMaster.getOutputCurrent();
-    // cache.rpmR = rightSlave.getEncoder().getVelocity();
-    // cache.ampsStatorR = rightSlave.getOutputCurrent();
+    // cache.rpmL = leftMaster.getEncoder().getVelocity();
+    // cache.ampsStatorL = leftMaster.getOutputCurrent();
+    cache.rpmR = rightMaster.getEncoder().getVelocity();
+    cache.ampsStatorR = rightMaster.getOutputCurrent();
 
     // cache.voltsL = masterL.getMotorOutputVoltage();
     // cache.voltsR = masterR.getMotorOutputVoltage();
@@ -149,7 +154,8 @@ public class Shooter extends SmartSubsystem {
   }
 
   public void setOpenLoop(double percent) {
-    leftMaster.set(percent);
+    // leftMaster.set(percent);
+    rightMaster.set(percent);
     // masterL.set(TalonFXControlMode.PercentOutput, percent);
     // masterR.set(TalonFXControlMode.PercentOutput, percent);
     demand = percent;
@@ -157,28 +163,17 @@ public class Shooter extends SmartSubsystem {
 
   public void setClosedLoop(double rpm) {
     targetVelocityRPM = rpm;
-    leftMaster.getPIDController().setReference(rpm, ControlType.kVelocity);
-
+    // leftMaster.getPIDController().setReference(rpm, ControlType.kVelocity);
+    rightMaster.getPIDController().setReference(rpm, ControlType.kVelocity);
     // masterL.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
     // masterR.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
     demand = rpm;
   }
 
-  public double getAmpsSupply() {
-    return (cache.ampsSupplyL + cache.ampsSupplyR) / 2.0;
-  }
-
-  public double getAmpsStator() {
-    return (cache.ampsStatorL + cache.ampsStatorR) / 2.0;
-  }
-
-  public double getRPM() {
-    return (cache.rpmL + cache.rpmR) / 2.0;
-  }
-
-  public double getVoltage() {
-    return (cache.voltsL + cache.voltsR) / 2.0;
-  }
+  public double getAmpsSupply() { return (cache.ampsSupplyL + cache.ampsSupplyR) / 2.0; }
+  public double getAmpsStator() { return (cache.ampsStatorL + cache.ampsStatorR) / 2.0; }
+  public double getRPM() { return (cache.rpmL + cache.rpmR) / 2.0; }
+  public double getVoltage() { return (cache.voltsL + cache.voltsR) / 2.0; }
 
   public boolean isOnTarget() {
     return Math.abs(targetVelocityRPM - getRPM()) < Constants.Shooter.RPM_ERROR_ALLOWED;
@@ -204,43 +199,7 @@ public class Shooter extends SmartSubsystem {
 
   @Override
   public void runTests() {
-    // Test.checkFirmware(new Test.FirmwareTalon(this, masterL));
-    // Test.checkFirmware(new Test.FirmwareTalon(this, masterR));
-
-    List<Integer> ids = new ArrayList<Integer>();
-    List<DoubleSupplier> encoders = new ArrayList<DoubleSupplier>();
-    // ids.add(leftMaster.getDeviceId());
-    // ids.add(rightSlave.getDeviceId());
-    // encoders.add(() -> leftMaster.getEncoder().getPosition());
-    // encoders.add(() -> rightSlave.getEncoder().getPosition());
-    testEncoder(ids, encoders);
-  }
-
-  // TODO refactor out to common class
-  private void testEncoder(List<Integer> ids, List<DoubleSupplier> encoders) {
-    List<Double> positionsInitial = new ArrayList<Double>();
-    List<Double> positionsFinal = new ArrayList<Double>();
-    boolean result = true;
-    for (DoubleSupplier encoder : encoders) {
-      positionsInitial.add(encoder.getAsDouble());
-    }
-    setOpenLoop(0.05);
-    Timer.delay(0.1);
-    setOpenLoop(0.0);
-    for (DoubleSupplier encoder : encoders) {
-      positionsFinal.add(encoder.getAsDouble());
-    }
-    Iterator<Integer> iterIds = ids.iterator();
-    Iterator<Double> iterPositionsInitial = positionsInitial.iterator();
-    Iterator<Double> iterPositionsFinal = positionsFinal.iterator();
-    while (iterIds.hasNext() && iterPositionsInitial.hasNext() && iterPositionsFinal.hasNext()) {
-      int id = iterIds.next();
-      double delta = iterPositionsFinal.next() - iterPositionsInitial.next();
-      if (delta < 0) {
-        System.out.println(String.format("ERROR: Motor %d out of phase, moved %d ticks", id, delta));
-        result = false;
-      }
-    }
-    Test.add("Encoder", result);
+    // Test.checkFirmware(this, new Test.FirmwareTalon(masterL));
+    // Test.checkFirmware(this, new Test.FirmwareTalon(masterR));
   }
 }

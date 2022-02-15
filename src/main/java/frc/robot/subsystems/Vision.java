@@ -92,6 +92,6 @@ public class Vision extends SmartSubsystem {
 
   @Override
   public void runTests() {
-    Test.add("Vision Target", cache.seesTarget);
+    Test.add(this, "Target", cache.seesTarget);
   }
 }

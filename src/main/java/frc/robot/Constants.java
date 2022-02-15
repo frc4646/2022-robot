@@ -44,10 +44,10 @@ public final class Constants {
       LED_CONFIG.disableWhenLOS = false;
       LED_CONFIG.stripType = LEDStripType.GRB;
       LED_CONFIG.brightnessScalar = 1.0;
-      LED_CONFIG.vBatOutputMode = VBatOutputMode.Modulated;
+      LED_CONFIG.vBatOutputMode = VBatOutputMode.Off;
     }
 
-    public static final double RUMBLE_PERCENT = 0.1;  // TODO tune
+    public static final double RUMBLE_PERCENT = 0.2;  // TODO tune
     public static final DiagnosticState
       FAULT_CARGO = new DiagnosticState(Diagnostics.toColor(255, 0, 255, 0.1)),
       FAULT_TURRET = new DiagnosticState(Diagnostics.toColor(255, 255, 0, 1.0), true),

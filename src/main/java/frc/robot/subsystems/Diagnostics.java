@@ -6,6 +6,7 @@ import java.util.List;
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdleFaults;
+import com.ctre.phoenix.led.CANdleStatusFrame;
 import com.ctre.phoenix.led.ColorFlowAnimation;
 import com.ctre.phoenix.led.FireAnimation;
 import com.ctre.phoenix.led.LarsonAnimation;
@@ -23,53 +24,47 @@ import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.controls.OperatorControls;
 import frc.robot.util.DiagnosticState;
 import frc.robot.util.Test;
 
 public class Diagnostics extends SmartSubsystem {
-  public static Animation toColor(int red, int green, int blue) { return toColor(red, green, blue, .25); }  // TODO tune
   public static Animation toColor(int red, int green, int blue, double percentFade) { return new SingleFadeAnimation(red, green, blue, 0, percentFade, Constants.Diagnostic.LED_COUNT); }
-  public static double BRIGHT = 1.0;
-  public static double FAST = 1.0;
+  public static double BRIGHT = 1.0, DIM = 0.2;
+  public static double FAST = 1.0, SLOW = 0.2, STATIC = 0.0;
 
   public static final Animation 
-    OFF = toColor(0, 0, 0),
-    BLUE_FADE = toColor(0, 0, 255, .5),  // TODO tune
-    BLUE_SOLID = toColor(0, 0, 255),
-    RED_FADE = toColor(255, 0, 0, .5),  // TODO tune
-    RED_SOLID = toColor(255, 0, 0);
+    OFF = toColor(0, 0, 0, 0.0),
+    BLUE_FADE = toColor(0, 0, 255, 1.0),  // TODO tune
+    BLUE_SOLID = toColor(0, 0, 255, 0.5),
+    RED_FADE = toColor(255, 0, 0, 1.0),  // TODO tune
+    RED_SOLID = toColor(255, 0, 0, 0.5);
 
   private final CANdle candle;
-  // private final OperatorControls operator;
   private Animation modeDefault = OFF, robotState = OFF;
   private boolean isCriticalIssuePresent = false;
   
   public Diagnostics() {
     candle = new CANdle(Constants.CAN.CANDLE);
     candle.configAllSettings(Constants.Diagnostic.LED_CONFIG, Constants.CAN_TIMEOUT);
-    // TODO configure status frames    
-    // operator = RobotContainer.CONTROLS.operator;
+    // TODO configure status frames
     DriverStation.silenceJoystickConnectionWarning(true);
   }
 
   @Override
   public void updateDashboard() {
     // TODO reduce calls to CAN HAL?
-    // candle.animate(robotState);
-    //candle.modulateVBatOutput(joystick.getRightY());
+    candle.animate(robotState);
     double rumble = (DriverStation.isDisabled() && isCriticalIssuePresent) ? Constants.Diagnostic.RUMBLE_PERCENT : 0.0;
-    // operator.setRumble(true, rumble);  // tune which side is better
-    // operator.setRumble(false, rumble);
+    RobotContainer.CONTROLS.operator.setRumble(true, rumble);  // tune which side is better
+    RobotContainer.CONTROLS.operator.setRumble(false, rumble);
   }
 
   @Override
   public void onEnable(boolean isAutonomous) {
     if (isAutonomous) {
-      modeDefault = DriverStation.getAlliance() == Alliance.Red ? RED_SOLID : BLUE_SOLID;
+      modeDefault = DriverStation.getAlliance() == Alliance.Red ? RED_FADE : BLUE_FADE;
     } else {
       modeDefault = OFF;  // Keep drive team sensitive to diagnostics
     }
@@ -77,7 +72,7 @@ public class Diagnostics extends SmartSubsystem {
 
   @Override
   public void onDisable() {
-    modeDefault = DriverStation.getAlliance() == Alliance.Red ? RED_FADE : BLUE_FADE;
+    modeDefault = DriverStation.getAlliance() == Alliance.Red ? RED_SOLID : BLUE_SOLID;
   }
 
   // public void set(int red, int green, int blue) {
@@ -94,30 +89,34 @@ public class Diagnostics extends SmartSubsystem {
     isCriticalIssuePresent = false;
   }
 
-  public void setBrightness(double percent) {
-    candle.configBrightnessScalar(percent, 0);
-  }
-
   @Override
   public void runTests() {
     CANdleFaults faults = new CANdleFaults();
     candle.getFaults(faults);
 
-    Test.add("Candle: Fault", !faults.hasAnyFault());
+    Test.add(this, "Candle - Fault", !faults.hasAnyFault());
 
-    Animation COLOR_FLOW = new ColorFlowAnimation(128, 20, 70, 0, FAST, Constants.Diagnostic.LED_COUNT, Direction.Forward);
-    Animation FIRE = new FireAnimation(BRIGHT, 0.7, Constants.Diagnostic.LED_COUNT, 0.7, 0.5);
-    Animation LARSON = new LarsonAnimation(255, 0, 0, 0, FAST, Constants.Diagnostic.LED_COUNT, BounceMode.Front, 7);
-    Animation RAINBOW = new RainbowAnimation(BRIGHT, 0.1, Constants.Diagnostic.LED_COUNT);
+    System.out.println(String.format("Frame 1: %d", candle.getStatusFramePeriod(CANdleStatusFrame.CANdleStatusFrame_Status_1_General)));
+    System.out.println(String.format("Frame 2: %d", candle.getStatusFramePeriod(CANdleStatusFrame.CANdleStatusFrame_Status_2_Startup)));
+    System.out.println(String.format("Frame 3: %d", candle.getStatusFramePeriod(CANdleStatusFrame.CANdleStatusFrame_Status_3_FirmwareApiStatus)));
+    System.out.println(String.format("Frame 4: %d", candle.getStatusFramePeriod(CANdleStatusFrame.CANdleStatusFrame_Status_4_ControlTelem)));
+    System.out.println(String.format("Frame 5: %d", candle.getStatusFramePeriod(CANdleStatusFrame.CANdleStatusFrame_Status_5_PixelPulseTrain)));
+    System.out.println(String.format("Frame 6: %d", candle.getStatusFramePeriod(CANdleStatusFrame.CANdleStatusFrame_Status_6_BottomPixels)));
+    System.out.println(String.format("Frame 7: %d", candle.getStatusFramePeriod(CANdleStatusFrame.CANdleStatusFrame_Status_7_TopPixels)));
+
+    Animation COLOR_FLOW = new ColorFlowAnimation(255, 0, 0, 0, SLOW, Constants.Diagnostic.LED_COUNT, Direction.Forward);
+    Animation FIRE = new FireAnimation(BRIGHT, SLOW, Constants.Diagnostic.LED_COUNT, 0.8, 0.2);
+    Animation LARSON = new LarsonAnimation(255, 0, 0, 0, SLOW, Constants.Diagnostic.LED_COUNT, BounceMode.Front, 4);
+    Animation RAINBOW = new RainbowAnimation(BRIGHT, SLOW, Constants.Diagnostic.LED_COUNT);
     Animation RGB_FADE = new RgbFadeAnimation(BRIGHT, FAST, Constants.Diagnostic.LED_COUNT);
-    Animation SINGLE_FADE = new SingleFadeAnimation(50, 2, 200, 0, FAST, Constants.Diagnostic.LED_COUNT);
-    Animation STROBE = new StrobeAnimation(255, 0, 0, 0, 98.0 / 256.0, Constants.Diagnostic.LED_COUNT);
-    Animation TWINKLE = new TwinkleAnimation(255, 0, 0, 0, FAST, Constants.Diagnostic.LED_COUNT, TwinklePercent.Percent6);
-    Animation TWINKLE_OFF = new TwinkleOffAnimation(255, 0, 0, 0, FAST, Constants.Diagnostic.LED_COUNT, TwinkleOffPercent.Percent100);
+    Animation SINGLE_FADE = new SingleFadeAnimation(255, 0, 0, 0, STATIC, Constants.Diagnostic.LED_COUNT);
+    Animation STROBE = new StrobeAnimation(255, 0, 0, 0, STATIC, Constants.Diagnostic.LED_COUNT);
+    Animation TWINKLE = new TwinkleAnimation(255, 0, 0, 0, STATIC, Constants.Diagnostic.LED_COUNT, TwinklePercent.Percent100);
+    Animation TWINKLE_OFF = new TwinkleOffAnimation(255, 0, 0, 0, STATIC, Constants.Diagnostic.LED_COUNT, TwinkleOffPercent.Percent100);
     List<Animation> ALL_ANIMATIONS = Arrays.asList(COLOR_FLOW, FIRE, LARSON, RAINBOW, RGB_FADE, SINGLE_FADE, STROBE, TWINKLE, TWINKLE_OFF);
   
     for(Animation animation : ALL_ANIMATIONS) {
-      Test.add("Candle:  " + animation.getClass().getSimpleName(), true);
+      Test.add(animation.getClass().getSimpleName(), true);
       candle.animate(animation);
       Timer.delay(5.0);
     }

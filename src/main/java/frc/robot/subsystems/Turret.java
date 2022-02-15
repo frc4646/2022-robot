@@ -48,6 +48,6 @@ public class Turret extends ServoMotorSubsystem {
 
   @Override
   public void runTests() {
-    Test.checkFirmware(new Test.FirmwareTalon(this, mMaster));
+    Test.checkFirmware(this, mMaster);
   }
 }

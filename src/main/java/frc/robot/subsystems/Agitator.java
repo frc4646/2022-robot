@@ -24,6 +24,6 @@ public class Agitator extends SmartSubsystem {
 
   @Override
   public void runTests() {
-    Test.checkFirmware(new Test.FirmwareTalon(this, motor));
+    Test.checkFirmware(this, motor);
   }
 }
