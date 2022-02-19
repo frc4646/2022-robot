@@ -10,6 +10,8 @@ import frc.robot.util.DiagnosticState;
 import frc.team254.util.InterpolatingDouble;
 import frc.team254.util.InterpolatingTreeMap;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+
 public final class Constants {
   public static int CAN_TIMEOUT = 100;
 
@@ -77,10 +79,25 @@ public final class Constants {
       FEED_FORWARD_GAIN_STATIC = 0.0,  // TODO
       FEED_FORWARD_GAIN_VELOCITY = 0.0,  // TODO
       FEED_FORWARD_GAIN_ACCEL = 0.0,  // TODO
-      P = 0.0,
-      I = 0.0,
-      D = 0.0,
-      F = 0.0;  // TODO
+      P_LEFT = 0.0,
+      I_LEFT = 0.0,
+      D_LEFT = 0.0,
+      F_LEFT = 0.0,  // TODO
+
+      P_RIGHT = 0.0,
+      I_RIGHT = 0.0,
+      D_RIGHT = 0.0,
+      F_RIGHT = 0.0;  // TODO
+
+      //Left and right should be tuned via a step response to a velocity change - P = V, D = A, I = dist. Start 
+
+
+    public static final boolean IS_LEFT_ENCODER_INVERTED = false;
+    public static final boolean IS_RIGHT_ENCODER_INVERTED = true;
+
+    public static final double WHEEL_TRACK_WIDTH_METERS = 0.0254 * WHEEL_TRACK_WIDTH_INCHES;
+    public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(WHEEL_TRACK_WIDTH_METERS);
+
   }
 
   public static final class Feeder {
