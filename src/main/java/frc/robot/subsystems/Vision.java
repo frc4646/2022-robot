@@ -20,7 +20,7 @@ public class Vision extends SmartSubsystem {
   }
 
   private final double RPM_MAP_KEY_INVALID = -1.0;
-  private final double HEIGHT_VISION_TAPE_TO_CAMERA = Constants.Field.VISION_TAPE_HEIGHT - Constants.Vision.CAMERA_MOUNTING_HEIGHT;
+  private final double HEIGHT_VISION_TAPE_TO_CAMERA = Constants.Field.VISION_TAPE_INCHES - Constants.Vision.CAMERA_MOUNTING_HEIGHT;
 
   private final NetworkTable table;
   private final DataCache cache = new DataCache();
@@ -75,11 +75,18 @@ public class Vision extends SmartSubsystem {
     return RPM_MAP_KEY_INVALID;
   }
 
-  public double getShooterVelocityRPM() {
+  public double getHoodDegrees() {
     if (isTargetPresent()) {
-      return Constants.Shooter.RPM_MAP.getInterpolated(new InterpolatingDouble(getGroundDistanceToHubInches())).value;
+      return Constants.Vision.ANGLE_MAP.getInterpolated(new InterpolatingDouble(getGroundDistanceToHubInches())).value;
     }
-    return Constants.Shooter.RPM_NO_TARGETS;
+    return Constants.Hood.DEGREES_DEFAULT;
+  }
+
+  public double getShooterRPM() {
+    if (isTargetPresent()) {
+      return Constants.Vision.RPM_MAP.getInterpolated(new InterpolatingDouble(getGroundDistanceToHubInches())).value;
+    }
+    return Constants.Shooter.RPM_DEFAULT;
   }
 
   public double getDegreesX() {

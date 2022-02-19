@@ -1,5 +1,7 @@
 package frc.robot.controls;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -16,14 +18,17 @@ import frc.robot.commands.sequence.LoadCargo;
 import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.StopShoot;
 import frc.robot.commands.sequence.StowIntake;
-import frc.robot.commands.turret.TurretOpenLoop;
 import frc.team254.CardinalDirection;
+import frc.team254.util.DelayedBoolean;
 
 public class OperatorControls {
+  private final double DPAD_DELAY = 0.02;
+
   private final XboxController operator;
   private final Trigger padUp, padDown, padLeft, padRight, leftStickL, leftStickR, leftStickOff;
   private final JoystickButton buttonA, buttonB, buttonX, buttonY, bumperL, bumperR, Fn, start;
-  private CardinalDirection lastCardinal;
+  private DelayedBoolean validDPAD;
+  private CardinalDirection lastCardinal = CardinalDirection.NONE;
   
   public OperatorControls() {
     operator = new XboxController(2);
@@ -32,6 +37,7 @@ public class OperatorControls {
     Fn = makeButton(Button.kBack); start = makeButton(Button.kStart);
     padUp = getUpDPAD(); padDown = getDownDPAD(); padLeft = getLeftDPAD(); padRight = getRightDPAD();
     leftStickL = getLeftStickLeft(); leftStickR = getLeftStickRight(); leftStickOff = getLeftStickOff();
+    validDPAD = new DelayedBoolean(Timer.getFPGATimestamp(), DPAD_DELAY);
 
     // Agitator
     buttonA.whenPressed(new AgitateOpenLoop(1.0));
@@ -70,22 +76,21 @@ public class OperatorControls {
   }
   
   public CardinalDirection getTurretSnap() {
-    return CardinalDirection.NONE;  // TODO
-    // int dPad = operator.getDPad();
-    // CardinalDirection newCardinal = dPad == -1 ? CardinalDirection.NONE : CardinalDirection.findClosest(Rotation2d.fromDegrees(-dPad));
-    // if (newCardinal != CardinalDirection.NONE && CardinalDirection.isDiagonal(newCardinal)) {
-    //   newCardinal = lastCardinal;
-    // }
-    // boolean valid = mDPadValid.update(Timer.getFPGATimestamp(), newCardinal != CardinalDirection.NONE && (lastCardinal == CardinalDirection.NONE || newCardinal == lastCardinal));
-    // if (valid) {
-    //     if (lastCardinal == CardinalDirection.NONE) {
-    //         lastCardinal = newCardinal;
-    //     }
-    //     return lastCardinal;
-    // } else {
-    //     lastCardinal = newCardinal;
-    // }
-    // return CardinalDirection.NONE;
+    int dPad = operator.getPOV();
+    CardinalDirection newCardinal = dPad == -1 ? CardinalDirection.NONE : CardinalDirection.findClosest(Rotation2d.fromDegrees(-dPad));
+    if (newCardinal != CardinalDirection.NONE && CardinalDirection.isDiagonal(newCardinal)) {
+      newCardinal = lastCardinal;
+    }
+    boolean valid = validDPAD.update(Timer.getFPGATimestamp(), newCardinal != CardinalDirection.NONE && (lastCardinal == CardinalDirection.NONE || newCardinal == lastCardinal));
+    if (valid) {
+      if (lastCardinal == CardinalDirection.NONE) {
+        lastCardinal = newCardinal;
+      }
+      return lastCardinal;
+    } else {
+      lastCardinal = newCardinal;
+    }
+    return CardinalDirection.NONE;
   }
 
   public void setRumble(boolean wantLeft, double percent) {

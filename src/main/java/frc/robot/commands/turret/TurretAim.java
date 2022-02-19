@@ -6,28 +6,34 @@ import frc.robot.RobotContainer;
 import frc.robot.controls.OperatorControls;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
+import frc.team254.CardinalDirection;
+import frc.team254.util.Util;
 
 public class TurretAim extends CommandBase {
-  private final Turret subsystem = RobotContainer.TURRET;
+  private final Turret turret = RobotContainer.TURRET;
   private final Vision vision = RobotContainer.VISION;
   private final OperatorControls controls = RobotContainer.CONTROLS.operator;
 
   public TurretAim() {
-    addRequirements(subsystem);
+    addRequirements(turret);
   }
 
   @Override
   public void execute() {
-    double setpoint = subsystem.getPosition();
-    double feedforward = 0.0;
+    double setpoint = turret.getPosition();
+    double feedforward = 0.0;  
     double stick = controls.getTurretStick();
+    CardinalDirection snap = controls.getTurretSnap();
 
     if (vision.isTargetPresent()) {
-      // TODO ask vision what angle to use
+      setpoint -= vision.getDegreesX();
     }
+    // else if (snap != CardinalDirection.NONE) {
+    //   setpoint = snap.getRotation().getDegrees();
+    // }
     else if (stick >= 0.0) {
       setpoint += stick * Constants.Turret.OPEN_LOOP_GAIN;
     }
-    subsystem.setSetpointPositionPID(setpoint, feedforward);
+    turret.setSetpointPositionPID(setpoint, feedforward);
   }
 }

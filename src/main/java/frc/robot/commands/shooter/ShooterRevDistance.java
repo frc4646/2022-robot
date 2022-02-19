@@ -17,7 +17,7 @@ public class ShooterRevDistance extends CommandBase {
 
   @Override
   public void initialize() {
-    double rpm = Constants.Shooter.RPM_MAP.getInterpolated(new InterpolatingDouble(distance)).value;
+    double rpm = Constants.Vision.RPM_MAP.getInterpolated(new InterpolatingDouble(distance)).value;
     subsystem.setClosedLoop(rpm);
   }
 

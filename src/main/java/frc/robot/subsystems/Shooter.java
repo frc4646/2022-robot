@@ -1,11 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -14,12 +8,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.controls.DashboardControls;
 import frc.robot.util.Test;
 import frc.team254.drivers.SparkMaxFactory;
 import frc.team254.drivers.TalonFXFactory;
@@ -142,8 +132,8 @@ public class Shooter extends SmartSubsystem {
     SmartDashboard.putNumber("Shooter: RPM", getRPM());
     SmartDashboard.putNumber("Shooter: Demand", demand);
     if (Constants.Shooter.TUNING) {
-      SmartDashboard.putNumber("Shooter: RPM L", cache.rpmL);
-      SmartDashboard.putNumber("Shooter: RPM R", cache.rpmR);
+      // SmartDashboard.putNumber("Shooter: RPM L", cache.rpmL);
+      // SmartDashboard.putNumber("Shooter: RPM R", cache.rpmR);
       SmartDashboard.putNumber("Shooter: Amps Supply L", cache.ampsSupplyL);
       SmartDashboard.putNumber("Shooter: Amps Supply R", cache.ampsSupplyR);
       SmartDashboard.putNumber("Shooter: Amps Stator L", cache.ampsStatorL);
@@ -175,23 +165,14 @@ public class Shooter extends SmartSubsystem {
   public double getRPM() { return (cache.rpmL + cache.rpmR) / 2.0; }
   public double getVoltage() { return (cache.voltsL + cache.voltsR) / 2.0; }
 
-  public boolean isOnTarget() {
-    return Math.abs(targetVelocityRPM - getRPM()) < Constants.Shooter.RPM_ERROR_ALLOWED;
-  }
-
-  public boolean isShooting() {
-    return !Util.epsilonEquals(demand, 0.0);
-  }
-
-  public boolean isStable() {
-    return stableCounts > 5;
-  }
-
+  public boolean isOnTarget() { return Math.abs(targetVelocityRPM - getRPM()) < Constants.Shooter.RPM_ERROR_ALLOWED; }
+  public boolean isShooting() { return !Util.epsilonEquals(demand, 0.0); }
+  public boolean isStable() { return stableCounts > Constants.Shooter.RPM_STABLE_COUNTS; }
+  
   private double nativeUnitsToRPM(double ticks_per_100_ms) {
     return ticks_per_100_ms;  // sparkmax already rpm
     // return ticks_per_100_ms * 10.0 * 60.0 / Constants.Shooter.TICKS_PER_REV;
   }
-
   private double rpmToNativeUnits(double rpm) {
     return rpm;
     // return rpm / 60.0 / 10.0 * Constants.Shooter.TICKS_PER_REV;
@@ -199,7 +180,7 @@ public class Shooter extends SmartSubsystem {
 
   @Override
   public void runTests() {
-    // Test.checkFirmware(this, new Test.FirmwareTalon(masterL));
-    // Test.checkFirmware(this, new Test.FirmwareTalon(masterR));
+    // Test.checkFirmware(this, masterL);
+    // Test.checkFirmware(this, masterR);
   }
 }

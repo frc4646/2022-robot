@@ -67,10 +67,10 @@ public class RobotContainer {
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
+    // TURRET.setDefaultCommand(new TurretAim());
+    // HOOD.setDefaultCommand(new HoodAim());
 
     autoModeSelector = new AutoModeSelector();
-
-    // TODO TURRET.forceZero();
   }
 
   public void cacheSensors() {

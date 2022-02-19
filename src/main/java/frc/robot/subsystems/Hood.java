@@ -26,12 +26,18 @@ public class Hood extends SmartSubsystem {
 
   @Override
   public void cacheSensors() {
+    super.cacheSensors();
     // cache.amps = motor.getOutputCurrent();
   }
 
   @Override
   public void updateDashboard() {
-    //SmartDashboard.putNumber(this.getName() + " Amps", cache.amps);
+    super.updateDashboard();
+    // SmartDashboard.putBoolean("Turret: Limit F", mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1);
+    // SmartDashboard.putBoolean("Turret: Limit R", mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1);
+    // if (Constants.HOOD.TUNING) {
+    //   SmartDashboard.putNumber("Turret: Error", mPeriodicIO.error_ticks);
+    // }
   }
 
   public void setOpenLoop(double percent) {

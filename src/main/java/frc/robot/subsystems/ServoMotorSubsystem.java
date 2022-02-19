@@ -238,8 +238,8 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
 
   @Override
   public void updateDashboard() {
-    SmartDashboard.putNumber(getName() + ": Position (units)", mPeriodicIO.position_units);
-    SmartDashboard.putBoolean(getName() + ": Homing Location", atHomingLocation());
+    SmartDashboard.putNumber(getName() + ": Position", mPeriodicIO.position_units);
+    SmartDashboard.putBoolean(getName() + ": Home", atHomingLocation());
   }
 
   // ------------------------------ SETTERS: SENSORS ------------------------------

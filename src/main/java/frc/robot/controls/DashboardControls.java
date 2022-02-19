@@ -5,11 +5,12 @@ import java.util.Map;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.commands.feeder.*;
-import frc.robot.commands.intake.*;
-import frc.robot.commands.sequence.*;
 import frc.robot.commands.shooter.*;
+import frc.robot.commands.turret.TurretOpenLoop;
+import frc.robot.commands.turret.TurretPosition;
 
 public class DashboardControls {
   public DashboardControls() {
@@ -27,6 +28,10 @@ public class DashboardControls {
     SmartDashboard.putNumber("Tune: Setpoint", 0);
     SmartDashboard.putData("Tune: Shooter Run", new ShooterTune());
     SmartDashboard.putData("Tune: Shooter Stop", new ShooterOpenLoop(0.0));
+    SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.Turret.SERVO.kHomePosition + 20.0, 0.1));
+    SmartDashboard.putData("Tune: Turret B", new TurretPosition(Constants.Turret.SERVO.kHomePosition - 20.0, 0.1));
+    SmartDashboard.putData("Tune: Turret Stop", new TurretOpenLoop(0.0));
+    SmartDashboard.putData("Tune: Turret Zero", new InstantCommand(RobotContainer.TURRET::zeroSensors));
   }
 
   /**
