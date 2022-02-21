@@ -4,9 +4,9 @@ import java.util.Arrays;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -30,7 +30,6 @@ public class Drivetrain extends SmartSubsystem {
   private final CANSparkMax masterL, masterR, slaveL, slaveR;
   private final AHRS gyro;
   private final DifferentialDriveOdometry odometry;
-  private final SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(Constants.Drivetrain.FEED_FORWARD_GAIN_STATIC, Constants.Drivetrain.FEED_FORWARD_GAIN_VELOCITY, Constants.Drivetrain.FEED_FORWARD_GAIN_ACCEL);
   private DataCache cache = new DataCache();
   // private final NetworkTableEntry dashDistanceL, dashDistanceR, dashRPML, dashRPMR, dashHeading, dashPitch;
   
@@ -117,6 +116,12 @@ public class Drivetrain extends SmartSubsystem {
     cache = new DataCache();
   }
 
+  public void resetPose(Pose2d pose) {
+    resetEncoders();
+    odometry.resetPosition(pose, gyro.getRotation2d());
+    // TODO update cache or something else about gyro?
+  }
+
   public void setBrakeMode(boolean enable) {
     if (isBrakeMode == enable) {
       return;  // Already in this mode
@@ -135,12 +140,13 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   public void setVolts(double left, double right) {
-    // TODO
+    // TODO is it this? masterL.getPIDController().setReference(left, ControlType.kVoltage);
+    // TODO is it this? masterR.getPIDController().setReference(right, ControlType.kVoltage);
   }
 
   public void setClosedLoopVelocity(DifferentialDriveWheelSpeeds speeds) {
-    double leftFeedforward = feedForward.calculate(speeds.leftMetersPerSecond);
-    double rightFeedforward = feedForward.calculate(speeds.rightMetersPerSecond);
+    double leftFeedforward = Constants.Drivetrain.FEED_FORWARD.calculate(speeds.leftMetersPerSecond);
+    double rightFeedforward = Constants.Drivetrain.FEED_FORWARD.calculate(speeds.rightMetersPerSecond);
     // TODO leftMaster.getPIDController().setReference(value, ctrl, pidSlot, arbFeedforward)
     // TODO rightMaster.getPIDController().setReference(value, ctrl, pidSlot, arbFeedforward)
   }

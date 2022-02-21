@@ -9,8 +9,10 @@ import frc.robot.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
 import frc.robot.util.DiagnosticState;
 import frc.team254.util.InterpolatingDouble;
 import frc.team254.util.InterpolatingTreeMap;
-
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 
 public final class Constants {
   public static int CAN_TIMEOUT = 100;
@@ -62,9 +64,10 @@ public final class Constants {
     public static final boolean TUNING = false;
 
     public static final double 
-      WHEEL_TRACK_WIDTH_INCHES = 26.0,
+      WHEEL_DIAMETER = 6.0,
       WHEEL_SCRUB_FACTOR = 1.02,
-      WHEEL_DIAMETER = 6.0;
+      WHEEL_TRACK_WIDTH_INCHES = 26.0,
+      WHEEL_TRACK_WIDTH_METERS = 0.0254 * WHEEL_TRACK_WIDTH_INCHES;
 
     public static final double
       THROTTLE_SLEW_LIMIT = 1.0,  // % output per second
@@ -76,11 +79,10 @@ public final class Constants {
     //public static final int kDriveCurrentUnThrottledLimit = 80; // TODO use case?
 
     public static final double
-      RAMSETE_B = 2.0,  // TODO
-      RAMSETE_ZETA = 0.7,  // TODO
       FEED_FORWARD_GAIN_STATIC = 0.0,  // TODO
       FEED_FORWARD_GAIN_VELOCITY = 0.0,  // TODO
       FEED_FORWARD_GAIN_ACCEL = 0.0,  // TODO
+      
       P_LEFT = 0.0,
       I_LEFT = 0.0,
       D_LEFT = 0.0,
@@ -97,9 +99,25 @@ public final class Constants {
     public static final boolean IS_LEFT_ENCODER_INVERTED = false;
     public static final boolean IS_RIGHT_ENCODER_INVERTED = true;
 
-    public static final double WHEEL_TRACK_WIDTH_METERS = 0.0254 * WHEEL_TRACK_WIDTH_INCHES;
     public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(WHEEL_TRACK_WIDTH_METERS);
+    public static final SimpleMotorFeedforward FEED_FORWARD = new SimpleMotorFeedforward(
+      FEED_FORWARD_GAIN_STATIC, FEED_FORWARD_GAIN_VELOCITY, FEED_FORWARD_GAIN_ACCEL
+    );
 
+    public static final double
+      AUTO_MAX_VOLTS = 10.0,
+      MAX_SPEED_METERS_PER_SECOND = 3.0,
+      MAX_ACCEL_METERS_PER_SECOND_SQUARED = 3.0,
+      RAMSETE_B = 2.0,     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+      RAMSETE_ZETA = 0.7;  // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+      
+    public static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
+      FEED_FORWARD, DRIVE_KINEMATICS, AUTO_MAX_VOLTS
+    );
+    public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(
+      MAX_SPEED_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED)
+      .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
+      .addConstraint(AUTO_VOLTAGE_CONSTRAINT);
   }
 
   public static final class Feeder {
