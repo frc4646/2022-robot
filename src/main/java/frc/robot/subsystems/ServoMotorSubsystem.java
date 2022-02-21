@@ -36,14 +36,14 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
 
     public double kHomePosition = 0.0; // Units
     public double kTicksPerUnitDistance = 1.0;
-    public double kKp = 0.0;  // Raw output / raw error
-    public double kKi = 0.0;  // Raw output / sum of raw error
-    public double kKd = 0.0;  // Raw output / (err - prevErr)
-    public double kKf = 0.0;  // Raw output / velocity in ticks/100ms
-    public double kKa = 0.0;  // Raw output / accel in (ticks/100ms) / s
+    public double kMotionMagicKp = 0.0;  // Raw output / raw error
+    public double kMotionMagicKi = 0.0;  // Raw output / sum of raw error
+    public double kMotionMagicKd = 0.0;  // Raw output / (err - prevErr)
+    public double kMotionMagicKf = 0.0;  // Raw output / velocity in ticks/100ms
+    public double kMotionMagicKa = 0.0;  // Raw output / accel in (ticks/100ms) / s
     public double kMaxIntegralAccumulator = 0.0;
     public double kIZone = 0.0; // Ticks
-    public double kDeadband = 0.0; // Ticks
+    public double kMotionMagicDeadband = 0.0; // Ticks
 
     public double kPositionKp = 0.0;
     public double kPositionKi = 0.0;
@@ -97,13 +97,13 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
 
     TalonUtil.checkError(mMaster.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT), getName() + ": Could not set voltage compensation saturation: ");
 
-    TalonUtil.checkError(mMaster.config_kP(kMotionProfileSlot, mConstants.kKp, Constants.CAN_TIMEOUT), getName() + ": could not set kP: ");
-    TalonUtil.checkError(mMaster.config_kI(kMotionProfileSlot, mConstants.kKi, Constants.CAN_TIMEOUT), getName() + ": could not set kI: ");
-    TalonUtil.checkError(mMaster.config_kD(kMotionProfileSlot, mConstants.kKd, Constants.CAN_TIMEOUT), getName() + ": could not set kD: ");
-    TalonUtil.checkError(mMaster.config_kF(kMotionProfileSlot, mConstants.kKf, Constants.CAN_TIMEOUT), getName() + ": Could not set kF: ");
+    TalonUtil.checkError(mMaster.config_kP(kMotionProfileSlot, mConstants.kMotionMagicKp, Constants.CAN_TIMEOUT), getName() + ": could not set kP: ");
+    TalonUtil.checkError(mMaster.config_kI(kMotionProfileSlot, mConstants.kMotionMagicKi, Constants.CAN_TIMEOUT), getName() + ": could not set kI: ");
+    TalonUtil.checkError(mMaster.config_kD(kMotionProfileSlot, mConstants.kMotionMagicKd, Constants.CAN_TIMEOUT), getName() + ": could not set kD: ");
+    TalonUtil.checkError(mMaster.config_kF(kMotionProfileSlot, mConstants.kMotionMagicKf, Constants.CAN_TIMEOUT), getName() + ": Could not set kF: ");
     TalonUtil.checkError(mMaster.configMaxIntegralAccumulator(kMotionProfileSlot, mConstants.kMaxIntegralAccumulator, Constants.CAN_TIMEOUT), getName() + ": Could not set max integral: ");
     TalonUtil.checkError(mMaster.config_IntegralZone(kMotionProfileSlot, mConstants.kIZone, Constants.CAN_TIMEOUT), getName() + ": Could not set i zone: ");
-    TalonUtil.checkError(mMaster.configAllowableClosedloopError(kMotionProfileSlot, mConstants.kDeadband, Constants.CAN_TIMEOUT), getName() + ": Could not set deadband: ");
+    TalonUtil.checkError(mMaster.configAllowableClosedloopError(kMotionProfileSlot, mConstants.kMotionMagicDeadband, Constants.CAN_TIMEOUT), getName() + ": Could not set deadband: ");
     TalonUtil.checkError(mMaster.configMotionCruiseVelocity(mConstants.kCruiseVelocity, Constants.CAN_TIMEOUT), getName() + ": Could not set cruise velocity: ");
     TalonUtil.checkError(mMaster.configMotionAcceleration(mConstants.kAcceleration, Constants.CAN_TIMEOUT), getName() + ": Could not set acceleration: ");
 
@@ -199,7 +199,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
         DriverStation.reportError(getName() + ": Active trajectory past forward soft limit!", false);
       }
       final double newVel = mMaster.getActiveTrajectoryVelocity();
-      if (Util.epsilonEquals(newVel, mConstants.kCruiseVelocity, Math.max(1, mConstants.kDeadband)) || Util.epsilonEquals(newVel, mPeriodicIO.active_trajectory_velocity, Math.max(1, mConstants.kDeadband))) {
+      if (Util.epsilonEquals(newVel, mConstants.kCruiseVelocity, Math.max(1, mConstants.kMotionMagicDeadband)) || Util.epsilonEquals(newVel, mPeriodicIO.active_trajectory_velocity, Math.max(1, mConstants.kMotionMagicDeadband))) {
         // Mechanism is ~constant velocity.
         mPeriodicIO.active_trajectory_acceleration = 0.0;
       } else {
@@ -286,14 +286,14 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   // ------------------------------ SETTERS: MOTORS ------------------------------
   public void setSetpointMotionMagic(double units, double feedforward_v) {
     mPeriodicIO.demand = constrainTicks(homedUnitsToTicks(units));
-    mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kKf + mConstants.kKd / 100.0) / 1023.0;
+    mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kMotionMagicKf + mConstants.kMotionMagicKd / 100.0) / 1023.0;
     setControlMode(ControlState.MOTION_MAGIC);
     mMaster.set(ControlMode.MotionMagic, mPeriodicIO.demand, DemandType.ArbitraryFeedForward, mPeriodicIO.feedforward);
   }
 
   public void setSetpointPositionPID(double units, double feedforward_v) {
     mPeriodicIO.demand = constrainTicks(homedUnitsToTicks(units));
-    mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kKf + mConstants.kKd / 100.0) / 1023.0;
+    mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kMotionMagicKf + mConstants.kMotionMagicKd / 100.0) / 1023.0;
     setControlMode(ControlState.POSITION_PID);
     mMaster.set(ControlMode.Position, mPeriodicIO.demand, DemandType.ArbitraryFeedForward, mPeriodicIO.feedforward);
   }

@@ -23,9 +23,9 @@ public class Infrastructure extends SmartSubsystem {
     pcm = new PneumaticsControlModule(Constants.CAN.PNEUMATIC_CONTROL_MODULE);
     
     // ShuffleboardLayout layout = Shuffleboard.getTab("General").getLayout("Pneumatics", BuiltInLayouts.kList).withSize(2, 4);
-    // dashPressureSwitch = layout.add("Pressure Switch", pcm.getPressureSwitch()).getEntry();
-    // dashCompressor = layout.add("Compressor", compressor.enabled()).getEntry();    
-    // dashVoltage = Shuffleboard.getTab("General").add("Voltage", RobotController.getBatteryVoltage()).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 6, "max", 14)).getEntry();
+    // dashPressureSwitch = DashboardControls.getGraph(tab, "Pressure Switch", 0.0).getEntry();
+    // dashCompressor = DashboardControls.getGraph(tab, "Compressor", 0.0).getEntry();
+    // dashVoltage = DashboardControls.getGraph(tab, "Voltage", 0.0).withProperties(Map.of("min", 6, "max", 14)).getEntry();
   }
 
   @Override

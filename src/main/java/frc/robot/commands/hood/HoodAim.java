@@ -19,7 +19,7 @@ public class HoodAim extends CommandBase {
     double feedforward = 0.0;
 
     if (vision.isTargetPresent()) {
-      // TODO setpoint = vision.getHoodDegrees();
+      setpoint = vision.getHoodDegrees();
     }
     // TODO hood.setSetpointPositionPID(setpoint, feedforward);
   }

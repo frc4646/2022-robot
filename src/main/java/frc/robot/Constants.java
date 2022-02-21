@@ -76,6 +76,8 @@ public final class Constants {
     //public static final int kDriveCurrentUnThrottledLimit = 80; // TODO use case?
 
     public static final double
+      RAMSETE_B = 2.0,  // TODO
+      RAMSETE_ZETA = 0.7,  // TODO
       FEED_FORWARD_GAIN_STATIC = 0.0,  // TODO
       FEED_FORWARD_GAIN_VELOCITY = 0.0,  // TODO
       FEED_FORWARD_GAIN_ACCEL = 0.0,  // TODO
@@ -124,7 +126,8 @@ public final class Constants {
     public static int  RPM_STABLE_COUNTS = 5;
     public static final double
       OPEN_LOOP = .5,
-      OPEN_LOOP_REV_SECONDS = 1.5,
+      OPEN_LOOP_REV_SECONDS = 1.0,
+      OPEN_LOOP_RPM = 2750.0,  // TODO
       RPM_MAX = 6380.0 * .94,
       RPM_DEFAULT = RPM_MAX / 2.0,
       RPM_ERROR_ALLOWED = 250.0,
@@ -141,8 +144,9 @@ public final class Constants {
     public static final double
       OPEN_LOOP = 0.3,
       OPEN_LOOP_DEADBAND = 0.8,
-      OPEN_LOOP_GAIN = 4.0,
-      GEAR_RATIO = 24.0 / 8.0 * 240.0 / 14.0,  // Number > 1 means "geared down" Real: 14:72 & 16:154
+      OPEN_LOOP_GAIN = 50.0,  // TODO tune
+      GEAR_RATIO = 72.0 / 14.0 * 154.0 / 16.0,  // Number > 1 means "geared down"
+      GEAR_RATIO_WRONG = 24.0 / 8.0 * 240.0 / 14.0,
       VELOCITY_MAX = 2200.0;  // TODO real value
 
     public static final ServoMotorSubsystemConstants SERVO = new ServoMotorSubsystemConstants();
@@ -150,57 +154,65 @@ public final class Constants {
       SERVO.kMasterConstants.id = CAN.TURRET;
       SERVO.kMasterConstants.invert_motor = false;
       SERVO.kMasterConstants.invert_sensor_phase = false;
+      SERVO.kSupplyContinuousCurrentLimit = 20; // amps
+      SERVO.kSupplyPeakCurrentLimit = 40; // amps
+      SERVO.kSupplyPeakCurrentDuration = 10; // ms
 
-      SERVO.kHomePosition = 180.0;  // TODO real value
-      SERVO.kTicksPerUnitDistance = 2048.0 * GEAR_RATIO / 360.0;
+      SERVO.kMinUnitsLimit = 80.0;
+      SERVO.kMaxUnitsLimit = 280.0;
+      SERVO.kHomePosition = 180.0;
+      SERVO.kTicksPerUnitDistance = 2048.0 * GEAR_RATIO_WRONG / 360.0;
 
-      SERVO.kKp = 0.0;
-      SERVO.kKd = 0.0;
-      SERVO.kKf = 1023.0 * VELOCITY_MAX;
-      SERVO.kKa = 0.0;
-      SERVO.kCruiseVelocity = 20000; // Ticks / 100ms  TODO VELOCITY_MAX * 0.975;  // .95-.975 might work well
-			SERVO.kAcceleration = 40000; // Ticks / 100ms / s TODO MOTION_MAGIC_VELOCITY * 3.0;  // 3 or 6 might work well
-      SERVO.kDeadband = 0.0;
-
-      SERVO.kPositionKp = 0.015;
+      SERVO.kPositionKp = 0.035;
+      SERVO.kPositionKi = 0.00035;
       SERVO.kPositionKd = 0.0;
       SERVO.kPositionKf = 0.0;
+      SERVO.kPositionIZone = 40.0;
+      SERVO.kPositionMaxIntegralAccumulator = 4500.0;  // TODO probably too high - getting windup??
       SERVO.kPositionDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
 
-      SERVO.kMinUnitsLimit = 80.0;  // TODO real value
-      SERVO.kMaxUnitsLimit = 280.0;  // TODO real value
-
-			// SERVO.kContinuousCurrentLimit = 20; // amps
-			// SERVO.kPeakCurrentLimit = 40; // amps
-			// SERVO.kPeakCurrentDuration = 10; // ms
+      SERVO.kMotionMagicKp = 0.0;
+      SERVO.kMotionMagicKi = 0.0;
+      SERVO.kMotionMagicKd = 0.0;
+      SERVO.kMotionMagicKf = 1023.0 * VELOCITY_MAX;
+      SERVO.kMotionMagicKa = 0.0;
+      SERVO.kCruiseVelocity = 20000; // Ticks / 100ms
+      SERVO.kAcceleration = 40000; // Ticks / 100ms / s
+      SERVO.kMotionMagicDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
 
       // TODO SERVO.kRecoverPositionOnReset = true;
     }
   }
 
   public static final class Vision {
+    public static final boolean TUNING = false;
+
     public static final double
       HORIZONTAL_FOV = 54.0,  // Degrees (LL1: 54.0, LL2: 59.6)
       VERTICAL_FOV = 41.0,  // Degrees (LL1: 41.0, LL2: 49.7)
       CAMERA_MOUNTING_HEIGHT = 40.0,  // Inches
       CAMERA_MOUNTING_ANGLE = 21.75;  // Degrees
 
-    public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> 
+    public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>
+      LOB_RPMS = new InterpolatingTreeMap<>(),
+      LOB_DEGREES = new InterpolatingTreeMap<>(),
       RPM_MAP = new InterpolatingTreeMap<>(),
       ANGLE_MAP = new InterpolatingTreeMap<>();
     static {
+      LOB_RPMS.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
+      LOB_RPMS.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
+    }
+    static {
+      LOB_DEGREES.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
+      LOB_DEGREES.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
+    }
+    static {
       RPM_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
       RPM_MAP.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
-      RPM_MAP.put(new InterpolatingDouble(147.0), new InterpolatingDouble(2750.0));
-      RPM_MAP.put(new InterpolatingDouble(163.0), new InterpolatingDouble(2910.0));
-      RPM_MAP.put(new InterpolatingDouble(196.0), new InterpolatingDouble(3200.0));
     }
     static {
       ANGLE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
       ANGLE_MAP.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
-      ANGLE_MAP.put(new InterpolatingDouble(147.0), new InterpolatingDouble(2750.0));
-      ANGLE_MAP.put(new InterpolatingDouble(163.0), new InterpolatingDouble(2910.0));
-      ANGLE_MAP.put(new InterpolatingDouble(196.0), new InterpolatingDouble(3200.0));
     }
   }
 

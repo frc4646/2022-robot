@@ -17,9 +17,4 @@ public class ShooterVelocity extends CommandBase {
   public void initialize() {
     subsystem.setClosedLoop(rpm);
   }
-
-  @Override
-  public boolean isFinished() {
-    return subsystem.isStable();
-  }
 }

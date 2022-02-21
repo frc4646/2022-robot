@@ -30,7 +30,7 @@ public class Shooter extends SmartSubsystem {
   private final CANSparkMax rightMaster;
   // private final TalonFX masterL, masterR;
   private final DataCache cache = new DataCache();
-  // private NetworkTableEntry guiRPM_L, guiRPM_R, graphRPM, graphDemand, graphAmps_L, graphAmps_R;
+  // private NetworkTableEntry guiRPM_L, guiRPM_R, graphRPM, graphAmps_L, graphAmps_R;
 
   private double targetVelocityRPM = Double.POSITIVE_INFINITY;
   private double demand = 0.0;
@@ -86,7 +86,6 @@ public class Shooter extends SmartSubsystem {
 
     // ShuffleboardLayout layoutRpm = DashboardControls.addLayout("Shooter", "RPM").withSize(4, 8);
     // graphRPM = layoutRpm.add("Shooter RPM Avg", getRPM()).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 0)).getEntry();
-    // graphDemand = layoutRpm.add("Shooter RPM Demand", demand).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("min", 0)).getEntry();
     // guiRPM_L = layoutRpm.add("Shooter RPM L", cache.rpmL).getEntry();
     // guiRPM_R = layoutRpm.add("Shooter RPM R", cache.rpmR).getEntry();
 
@@ -125,12 +124,10 @@ public class Shooter extends SmartSubsystem {
     // guiRPM_L.setDouble(cache.rpmL);
     // guiRPM_R.setDouble(cache.rpmR);
     // graphRPM.setDouble(getRPM());
-    // graphDemand.setDouble(demand);
     // graphAmps_L.setDouble(cache.ampsStatorL);
     // graphAmps_R.setDouble(cache.ampsStatorR);
 
     SmartDashboard.putNumber("Shooter: RPM", getRPM());
-    SmartDashboard.putNumber("Shooter: Demand", demand);
     if (Constants.Shooter.TUNING) {
       // SmartDashboard.putNumber("Shooter: RPM L", cache.rpmL);
       // SmartDashboard.putNumber("Shooter: RPM R", cache.rpmR);

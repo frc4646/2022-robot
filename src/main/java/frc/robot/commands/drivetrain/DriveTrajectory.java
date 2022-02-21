@@ -1,37 +1,41 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
-public class DriveTrajectory extends CommandGroup {
+public class DriveTrajectory extends SequentialCommandGroup {
   /** Add your docs here. */
-  public DriveTrajectory(TrajectortyConfig trajectory) {
+  public DriveTrajectory(TrajectoryConfig trajectory) {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
     // these will run in order.
 
-    addSequential(new RamseteCommand(trajectory, 
-    pose, //m_robotdirive::getPose
-    new RamseteController(Constants.Drivetrain.RAMSETE_B,Constants.Drivetrain.RAMSETE_ZETA), 
-    new SimpleMotorFeedforward(
-      Constants.Drivetrain.FEED_FORWARD_GAIN_STATIC, 
-      Constants.Drivetrain.FEED_FORWARD_GAIN_VELOCITY,
-      Constants.Drivetrain.FEED_FORWARD_GAIN_ACCEL), 
-    Constants.Drivetrain.DRIVE_KINEMATICS, 
-    wheelSpeeds, //m_robotdrive::getWheelSpeeds
-    new PIDController(Constants.Drivetrain., ki, kd), 
-    rightController, 
-    outputVolts, 
-    requirements))
+    addCommands(
+      new RamseteCommand(
+        trajectory,
+        RobotContainer.DRIVETRAIN::getPose,
+        new RamseteController(Constants.Drivetrain.RAMSETE_B, Constants.Drivetrain.RAMSETE_ZETA),
+        new SimpleMotorFeedforward(
+          Constants.Drivetrain.FEED_FORWARD_GAIN_STATIC,
+          Constants.Drivetrain.FEED_FORWARD_GAIN_VELOCITY,
+          Constants.Drivetrain.FEED_FORWARD_GAIN_ACCEL
+        ),
+        Constants.Drivetrain.DRIVE_KINEMATICS,
+        RobotContainer.DRIVETRAIN::getWheelSpeeds,
+        // TODO Do we want the ramsete volts or velocity constructor?
+        new PIDController(Constants.Drivetrain.P_LEFT, Constants.Drivetrain.I_LEFT, Constants.Drivetrain.D_LEFT),
+        new PIDController(Constants.Drivetrain.P_RIGHT, Constants.Drivetrain.I_RIGHT, Constants.Drivetrain.D_RIGHT),
+        outputVolts,  // TODO why does RobotContainer.DRIVETRAIN::setVolts not work???
+        RobotContainer.DRIVETRAIN
+      )
+    );
     // To run multiple commands at the same time,
     // use addParallel()
     // e.g. addParallel(new Command1());

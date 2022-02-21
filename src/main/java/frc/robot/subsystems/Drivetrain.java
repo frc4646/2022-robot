@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -47,6 +48,14 @@ public class Drivetrain extends SmartSubsystem {
     configureMotor(slaveL, true, false);
     configureMotor(masterR, false, true);
     configureMotor(slaveR, false, false);
+    masterL.getPIDController().setP(Constants.Drivetrain.P_LEFT);
+    masterL.getPIDController().setI(Constants.Drivetrain.I_LEFT);
+    masterL.getPIDController().setD(Constants.Drivetrain.D_LEFT);
+    masterL.getPIDController().setFF(Constants.Drivetrain.F_LEFT);
+    masterR.getPIDController().setP(Constants.Drivetrain.P_RIGHT);
+    masterR.getPIDController().setI(Constants.Drivetrain.I_RIGHT);
+    masterR.getPIDController().setD(Constants.Drivetrain.D_RIGHT);
+    masterR.getPIDController().setFF(Constants.Drivetrain.F_RIGHT);
 
     isBrakeMode = true;
     setBrakeMode(false);
@@ -56,24 +65,18 @@ public class Drivetrain extends SmartSubsystem {
     odometry = new DifferentialDriveOdometry(cache.heading);
     
     // ShuffleboardTab tab = Shuffleboard.getTab("Drive");
-    // dashDistanceL = tab.add("Distance L", cache.distanceL).withWidget(BuiltInWidgets.kGraph).getEntry();
-    // dashDistanceR = tab.add("Distance R", cache.distanceR).withWidget(BuiltInWidgets.kGraph).getEntry();
-    // dashRPML = tab.add("RPM L", cache.rpmL).withWidget(BuiltInWidgets.kGraph).getEntry();
-    // dashRPMR = tab.add("RPM R", cache.rpmR).withWidget(BuiltInWidgets.kGraph).getEntry();
-    // dashHeading = tab.add("Heading", cache.heading.getDegrees()).withWidget(BuiltInWidgets.kGraph).getEntry();
-    // dashPitch = tab.add("Pitch", cache.pitch.getDegrees()).withWidget(BuiltInWidgets.kGraph).getEntry();
+    // dashDistanceL = DashboardControls.getGraph(tab, "Distance L", 0.0).getEntry();
+    // dashDistanceR = DashboardControls.getGraph(tab, "Distance R", 0.0).getEntry();
+    // dashRPML = DashboardControls.getGraph(tab, "RPM L", 0.0).getEntry();
+    // dashRPMR = DashboardControls.getGraph(tab, "RPM R", 0.0).getEntry();
+    // dashHeading = DashboardControls.getGraph(tab, "Heading", 0.0).getEntry();
+    // dashPitch = DashboardControls.getGraph(tab, "Pitch", 0.0).getEntry();
   }
 
   public void configureMotor(CANSparkMax motor, boolean isLeft, boolean isMaster) {
     motor.setInverted(!isLeft);
     motor.enableVoltageCompensation(Constants.Drivetrain.VOLTAGE_COMPENSATION);
     motor.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
-    if (isMaster) {
-      motor.getPIDController().setP(Constants.Drivetrain.P);
-      motor.getPIDController().setI(Constants.Drivetrain.I);
-      motor.getPIDController().setD(Constants.Drivetrain.D);
-      motor.getPIDController().setFF(Constants.Drivetrain.F);
-    }
   }
 
   @Override
@@ -84,6 +87,9 @@ public class Drivetrain extends SmartSubsystem {
     cache.rpmR = masterR.getEncoder().getVelocity();
     cache.heading = Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(gyroOffset);
     cache.pitch = Rotation2d.fromDegrees(gyro.getPitch());
+    double metersL = 0.0;  // TODO m_leftEncoder.getDistance()
+    double metersR = 0.0;  // TODO m_rightEncoder.getDistance()
+    odometry.update(getHeading(), metersL, metersR);
   }
 
   @Override
@@ -128,6 +134,10 @@ public class Drivetrain extends SmartSubsystem {
     masterR.set(right);
   }
 
+  public void setVolts(double left, double right) {
+    // TODO
+  }
+
   public void setClosedLoopVelocity(DifferentialDriveWheelSpeeds speeds) {
     double leftFeedforward = feedForward.calculate(speeds.leftMetersPerSecond);
     double rightFeedforward = feedForward.calculate(speeds.rightMetersPerSecond);
@@ -156,8 +166,12 @@ public class Drivetrain extends SmartSubsystem {
     return cache.pitch;
   }
 
-  public void updateOdometry() {
-    // TODO m_odometry.update(m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+  public Pose2d getPose() {
+    return null;  // TODO
+  }
+
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return null;  // TODO
   }
 
   @Override

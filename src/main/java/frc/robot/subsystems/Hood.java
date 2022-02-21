@@ -54,6 +54,10 @@ public class Hood extends SmartSubsystem {
     return extended;
   }
 
+  public boolean isOnTarget() {
+    return false;  // TODO
+  }
+
   @Override
   public void runTests() {
     Test.checkSolenoid(this, solenoid);

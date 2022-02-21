@@ -51,6 +51,10 @@ public class Turret extends ServoMotorSubsystem {
     return false;  // TODO canifier.isTurretHomed();
   }
 
+  public boolean isOnTarget() {
+    return false;  // TODO
+  }
+
   @Override
   public void runTests() {
     Test.checkFirmware(this, mMaster);

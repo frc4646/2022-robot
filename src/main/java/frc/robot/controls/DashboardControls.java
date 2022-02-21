@@ -2,6 +2,7 @@ package frc.robot.controls;
 
 import java.util.Map;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,11 +42,7 @@ public class DashboardControls {
    * @return
    */
   public static ShuffleboardLayout addLayout(String tab, String name) {
-    ShuffleboardLayout layout = Shuffleboard.getTab(tab)
-      .getLayout(name, BuiltInLayouts.kList)
-      .withSize(2, 6)
-      .withProperties(Map.of("Label position", "HIDDEN"));
-    return layout;
+    return addLayout(tab, name);
   }
 
   /**
@@ -56,10 +53,17 @@ public class DashboardControls {
    * @return
    */
   public static ShuffleboardLayout addLayout(String tab, String name, Sendable... items) {
-    ShuffleboardLayout layout = addLayout(tab, name);
+    ShuffleboardLayout layout = Shuffleboard.getTab(tab)
+      .getLayout(name, BuiltInLayouts.kList)
+      .withSize(2, 6)
+      .withProperties(Map.of("Label position", "HIDDEN"));
     for (Sendable item : items) {
       layout.add(item);
     }
     return layout;
+  }
+
+  public static SimpleWidget getGraph(ShuffleboardTab tab, String name, Object defaultValue) {
+    return tab.add(name, defaultValue).withWidget(BuiltInWidgets.kGraph);
   }
 }
