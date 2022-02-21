@@ -3,8 +3,7 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class DriverControls {
-  private final Joystick throttle;
-  private final Joystick turn;
+  private final Joystick throttle, turn;
 
   DriverControls() {
     throttle = new Joystick(0);
