@@ -35,7 +35,8 @@ public final class Constants {
   }
 
   public static final class Digital {
-    public static final int FEEDER_BREAK_BEAM = 0;
+    public static final int
+      FEEDER_BREAK_BEAM = 0, HOOD = 1;
   }
 
   public static final class Agitator {
@@ -147,24 +148,24 @@ public final class Constants {
     public static final double
       OPEN_LOOP = .5,
       OPEN_LOOP_REV_SECONDS = 1.0,
-      OPEN_LOOP_RPM = 2750.0,  // TODO
-      RPM_MAX = 6380.0 * .94,
+      OPEN_LOOP_RPM = 2300.0,
+      RPM_MAX = 6380.0 * 1.084,  //  Tuned 2/22
       RPM_DEFAULT = RPM_MAX / 2.0,
       RPM_ERROR_ALLOWED = 250.0,
       TICKS_PER_REV = 2048.0,
-      P = 0.0,  // Probably between 0.0075 and 0.25
+      P = 0.01,  // Probably between 0.0075 and 0.25
       I = 0.0,  // Use 0 if possible. But if we do use non-zero, make sure to use i zone
       D = 0.0,  // Stay 0
       F =  TICKS_PER_REV / RPM_MAX / 60.0 * 10.0;  // Equals 0.05029
   }
 
   public static final class Turret {
-    public static final boolean TUNING = true;
+    public static final boolean TUNING = false;
 
     public static final double
       OPEN_LOOP = 0.3,
       OPEN_LOOP_DEADBAND = 0.8,
-      OPEN_LOOP_GAIN = 50.0,  // TODO tune
+      OPEN_LOOP_GAIN = 25.0,  // TODO tune
       GEAR_RATIO = 72.0 / 14.0 * 154.0 / 16.0,  // Number > 1 means "geared down"
       GEAR_RATIO_WRONG = 24.0 / 8.0 * 240.0 / 14.0,
       VELOCITY_MAX = 2200.0;  // TODO real value
@@ -183,22 +184,22 @@ public final class Constants {
       SERVO.kHomePosition = 180.0;
       SERVO.kTicksPerUnitDistance = 2048.0 * GEAR_RATIO_WRONG / 360.0;
 
-      SERVO.kPositionKp = 0.035;
-      SERVO.kPositionKi = 0.00035;
-      SERVO.kPositionKd = 0.0;
+      SERVO.kPositionKp = 0.05;
+      SERVO.kPositionKi = 0.0;
+      SERVO.kPositionKd = 0.25;
       SERVO.kPositionKf = 0.0;
       SERVO.kPositionIZone = 40.0;
-      SERVO.kPositionMaxIntegralAccumulator = 4500.0;  // TODO probably too high - getting windup??
-      SERVO.kPositionDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
+      SERVO.kPositionMaxIntegralAccumulator = 2000.0;
+      SERVO.kPositionDeadband = 1.0 * SERVO.kTicksPerUnitDistance; // Ticks  // TODO try .1 again
 
-      SERVO.kMotionMagicKp = 0.0;
-      SERVO.kMotionMagicKi = 0.0;
-      SERVO.kMotionMagicKd = 0.0;
-      SERVO.kMotionMagicKf = 1023.0 * VELOCITY_MAX;
-      SERVO.kMotionMagicKa = 0.0;
-      SERVO.kCruiseVelocity = 20000; // Ticks / 100ms
-      SERVO.kAcceleration = 40000; // Ticks / 100ms / s
-      SERVO.kMotionMagicDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
+      // SERVO.kMotionMagicKp = 0.0;
+      // SERVO.kMotionMagicKi = 0.0;
+      // SERVO.kMotionMagicKd = 0.0;
+      // SERVO.kMotionMagicKf = 1023.0 * VELOCITY_MAX;
+      // SERVO.kMotionMagicKa = 0.0;
+      // SERVO.kCruiseVelocity = 20000; // Ticks / 100ms
+      // SERVO.kAcceleration = 40000; // Ticks / 100ms / s
+      // SERVO.kMotionMagicDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
 
       // TODO SERVO.kRecoverPositionOnReset = true;
     }
@@ -211,7 +212,7 @@ public final class Constants {
       HORIZONTAL_FOV = 54.0,  // Degrees (LL1: 54.0, LL2: 59.6)
       VERTICAL_FOV = 41.0,  // Degrees (LL1: 41.0, LL2: 49.7)
       CAMERA_MOUNTING_HEIGHT = 40.0,  // Inches
-      CAMERA_MOUNTING_ANGLE = 21.75;  // Degrees
+      CAMERA_MOUNTING_ANGLE = 32.0;  // Degrees
 
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>
       LOB_RPMS = new InterpolatingTreeMap<>(),
@@ -227,12 +228,11 @@ public final class Constants {
       LOB_DEGREES.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
     }
     static {
-      RPM_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
-      RPM_MAP.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
+      RPM_MAP.put(new InterpolatingDouble(64.0), new InterpolatingDouble(1900.0));
+      RPM_MAP.put(new InterpolatingDouble(117.0), new InterpolatingDouble(2350.0));
     }
     static {
       ANGLE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
-      ANGLE_MAP.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
     }
   }
 

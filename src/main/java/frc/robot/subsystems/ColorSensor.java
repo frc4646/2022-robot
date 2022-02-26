@@ -12,7 +12,6 @@ import frc.robot.Constants;
 import frc.robot.util.Test;
 
 public class ColorSensor extends SmartSubsystem {
-
   public static enum CargoColor {
     NONE, CORRECT, WRONG
   }
@@ -27,7 +26,6 @@ public class ColorSensor extends SmartSubsystem {
 
   public static class DataCache {
     public CargoColor color;
-
     public DataCacheDetails details = new DataCacheDetails();
   }
   
@@ -37,9 +35,7 @@ public class ColorSensor extends SmartSubsystem {
   private final ColorMatch colorMatcher;
 
   private Alliance alliance, lastAlliance;
-  private Color allianceColor;
-  private Color opponentColor;
-
+  private Color allianceColor, opponentColor;
 
   public ColorSensor() {
     colorSensor = new ColorSensorV3(Constants.ColorSensor.I2C_PORT);
@@ -51,20 +47,16 @@ public class ColorSensor extends SmartSubsystem {
     lastAlliance = Alliance.Invalid;
   }
 
-
   @Override
   public void cacheSensors() {
     alliance = DriverStation.getAlliance();
-    if(lastAlliance != alliance)
-    {
+    if(lastAlliance != alliance) {
       // save alliance color target
-      if(alliance == Alliance.Red)
-      {
+      if(alliance == Alliance.Red) {
         allianceColor = Constants.ColorSensor.RED_CARGO_TARGET;
         opponentColor = Constants.ColorSensor.BLUE_CARGO_TARGET;
       }
-      else
-      {
+      else {
         allianceColor = Constants.ColorSensor.BLUE_CARGO_TARGET;
         opponentColor = Constants.ColorSensor.RED_CARGO_TARGET;
       }
@@ -73,8 +65,7 @@ public class ColorSensor extends SmartSubsystem {
 
     // get updated data from the sensor
     try {
-      if(colorSensor.isConnected())
-      {
+      if(colorSensor.isConnected()) {
         cache.details.detectedColor = colorSensor.getColor();
         cache.details.ir = colorSensor.getIR();
         cache.details.proximity = colorSensor.getProximity();
@@ -100,8 +91,7 @@ public class ColorSensor extends SmartSubsystem {
   }
 
   @Override
-  public void updateDashboard() {
-    
+  public void updateDashboard() {    
     SmartDashboard.putBoolean("ColorSensor/Detected", isCargoDetected());
     SmartDashboard.putBoolean("ColorSensor/Correct", getCargoColor() == CargoColor.CORRECT);
     SmartDashboard.putBoolean("ColorSensor/Wrong", getCargoColor() == CargoColor.WRONG);
@@ -125,19 +115,15 @@ public class ColorSensor extends SmartSubsystem {
       SmartDashboard.putNumber("ColorSensor/IR", cache.details.ir);
       SmartDashboard.putNumber("ColorSensor/Proximity", cache.details.proximity);
     }
-
   }
 
-  public boolean isCargoDetected()
-  {
+  public boolean isCargoDetected() {
     return cache.color != CargoColor.NONE;
   }
 
-  public CargoColor getCargoColor()
-  {
+  public CargoColor getCargoColor() {
     return cache.color;
   }
-
 
   @Override
   public void runTests() {

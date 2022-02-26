@@ -1,9 +1,13 @@
 package frc.robot.util;
 
+import java.util.List;
+
 import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -60,6 +64,20 @@ public class Test {
   public static void checkFirmware(SubsystemBase subsystem, CANSparkMax device) {
     int deviceID = device.getDeviceId(), actual = device.getFirmwareVersion(), expected = 0x01050002;
     add(subsystem, String.format("Device %d Firmware 0x%X, Expected 0x%X", deviceID, actual, expected), actual == expected);
+  }
+
+  public static void checkStatusFrames(BaseMotorController device) {
+    List<Pair<String, StatusFrameEnhanced>> frames = List.of(
+      Pair.of("General", StatusFrameEnhanced.Status_1_General),
+      Pair.of("Feedback", StatusFrameEnhanced.Status_2_Feedback0),
+      Pair.of("Quadrature", StatusFrameEnhanced.Status_3_Quadrature),
+      Pair.of("Analog Temp Vbat", StatusFrameEnhanced.Status_4_AinTempVbat),
+      Pair.of("Pulse Width", StatusFrameEnhanced.Status_8_PulseWidth),
+      Pair.of("Motion Magic", StatusFrameEnhanced.Status_10_MotionMagic)
+    );
+    for (Pair<String, StatusFrameEnhanced> frame : frames) {
+      System.out.println(String.format("Device %d Status Frame %d %s: %d", device.getDeviceID(), frame.getFirst(), frame.getFirst(), device.getStatusFramePeriod(frame.getSecond())));
+    }
   }
 
   private static void countResult(boolean result) {

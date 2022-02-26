@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.feeder.FeederOpenLoop;
-import frc.robot.commands.hood.HoodExtend;
 import frc.robot.commands.intake.IntakeActivate;
 import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.LoadCargo;
@@ -42,8 +41,8 @@ public class OperatorControls {
     // start.and(Fn) TODO climb mode
 
     // Hood
-    buttonB.whenPressed(new HoodExtend(true));
-    buttonB.whenReleased(new HoodExtend(false));
+    // buttonB.whenPressed(new HoodExtend(true));
+    // buttonB.whenReleased(new HoodExtend(false));
     // aimLob.whenActive(new HoodExtend(false));  // TODO test these
     // aimFar.whenActive(new HoodExtend(true));
 
