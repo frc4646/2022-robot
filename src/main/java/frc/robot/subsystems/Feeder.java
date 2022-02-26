@@ -15,7 +15,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class Feeder extends SmartSubsystem {
   private static class DataCache {
-    public boolean hasBall;
+    public boolean hasCargo;
   }
 
   // private final VictorSPX motor;
@@ -42,7 +42,7 @@ public class Feeder extends SmartSubsystem {
 
   @Override
   public void cacheSensors () {
-    cache.hasBall = breakBeam.get();
+    cache.hasCargo = !breakBeam.get();
     // cache.hasBall = false;  // TODO break beam currently not working
   }
 
@@ -57,7 +57,7 @@ public class Feeder extends SmartSubsystem {
   }
 
   public boolean isCargoPresent() {
-    return ! cache.hasBall;
+    return cache.hasCargo;
   } 
 
   @Override

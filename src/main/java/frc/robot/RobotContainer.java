@@ -7,8 +7,10 @@ import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.Agitator;
+import frc.robot.subsystems.CargoHolder;
 import frc.robot.subsystems.Diagnostics;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hood;
@@ -33,6 +35,8 @@ public class RobotContainer {
 
   public static Agitator AGITATOR;
   public static Climber CLIMBER;
+  public static CargoHolder CARGO_HOLDER;
+  public static ColorSensor COLOR_SENSOR;
   public static Diagnostics DIAGNOSTICS;
   public static Drivetrain DRIVETRAIN;
   public static Feeder FEEDER;
@@ -51,7 +55,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     AGITATOR = new Agitator();
+    // CARGO_HOLDER = new CargoHolder();
     // CLIMBER = new Climber();
+    // COLOR_SENSOR = new ColorSensor();
     DIAGNOSTICS = new Diagnostics();
     DRIVETRAIN = new Drivetrain();
     FEEDER = new Feeder();
@@ -61,7 +67,7 @@ public class RobotContainer {
     SHOOTER = new Shooter();
     // TURRET = new Turret();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(AGITATOR, DRIVETRAIN, FEEDER, HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, /*TURRET,*/ VISION, DIAGNOSTICS);
+    allSubsystems = Arrays.asList(AGITATOR, /*COLOR_SENSOR,*/ DRIVETRAIN, FEEDER, /*CARGO_HOLDER,*/ HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, /*TURRET,*/ VISION, DIAGNOSTICS);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());

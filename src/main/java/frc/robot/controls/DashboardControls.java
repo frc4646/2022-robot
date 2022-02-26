@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.shooter.*;
 import frc.robot.commands.turret.TurretOpenLoop;
 import frc.robot.commands.turret.TurretPosition;
@@ -27,7 +28,8 @@ public class DashboardControls {
 
   public void addTuningCommands() {
     SmartDashboard.putNumber("Tune: Setpoint", 0);
-    SmartDashboard.putData("Tune: Shooter Run", new ShooterTune());
+    SmartDashboard.putData("Tune: Shooter RPM", new ShooterTune());
+    SmartDashboard.putData("Tune: Shooter Vision", new ShootVision());
     SmartDashboard.putData("Tune: Shooter Stop", new ShooterOpenLoop(0.0));
     // SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.Turret.SERVO.kHomePosition + 20.0, 0.1));
     // SmartDashboard.putData("Tune: Turret B", new TurretPosition(Constants.Turret.SERVO.kHomePosition - 20.0, 0.1));

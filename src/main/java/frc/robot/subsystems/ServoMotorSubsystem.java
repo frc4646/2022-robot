@@ -2,12 +2,12 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.StickyFaults;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -86,7 +86,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     mMaster = TalonFXFactory.createDefaultTalon(mConstants.kMasterConstants.id);
     mSlaves = new TalonFX[mConstants.kSlaveConstants.length];
 
-    TalonUtil.checkError(mMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), getName() + ": Could not detect encoder: ");
+    TalonUtil.checkError(mMaster.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), getName() + ": Could not detect encoder: ");
 
     mForwardSoftLimitTicks = (mConstants.kMaxUnitsLimit - mConstants.kHomePosition) * mConstants.kTicksPerUnitDistance;
     mReverseSoftLimitTicks = (mConstants.kMinUnitsLimit - mConstants.kHomePosition) * mConstants.kTicksPerUnitDistance;
@@ -130,7 +130,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     mMaster.setInverted(mConstants.kMasterConstants.invert_motor);
     mMaster.setSensorPhase(mConstants.kMasterConstants.invert_sensor_phase);
     mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10, 20);
-    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 1000, 20);
+    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 20);
     mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, mConstants.kStatusFrame8UpdateRate, 20);
     mMaster.selectProfileSlot(kMotionProfileSlot, 0);  // Start with kMotionProfileSlot
 

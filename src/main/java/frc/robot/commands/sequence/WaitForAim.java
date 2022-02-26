@@ -10,10 +10,9 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
 public class WaitForAim extends CommandBase {
-  private final Hood hood = RobotContainer.HOOD;
+  // private final Hood hood = RobotContainer.HOOD;
   private final Shooter shooter = RobotContainer.SHOOTER;
   private final Turret turret = RobotContainer.TURRET;
-  private final OperatorControls controls = RobotContainer.CONTROLS.operator;
   private double timeStart = Double.MAX_VALUE;
 
   @Override
@@ -23,9 +22,10 @@ public class WaitForAim extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    if (controls.getFn()) {  // Manual override
+    if (RobotContainer.CONTROLS.operator.getFn()) {  // Manual override
       return Timer.getFPGATimestamp() - timeStart > Constants.Shooter.OPEN_LOOP_REV_SECONDS;
     }
-    return shooter.isStable() && hood.isOnTarget() && turret.isOnTarget();
+    // return shooter.isStable() && hood.isOnTarget() && turret.isOnTarget();
+    return shooter.isStable() && turret.isOnTarget();
   }
 }
