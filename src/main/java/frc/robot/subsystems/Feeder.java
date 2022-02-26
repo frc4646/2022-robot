@@ -18,32 +18,24 @@ public class Feeder extends SmartSubsystem {
     public boolean hasCargo;
   }
 
-  // private final VictorSPX motor;
   private final CANSparkMax motor;
   private final DigitalInput breakBeam;
   private DataCache cache = new DataCache();
 
   public Feeder() {
-    // motor = new VictorSPX(Constants.CAN.FEEDER);
     motor = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.FEEDER);
     breakBeam = new DigitalInput(Constants.Digital.FEEDER_BREAK_BEAM);
 
-    // motor.setNeutralMode(NeutralMode.Brake);
-    // motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
-    // motor.enableVoltageCompensation(true);
-    // motor.configOpenloopRamp(Constants.Feeder.OPEN_LOOP_RAMP);
     motor.setInverted(true);
     motor.setIdleMode(IdleMode.kBrake);
     motor.enableVoltageCompensation(12.0);
     motor.setOpenLoopRampRate(Constants.Feeder.OPEN_LOOP_RAMP);
     // TODO supply current limiting
-    // TODO add sensor for if ball is in indexer
   }
 
   @Override
   public void cacheSensors () {
     cache.hasCargo = !breakBeam.get();
-    // cache.hasBall = false;  // TODO break beam currently not working
   }
 
   @Override
@@ -52,7 +44,6 @@ public class Feeder extends SmartSubsystem {
   }
 
   public void setOpenLoop(double percent) {
-    // motor.set(ControlMode.PercentOutput, percent);
     motor.set(percent);
   }
 

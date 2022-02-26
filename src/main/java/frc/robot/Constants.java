@@ -32,8 +32,9 @@ public final class Constants {
 
   public static final class Solenoid {
     public static final int
-      INTAKE_L_OUT = 0, INTAKE_L_IN = 1, INTAKE_R_OUT = 2, INTAKE_R_IN = 3,
-      CLIMBER_L_OUT = 4, CLIMBER_L_IN = 5, CLIMBER_R_OUT = 6, CLIMBER_R_IN = 7;
+      INTAKE_OUT = 0, INTAKE_IN = 1,
+      ARM_L_OUT = 4, ARM_L_IN = 5, ARM_R_OUT = 6, ARM_R_IN = 7,
+      RATCHET_L_OUT = 0, RATCHET_L_IN = 1, RATCHET_R_OUT = 2, RATCHET_R_IN = 3;
   }
 
   public static final class Digital {
@@ -42,7 +43,16 @@ public final class Constants {
   }
 
   public static final class Agitator {
-    public static final double OPEN_LOOP_RAMP = 0.125;  // TODO tune //0.125
+    public static final double
+      OPEN_LOOP_LOADING = 0.45,
+      OPEN_LOOP_SHOOTING = 0.45,
+      OPEN_LOOP_RAMP = 0.125;  // TODO tune
+  }
+  
+  public static final class Climber {
+    public static final boolean TUNING = true;
+
+    public static final double LIMIT_F = -1.0;
   }
 
   public static final class Diagnostic {
@@ -87,7 +97,7 @@ public final class Constants {
       FEED_FORWARD_GAIN_STATIC = 0.0,  // TODO
       FEED_FORWARD_GAIN_VELOCITY = 0.0,  // TODO
       FEED_FORWARD_GAIN_ACCEL = 0.0,  // TODO
-      
+    
       P_LEFT = 0.0,
       I_LEFT = 0.0,
       D_LEFT = 0.0,
@@ -98,8 +108,7 @@ public final class Constants {
       D_RIGHT = 0.0,
       F_RIGHT = 0.0;  // TODO
 
-      //Left and right should be tuned via a step response to a velocity change - P = V, D = A, I = dist. Start 
-
+      //Left and right should be tuned via a step response to a velocity change - P = V, D = A, I = dist. Start
 
     public static final boolean IS_LEFT_ENCODER_INVERTED = false;
     public static final boolean IS_RIGHT_ENCODER_INVERTED = true;
@@ -127,7 +136,8 @@ public final class Constants {
 
   public static final class Feeder {
     public static final double
-      OPEN_LOOP = 0.5,
+      OPEN_LOOP_LOADING = 0.3,  
+      OPEN_LOOP_SHOOTING = 0.5,
       OPEN_LOOP_RAMP = 0.25;  // TODO tune
   }
 
@@ -140,7 +150,7 @@ public final class Constants {
   public static final class Intake {
     public static final double
       OPEN_LOOP = 0.40,
-      OPEN_LOOP_RAMP = 0.4;  // TODO tune
+      OPEN_LOOP_RAMP = 0.4;
   }
 
   public static final class Shooter {
@@ -165,9 +175,9 @@ public final class Constants {
     public static final boolean TUNING = false;
 
     public static final double
-      OPEN_LOOP = 0.3,
-      OPEN_LOOP_DEADBAND = 0.8,
-      OPEN_LOOP_GAIN = 25.0,  // TODO tune
+      STICK_GAIN = 25.0,
+      STICK_DEADBAND = 0.2,
+      
       GEAR_RATIO = 72.0 / 14.0 * 154.0 / 16.0,  // Number > 1 means "geared down"
       GEAR_RATIO_WRONG = 24.0 / 8.0 * 240.0 / 14.0,
       VELOCITY_MAX = 2200.0;  // TODO real value

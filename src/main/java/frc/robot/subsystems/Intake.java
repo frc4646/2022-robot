@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -14,14 +13,13 @@ import frc.team254.drivers.TalonFXFactory;
 
 public class Intake extends SmartSubsystem {
   private final TalonFX motor;
-  private final DoubleSolenoid solenoidL, solenoidR;
+  private final DoubleSolenoid solenoid;
 
   private boolean extended = false;
 
   public Intake() {
     motor = TalonFXFactory.createDefaultTalon(Constants.CAN.INTAKE);
-    solenoidL = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.INTAKE_L_OUT, Constants.Solenoid.INTAKE_L_IN);
-    solenoidR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.INTAKE_R_OUT, Constants.Solenoid.INTAKE_R_IN);
+    solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.INTAKE_OUT, Constants.Solenoid.INTAKE_IN);
 
     motor.setInverted(true);
     motor.setNeutralMode(NeutralMode.Coast);
@@ -37,8 +35,7 @@ public class Intake extends SmartSubsystem {
 
   public void setExtend (boolean extend) {
     Value direction = (extend) ? Value.kForward : Value.kReverse;
-    solenoidL.set(direction);
-    solenoidR.set(direction);
+    solenoid.set(direction);
     extended = extend;
   }
 
@@ -53,7 +50,6 @@ public class Intake extends SmartSubsystem {
   @Override
   public void runTests() {
     Test.checkFirmware(this, motor);
-    Test.checkSolenoid(this, solenoidL);
-    Test.checkSolenoid(this, solenoidR);
+    Test.checkSolenoid(this, solenoid);
   }
 }

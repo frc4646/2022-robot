@@ -4,37 +4,40 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.robot.Constants;
 import frc.robot.util.Test;
 
+import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 
 public class Agitator extends SmartSubsystem {
-  private final VictorSPX motorL, motorR;
+  private final VictorSPX masterL, slaveR;
 
   public Agitator() {
-    motorL = new VictorSPX(Constants.CAN.AGITATOR_L);
-    motorL.setInverted(true);
-    motorL.setNeutralMode(NeutralMode.Brake);
-    motorL.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
-    motorL.enableVoltageCompensation(true);
-    motorL.configOpenloopRamp(Constants.Agitator.OPEN_LOOP_RAMP);
+    masterL = new VictorSPX(Constants.CAN.AGITATOR_L);
+    masterL.setInverted(true);
+    masterL.setNeutralMode(NeutralMode.Brake);
+    masterL.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
+    masterL.enableVoltageCompensation(true);
+    masterL.configOpenloopRamp(Constants.Agitator.OPEN_LOOP_RAMP);
 
-    motorR = new VictorSPX(Constants.CAN.AGITATOR_R);
-    motorR.setInverted(false);
-    motorR.setNeutralMode(NeutralMode.Brake);
-    motorR.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
-    motorR.enableVoltageCompensation(true);
-    motorR.configOpenloopRamp(Constants.Agitator.OPEN_LOOP_RAMP);
-
+    slaveR = new VictorSPX(Constants.CAN.AGITATOR_R);
+    slaveR.follow(masterL);
+    slaveR.setInverted(false);
+    slaveR.setNeutralMode(NeutralMode.Brake);
+    slaveR.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
+    slaveR.enableVoltageCompensation(true);
+    slaveR.configOpenloopRamp(Constants.Agitator.OPEN_LOOP_RAMP);
+    slaveR.setControlFramePeriod(ControlFrame.Control_3_General, 100);    
+    slaveR.setStatusFramePeriod(StatusFrame.Status_1_General, 1000);
   }
 
   public void setOpenLoop(double percent) {
-    motorL.set(ControlMode.PercentOutput, percent);
-    motorR.set(ControlMode.PercentOutput, percent);
+    masterL.set(ControlMode.PercentOutput, percent);
   }
 
   @Override
   public void runTests() {
-    Test.checkFirmware(this, motorL);
-    Test.checkFirmware(this, motorR);
+    Test.checkFirmware(this, masterL);
+    Test.checkFirmware(this, slaveR);
   }
 }

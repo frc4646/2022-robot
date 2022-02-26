@@ -3,7 +3,9 @@ package frc.robot;
 import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.OnDisabledDelayed;
 import frc.robot.commands.SignalDriveTeam;
+import frc.robot.commands.climber.ClimberManual;
 import frc.robot.commands.drivetrain.DriveTeleop;
+import frc.robot.commands.turret.TurretAim;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.Agitator;
@@ -56,7 +58,7 @@ public class RobotContainer {
   public RobotContainer() {
     AGITATOR = new Agitator();
     // CARGO_HOLDER = new CargoHolder();
-    // CLIMBER = new Climber();
+    CLIMBER = new Climber();
     // COLOR_SENSOR = new ColorSensor();
     DIAGNOSTICS = new Diagnostics();
     DRIVETRAIN = new Drivetrain();
@@ -65,16 +67,17 @@ public class RobotContainer {
     INFRASTRUCTURE = new Infrastructure();
     INTAKE = new Intake();
     SHOOTER = new Shooter();
-    // TURRET = new Turret();
+    TURRET = new Turret();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(AGITATOR, /*COLOR_SENSOR,*/ DRIVETRAIN, FEEDER, /*CARGO_HOLDER,*/ HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, /*TURRET,*/ VISION, DIAGNOSTICS);
+    allSubsystems = Arrays.asList(AGITATOR, CLIMBER, /*COLOR_SENSOR,*/ DRIVETRAIN, FEEDER, /*CARGO_HOLDER,*/ HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION, DIAGNOSTICS);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
-    // TURRET.setDefaultCommand(new TurretAim());
+    TURRET.setDefaultCommand(new TurretAim());
     // HOOD.setDefaultCommand(new HoodAim());
+    CLIMBER.setDefaultCommand(new ClimberManual());
 
     autoModeSelector = new AutoModeSelector();
   }
@@ -99,7 +102,9 @@ public class RobotContainer {
   }
 
   public void runTests() {
-    VISION.setLED(LEDMode.BLINK);
+    if (VISION != null) {
+      VISION.setLED(LEDMode.BLINK);
+	}
     Test.reset();
     Timer.delay(3.0);
     allSubsystems.forEach(SmartSubsystem::runTests);  // TODO try as lambda command so its cancellable

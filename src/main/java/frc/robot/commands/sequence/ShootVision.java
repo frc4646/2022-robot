@@ -1,9 +1,9 @@
 package frc.robot.commands.sequence;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.feeder.FeederOpenLoop;
-import frc.robot.commands.intake.IntakeActivate;
 import frc.robot.commands.shooter.ShooterAim;
 
 public class ShootVision extends SequentialCommandGroup {
@@ -12,11 +12,10 @@ public class ShootVision extends SequentialCommandGroup {
       deadline(
         new WaitForAim(),
         new ShooterAim(),
-        new IntakeActivate(0.5),
-        new AgitateOpenLoop(0.45)
+        new AgitateOpenLoop(Constants.Agitator.OPEN_LOOP_SHOOTING)
         // TODO should drivetrain lock?
       ),
-      new FeederOpenLoop(1.0)
+      new FeederOpenLoop(Constants.Feeder.OPEN_LOOP_SHOOTING)
     );
   }
 }

@@ -6,7 +6,6 @@ import frc.robot.subsystems.Turret;
 
 public class TurretOpenLoop extends InstantCommand {
   private final Turret subsystem = RobotContainer.TURRET;
-
   private final double percent;
 
   public TurretOpenLoop(double percent) {

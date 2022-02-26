@@ -13,126 +13,75 @@ public class CargoHolder extends SmartSubsystem {
     IDLE, INTAKING, SHOOTING, EJECT_SHOOT, EJECT_INTAKE
   }
 
-  // FSM variables
-  private State currentState;
+  private State currentState = State.IDLE;
 
-  private boolean wasShooterLoaded;
-  private int ejectionTimer;
-
-  public CargoHolder() {
-    currentState = State.IDLE;
-    ejectionTimer = 0;
-    wasShooterLoaded = false;
-  }
+  private boolean wasShooterLoaded = false;
+  private int ejectionTimer = 0;
 
   @Override
-  public void cacheSensors() // or periodic?
-  {
+  public void cacheSensors() {
     CargoColor color = RobotContainer.COLOR_SENSOR.getCargoColor();
     boolean isShooterLoaded = RobotContainer.FEEDER.isCargoPresent();
     boolean shootRequested = RobotContainer.SHOOTER.isShooting(); // not technically correct, but works for monitoring
-    
+  
     switch (currentState) {
       case IDLE:
         // here if we have our cargo loaded for the shooter and may or may not have our cargo in the intake
-
-        // got a lower cargo and need to intake it to the top
         if ((color == CargoColor.CORRECT) && !isShooterLoaded) {
-          currentState = State.INTAKING;
+          currentState = State.INTAKING;  // got a lower cargo and need to intake it to the top
         }
-        // got the wrong cargo and need to shoot it out the top
         if ((color == CargoColor.WRONG) && !isShooterLoaded) {
-          currentState = State.EJECT_SHOOT;
+          currentState = State.EJECT_SHOOT;  // got the wrong cargo and need to shoot it out the top
         }
-        // got the wrong cargo and have one already, so shoot it out the intake
         if ((color == CargoColor.WRONG) && isShooterLoaded) {
-          currentState = State.EJECT_INTAKE;
+          currentState = State.EJECT_INTAKE;  // got the wrong cargo and have one already, so shoot it out the intake
         }
-
-        // need to shoot!
         if (shootRequested) {
-          currentState = State.SHOOTING;
+          currentState = State.SHOOTING;  // need to shoot!
         }
         break;
-
       case INTAKING:
         // here if we dont have cargo loaded for the shooter and are trying to intake
-
-        // we now have a cargo ready for the shooter, so idle
         if (isShooterLoaded) {
-          currentState = State.IDLE;
+          currentState = State.IDLE;  // we now have a cargo ready for the shooter, so idle
         }
-        
-        // got the wrong cargo and need to shoot it out the top
         if ((color == CargoColor.WRONG) && !isShooterLoaded) {
-          currentState = State.EJECT_SHOOT;
-        }
-        
-        // got the wrong cargo and have one already, so shoot it out the intake
+          currentState = State.EJECT_SHOOT;   // got the wrong cargo and need to shoot it out the top
+        }        
         if ((color == CargoColor.WRONG) && isShooterLoaded) {
-          currentState = State.EJECT_INTAKE;
+          currentState = State.EJECT_INTAKE;  // got the wrong cargo and have one already, so shoot it out the intake
         }
-
-        // need to shoot!
         if (shootRequested) {
-          currentState = State.SHOOTING;
+          currentState = State.SHOOTING;  // need to shoot!
         }
         break;
-
       case SHOOTING:
         // a shot was requeested, so empty our guts
-
-        // no longer need to shoot, so go chill
         if (!shootRequested) {
-          currentState = State.IDLE;
+          currentState = State.IDLE;  // no longer need to shoot, so go chill
         }
         break;
-
       case EJECT_SHOOT:
         // we need to eject the top cargo, so do a single shot
-
-        // we had a cargo and shot it, so be done with it!
         if (!isShooterLoaded && wasShooterLoaded) {
-          currentState = State.IDLE;
+          currentState = State.IDLE;  // we had a cargo and shot it, so be done with it!
         }
         break;
-
       case EJECT_INTAKE:
-        // only wait for X time if it's not the wrong cargo
         if ((color == CargoColor.CORRECT) || (color == CargoColor.NONE) || (ejectionTimer > 0)) {
-          ejectionTimer++;
+          ejectionTimer++;  // only wait for X time if it's not the wrong cargo
         }
-
-        // and just wait for 10 loops (?)
         if (ejectionTimer >= 10) {
           ejectionTimer = 0;
-          currentState = State.IDLE;
+          currentState = State.IDLE;  // and just wait for 10 loops (?)
         }
         break;
     }
-
     wasShooterLoaded = isShooterLoaded;
   }
 
   @Override
-  public void updateDashboard()
-  {
-    switch (currentState) {
-      case IDLE:
-        SmartDashboard.putString("CargoHolder/State", "IDLE");
-        break;
-      case INTAKING:
-        SmartDashboard.putString("CargoHolder/State", "INTAKING");
-        break;
-      case SHOOTING:
-        SmartDashboard.putString("CargoHolder/State", "SHOOTING");
-        break;
-      case EJECT_SHOOT:
-        SmartDashboard.putString("CargoHolder/State", "EJECT_SHOOT");
-        break;
-      case EJECT_INTAKE:
-        SmartDashboard.putString("CargoHolder/State", "EJECT_INTAKE");
-        break;
-    }
+  public void updateDashboard() {
+    SmartDashboard.putString("CargoHolder/State", currentState.toString());
   }
 }

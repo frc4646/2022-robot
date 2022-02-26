@@ -6,7 +6,6 @@ import frc.robot.subsystems.Climber;
 
 public class ClimberOpenLoop extends InstantCommand {
   private Climber subsystem = RobotContainer.CLIMBER;
-
   private final double output;
 
   public ClimberOpenLoop(double percent) {

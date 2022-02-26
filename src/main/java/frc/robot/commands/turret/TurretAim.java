@@ -11,7 +11,6 @@ public class TurretAim extends CommandBase {
   private final Turret turret = RobotContainer.TURRET;
   private final Vision vision = RobotContainer.VISION;
   private final OperatorControls controls = RobotContainer.CONTROLS.operator;
-  private final double DEADBAND = 0.2;
 
   public TurretAim() {
     addRequirements(turret);
@@ -30,7 +29,7 @@ public class TurretAim extends CommandBase {
     else if (snap != -1) {
       setpoint = snap;
     }
-    else if (Math.abs(stick) >= DEADBAND) {
+    else if (Math.abs(stick) >= Constants.Turret.STICK_DEADBAND) {
       setpoint += stick * Constants.Turret.OPEN_LOOP_GAIN;
     }
     turret.setSetpointPositionPID(setpoint, feedforward);

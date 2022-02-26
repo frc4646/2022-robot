@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.commands.agitator.AgitateOpenLoop;
+import frc.robot.commands.climber.ClimberArms;
 import frc.robot.commands.feeder.FeederOpenLoop;
 import frc.robot.commands.intake.IntakeActivate;
-import frc.robot.commands.intake.IntakeExtend;
 import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.LoadCargo;
 import frc.robot.commands.sequence.ShootOpenLoop;
@@ -32,18 +32,12 @@ public class OperatorControls {
     aimLob = new Trigger() { @Override public boolean get() { return getAimLob(); } };
     aimFar = new Trigger() { @Override public boolean get() { return getAimFar(); } };
 
-    // Agitator
-    buttonA.whenPressed(new AgitateOpenLoop(1.0));  // TODO probably messing with intaking, remove???
-    buttonA.whenReleased(new AgitateOpenLoop(0.0));
-    buttonA.and(Fn).whenActive(new AgitateOpenLoop(-1.0));
-    // TODO reverse agitators should also reverse intake??
-
     // Climber
-    // start.and(Fn) TODO climb mode
+    buttonB.whenPressed(new ClimberArms(true));
+    buttonB.whenReleased(new ClimberArms(false));
+    // buttonB.and(Fn).whenPressed(new ClimberRelease());
 
-    // Hood
-    // buttonB.whenPressed(new HoodExtend(true));
-    // buttonB.whenReleased(new HoodExtend(false));
+	// Hood
     // aimLob.whenActive(new HoodExtend(false));  // TODO test these
     // aimFar.whenActive(new HoodExtend(true));
 
@@ -69,6 +63,7 @@ public class OperatorControls {
 
   public boolean getAimLob() { return operator.getRawAxis(TRIGGER_L) > TRIGGER_DEADBAND; }
   public boolean getAimFar() { return operator.getRawAxis(TRIGGER_R) > TRIGGER_DEADBAND; }
+  public double getClimberStick() { return -operator.getRawAxis(XboxController.Axis.kRightY.value); }
   public double getTurretStick() { return -operator.getRawAxis(XboxController.Axis.kLeftX.value); }
   public int getTurretSnap() { return operator.getPOV(); }
   public boolean getFn() { return operator.getBackButton(); }
