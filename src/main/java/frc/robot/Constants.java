@@ -13,6 +13,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.util.Color;
 
 public final class Constants {
   public static int CAN_TIMEOUT = 100;
@@ -232,6 +234,17 @@ public final class Constants {
       ANGLE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
       ANGLE_MAP.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
     }
+  }
+
+  public static final class ColorSensor {
+    public static final boolean TUNING = false;
+    
+    public static final Color BLUE_CARGO_TARGET = new Color(0.143, 0.427, 0.429); // TODO fill these out based on readings
+    public static final Color RED_CARGO_TARGET = new Color(0.561, 0.232, 0.114); // TODO fill these out based on readings
+
+    public static final int PROXIMITY_TO_CARGO = 1000; // TODO tune distance from sensor to cargo
+
+    public static final I2C.Port I2C_PORT = I2C.Port.kMXP;
   }
 
   public static final class Field {
