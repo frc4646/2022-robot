@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -9,18 +10,20 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.Constants;
 import frc.robot.util.Test;
+import frc.team254.drivers.TalonFXFactory;
 
 public class Intake extends SmartSubsystem {
-  private final VictorSPX motor;
+  private final TalonFX motor;
   private final DoubleSolenoid solenoidL, solenoidR;
 
   private boolean extended = false;
 
   public Intake() {
-    motor = new VictorSPX(Constants.CAN.INTAKE);
+    motor = TalonFXFactory.createDefaultTalon(Constants.CAN.INTAKE);
     solenoidL = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.INTAKE_L_OUT, Constants.Solenoid.INTAKE_L_IN);
     solenoidR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.INTAKE_R_OUT, Constants.Solenoid.INTAKE_R_IN);
 
+    motor.setInverted(true);
     motor.setNeutralMode(NeutralMode.Coast);
     motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
     motor.enableVoltageCompensation(true);

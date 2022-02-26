@@ -29,10 +29,10 @@ public class DashboardControls {
     SmartDashboard.putNumber("Tune: Setpoint", 0);
     SmartDashboard.putData("Tune: Shooter Run", new ShooterTune());
     SmartDashboard.putData("Tune: Shooter Stop", new ShooterOpenLoop(0.0));
-    SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.Turret.SERVO.kHomePosition + 20.0, 0.1));
-    SmartDashboard.putData("Tune: Turret B", new TurretPosition(Constants.Turret.SERVO.kHomePosition - 20.0, 0.1));
-    SmartDashboard.putData("Tune: Turret Stop", new TurretOpenLoop(0.0));
-    SmartDashboard.putData("Tune: Turret Zero", new InstantCommand(RobotContainer.TURRET::zeroSensors));
+    // SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.Turret.SERVO.kHomePosition + 20.0, 0.1));
+    // SmartDashboard.putData("Tune: Turret B", new TurretPosition(Constants.Turret.SERVO.kHomePosition - 20.0, 0.1));
+    // SmartDashboard.putData("Tune: Turret Stop", new TurretOpenLoop(0.0));
+    // SmartDashboard.putData("Tune: Turret Zero", new InstantCommand(RobotContainer.TURRET::zeroSensors));
   }
 
   /**

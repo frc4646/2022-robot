@@ -23,7 +23,9 @@ public final class Constants {
       DRIVETRAIN_FL = 21, DRIVETRAIN_BL = 22, DRIVETRAIN_BR = 23, DRIVETRAIN_FR = 24,
       SHOOTER_L = 6, SHOOTER_R = 7, TALON_SHOOTER_L = 25, TALON_SHOOTER_R = 27,
       CLIMBER_L = 13, CLIMBER_R = 14,
-      INTAKE = 5, FEEDER = 8, TURRET = 26, HOOD = 11, AGITATOR = 12, CANIFIER = 9, CANDLE = 15;
+      INTAKE = 5, TURRET = 26, HOOD = 11,
+      FEEDER = 8, AGITATOR_R = 31, AGITATOR_L = 32,
+      CANIFIER = 9, CANDLE = 15;
   }
 
   public static final class Solenoid {
@@ -37,7 +39,7 @@ public final class Constants {
   }
 
   public static final class Agitator {
-    public static final double OPEN_LOOP_RAMP = 0.25;  // TODO tune
+    public static final double OPEN_LOOP_RAMP = 0.125;  // TODO tune //0.125
   }
 
   public static final class Diagnostic {
@@ -134,8 +136,8 @@ public final class Constants {
 
   public static final class Intake {
     public static final double
-      OPEN_LOOP = 1.0,
-      OPEN_LOOP_RAMP = 0.25;  // TODO tune
+      OPEN_LOOP = 0.40,
+      OPEN_LOOP_RAMP = 0.4;  // TODO tune
   }
 
   public static final class Shooter {
