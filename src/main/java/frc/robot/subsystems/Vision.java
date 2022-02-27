@@ -45,8 +45,8 @@ public class Vision extends SmartSubsystem {
   public void updateDashboard() {
     SmartDashboard.putBoolean("Vision: Target", cache.seesTarget);
     SmartDashboard.putNumber("Vision: Distance", cache.distance);
+    SmartDashboard.putNumber("Vision: X", cache.xDegrees);
     if (Constants.Vision.TUNING) {
-      SmartDashboard.putNumber("Vision: X", cache.xDegrees);
       SmartDashboard.putNumber("Vision: Y", cache.yDegrees);
     }
   }

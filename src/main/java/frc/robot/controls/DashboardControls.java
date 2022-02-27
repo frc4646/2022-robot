@@ -8,9 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.sequence.TuneInterpolation;
-import frc.robot.commands.shooter.*;
 import frc.robot.commands.turret.TurretOpenLoop;
 import frc.robot.commands.turret.TurretPosition;
 
@@ -23,14 +21,14 @@ public class DashboardControls {
   }
 
   public void addCommands() {
-    SmartDashboard.putNumber("Tune: Setpoint", 0);
+    SmartDashboard.putNumber("Tune: Setpoint", Constants.Shooter.RPM_DEFAULT);
     SmartDashboard.putData("Tune: Shooter RPM", new TuneInterpolation());
-    SmartDashboard.putData("Tune: Shooter Vision", new ShootVision());
-    SmartDashboard.putData("Tune: Shooter Stop", new ShooterOpenLoop(0.0));
-    SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.Turret.SERVO.kHomePosition + 20.0, 0.1));
-    SmartDashboard.putData("Tune: Turret B", new TurretPosition(Constants.Turret.SERVO.kHomePosition - 20.0, 0.1));
-    SmartDashboard.putData("Tune: Turret Stop", new TurretOpenLoop(0.0));
-    SmartDashboard.putData("Tune: Turret Zero", new InstantCommand(RobotContainer.TURRET::zeroSensors));
+    if (Constants.Turret.TUNING) {
+      SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.Turret.SERVO.kHomePosition + 20.0, 0.1));
+      SmartDashboard.putData("Tune: Turret B", new TurretPosition(Constants.Turret.SERVO.kHomePosition - 20.0, 0.1));
+      SmartDashboard.putData("Tune: Turret Stop", new TurretOpenLoop(0.0));
+      SmartDashboard.putData("Tune: Turret Zero", new InstantCommand(RobotContainer.TURRET::zeroSensors));
+    }
   }
 
   public void addLayouts() {

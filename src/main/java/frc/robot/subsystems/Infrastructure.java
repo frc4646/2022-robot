@@ -18,15 +18,15 @@ public class Infrastructure extends SmartSubsystem {
   private final Compressor compressor;
   private final PneumaticsControlModule pcm;
   private final DataCache cache = new DataCache();
-  private final UsbCamera camera;
+  // private final UsbCamera camera;
 
   // private NetworkTableEntry dashPressureSwitch, dashCompressor, dashVoltage;
 
   public Infrastructure() {
-    camera = CameraServer.startAutomaticCapture();
     compressor = new Compressor(Constants.CAN.PNEUMATIC_CONTROL_MODULE, PneumaticsModuleType.CTREPCM);
     pcm = new PneumaticsControlModule(Constants.CAN.PNEUMATIC_CONTROL_MODULE);
-    
+    // camera = CameraServer.startAutomaticCapture();
+
     // ShuffleboardLayout layout = Shuffleboard.getTab("General").getLayout("Pneumatics", BuiltInLayouts.kList).withSize(2, 4);
     // dashPressureSwitch = DashboardControls.getGraph(tab, "Pressure Switch", 0.0).getEntry();
     // dashCompressor = DashboardControls.getGraph(tab, "Compressor", 0.0).getEntry();
@@ -61,12 +61,12 @@ public class Infrastructure extends SmartSubsystem {
     boolean isConnected = !pcm.getCompressorNotConnectedStickyFault();
     boolean isNotShorted = !pcm.getCompressorShortedStickyFault();
     boolean isBatteryFull = RobotController.getBatteryVoltage() > 13.0;
-    boolean isCameraEnabled = camera.isEnabled();
+    // boolean isCameraEnabled = camera.isEnabled();
 
     Test.add(this, "Compressor - Connected", isConnected);
     Test.add(this, "Compressor - Current", isCurrentLowEnough);
     Test.add(this, "Compressor - Shorted", isNotShorted);
     Test.add(this, "Battery - Voltage", isBatteryFull);
-    Test.add(this, "DriverCam - Not Enabled", isCameraEnabled);
+    // Test.add(this, "Camera - Enabled", isCameraEnabled);
   }
 }

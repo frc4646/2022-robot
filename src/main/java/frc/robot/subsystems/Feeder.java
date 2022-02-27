@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -10,12 +9,9 @@ import frc.robot.Constants;
 import frc.robot.util.Test;
 import frc.team254.drivers.SparkMaxFactory;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 public class Feeder extends SmartSubsystem {
   private static class DataCache {
-    public boolean hasCargo;
+    public boolean shooterLoaded;
   }
 
   private final CANSparkMax motor;
@@ -35,20 +31,20 @@ public class Feeder extends SmartSubsystem {
 
   @Override
   public void cacheSensors () {
-    cache.hasCargo = !breakBeam.get();
+    cache.shooterLoaded = !breakBeam.get();
   }
 
   @Override
   public void updateDashboard() {    
-    SmartDashboard.putBoolean("Feeder: Cargo", isCargoPresent());
+    SmartDashboard.putBoolean("Feeder: Loaded", isShooterLoaded());
   }
 
   public void setOpenLoop(double percent) {
     motor.set(percent);
   }
 
-  public boolean isCargoPresent() {
-    return cache.hasCargo;
+  public boolean isShooterLoaded() {
+    return cache.shooterLoaded;
   } 
 
   @Override

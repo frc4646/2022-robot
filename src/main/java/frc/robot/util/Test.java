@@ -76,7 +76,7 @@ public class Test {
       Pair.of("Motion Magic", StatusFrameEnhanced.Status_10_MotionMagic)
     );
     for (Pair<String, StatusFrameEnhanced> frame : frames) {
-      System.out.println(String.format("Device %d Status Frame %d %s: %d", device.getDeviceID(), frame.getFirst(), frame.getFirst(), device.getStatusFramePeriod(frame.getSecond())));
+      System.out.println(String.format("Device %d Status Frame %s: %d", device.getDeviceID(), frame.getFirst(), device.getStatusFramePeriod(frame.getSecond())));
     }
   }
 

@@ -47,6 +47,7 @@ public class Turret extends ServoMotorSubsystem {
   @Override
   public void onEnable(boolean isAutonomous) {
     setBrakeMode(true);
+    setSetpointPositionPID(getPosition(), 0.0);  // Handle if zeroed while disabled
   }
 
   @Override
@@ -60,7 +61,7 @@ public class Turret extends ServoMotorSubsystem {
   }
 
   public boolean isOnTarget() {
-    return false;  // TODO
+    return true; // TODO Math.abs(mPeriodicIO.error_ticks) < 1.0 * Constants.Turret.SERVO.kTicksPerUnitDistance;
   }
 
   @Override

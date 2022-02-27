@@ -3,15 +3,12 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.CANifierStatusFrame;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.Test;
 
 public class Canifier extends SmartSubsystem {
   public static class DataCache {
-    double red = 0.0;
-    double green = 0.0;
-    double blue = 0.0;
+    double red = 0.0, green = 0.0, blue = 0.0;
   }
 
   private final CANifier canifier;

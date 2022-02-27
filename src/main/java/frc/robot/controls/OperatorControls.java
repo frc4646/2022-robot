@@ -3,17 +3,13 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants;
-import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.climber.ClimberArms;
-import frc.robot.commands.feeder.FeederOpenLoop;
-import frc.robot.commands.intake.IntakeActivate;
 import frc.robot.commands.sequence.DeployIntake;
-import frc.robot.commands.sequence.LoadCargo;
+import frc.robot.commands.sequence.ExhaustIntake;
 import frc.robot.commands.sequence.ShootOpenLoop;
+import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.sequence.StopShoot;
 import frc.robot.commands.sequence.StowIntake;
 
@@ -37,28 +33,31 @@ public class OperatorControls {
     buttonB.whenReleased(new ClimberArms(false));
     // buttonB.and(Fn).whenPressed(new ClimberRelease());
 
-	// Hood
+    // Hood
     // aimLob.whenActive(new HoodExtend(false));  // TODO test these
     // aimFar.whenActive(new HoodExtend(true));
 
     // Intake
-    buttonY.whenPressed(new ParallelCommandGroup(new DeployIntake(), new LoadCargo()));
-    buttonY.whenReleased(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
-    buttonY.and(Fn).whenActive(new IntakeActivate(-Constants.Intake.OPEN_LOOP));
-    // TODO reverse intake should also reverse agitators??
-    buttonX.debounce(.1).whenActive(new ParallelCommandGroup(new DeployIntake(), new LoadCargo()));  // TODO tune if debounce better
-    buttonX.debounce(.1).whenInactive(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
-    buttonX.and(Fn).whenActive(new IntakeActivate(-Constants.Intake.OPEN_LOOP));
-    // TODO reverse intake should also reverse agitators??
-
+    buttonY.whenPressed(new DeployIntake());
+    buttonY.whenReleased(new StowIntake());
+    buttonY.and(Fn).whenActive(new ExhaustIntake());  // TODO just on regular button?
+    buttonY.and(Fn).whenInactive(new StowIntake());
+    buttonA.whenActive(new ExhaustIntake());
+    buttonA.whenInactive(new StowIntake());
+    
     // Shooter
     bumperL.whenPressed(new ShootOpenLoop());
-    bumperL.whenReleased(new StopShoot().alongWith(new IntakeActivate(0.0), new AgitateOpenLoop(0.0)));
-    bumperR.whenPressed(new LoadCargo());
-    bumperR.whenReleased(new FeederOpenLoop(0.0));
+    bumperL.whenReleased(new StopShoot());  // TODO default shooter command?
+    bumperR.whenPressed(new ShootVision());
+    bumperR.whenReleased(new StopShoot());
 
     // Turret
     // TODO move to zero
+
+    // Sensor
+    // new Trigger(RobotContainer.COLOR_SENSOR::isWrongCargoDetected)
+    // .whenActive(new ExhaustIntake())
+    // .whenInactive(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
   }
 
   public boolean getAimLob() { return operator.getRawAxis(TRIGGER_L) > TRIGGER_DEADBAND; }

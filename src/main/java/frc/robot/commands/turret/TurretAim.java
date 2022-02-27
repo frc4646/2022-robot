@@ -30,7 +30,7 @@ public class TurretAim extends CommandBase {
       setpoint = snap;
     }
     else if (Math.abs(stick) >= Constants.Turret.STICK_DEADBAND) {
-      setpoint += stick * Constants.Turret.OPEN_LOOP_GAIN;
+      setpoint += stick * Constants.Turret.STICK_GAIN;
     }
     turret.setSetpointPositionPID(setpoint, feedforward);
   }

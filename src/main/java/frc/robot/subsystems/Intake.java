@@ -27,6 +27,8 @@ public class Intake extends SmartSubsystem {
     motor.enableVoltageCompensation(true);
     motor.configOpenloopRamp(Constants.Intake.OPEN_LOOP_RAMP);
     // TODO supply current limiting
+
+    setExtend(false);  // solenoid default is OFF, not IN
   }
 
   public void setIntakeSpeed (double intakeSpeed) {

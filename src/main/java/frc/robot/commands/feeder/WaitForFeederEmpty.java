@@ -9,6 +9,6 @@ public class WaitForFeederEmpty extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    return !subsystem.isCargoPresent();  // TODO
+    return !subsystem.isShooterLoaded();  // TODO
   }
 }

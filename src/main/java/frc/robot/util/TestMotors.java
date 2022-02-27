@@ -70,7 +70,7 @@ public class TestMotors {
     }
   
     private void analyzeSingle(SubsystemBase subsystem, TestConfig config, String motor, double current, double rpm) {
-      System.out.println(String.format("%s: %s %.1f Amps", subsystem.getName(), motor, current));
+      System.out.print(String.format("%s: %s %.1f Amps", subsystem.getName(), motor, current));
       if (config.rpmSupplier != null) {
         System.out.print(String.format(", %.0f RPM", rpm));
       }

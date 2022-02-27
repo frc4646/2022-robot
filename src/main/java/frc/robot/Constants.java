@@ -23,7 +23,7 @@ public final class Constants {
     public static final int
       PNEUMATIC_CONTROL_MODULE = 0, POWER_DISTRIBUTION_PANEL = 2,
       DRIVETRAIN_FL = 21, DRIVETRAIN_BL = 22, DRIVETRAIN_BR = 23, DRIVETRAIN_FR = 24,
-      SHOOTER_L = 6, SHOOTER_R = 7, TALON_SHOOTER_L = 25, TALON_SHOOTER_R = 27,
+      TALON_SHOOTER_L = 25, TALON_SHOOTER_R = 27,
       CLIMBER_L = 13, CLIMBER_R = 14,
       INTAKE = 5, TURRET = 26, HOOD = 11,
       FEEDER = 8, AGITATOR_R = 31, AGITATOR_L = 32,
@@ -33,7 +33,7 @@ public final class Constants {
   public static final class Solenoid {
     public static final int
       INTAKE_OUT = 0, INTAKE_IN = 1,
-      ARM_L_OUT = 4, ARM_L_IN = 5, ARM_R_OUT = 6, ARM_R_IN = 7,
+      ARM_L_OUT = 5, ARM_L_IN = 4, ARM_R_OUT = 7, ARM_R_IN = 6,
       RATCHET_L_OUT = 0, RATCHET_L_IN = 1, RATCHET_R_OUT = 2, RATCHET_R_IN = 3;
   }
 
@@ -44,15 +44,30 @@ public final class Constants {
 
   public static final class Agitator {
     public static final double
-      OPEN_LOOP_LOADING = 0.45,
-      OPEN_LOOP_SHOOTING = 0.45,
-      OPEN_LOOP_RAMP = 0.125;  // TODO tune
+      OPEN_LOOP_EXHAUST = 0.90,
+      OPEN_LOOP_LOAD = 0.45,
+      OPEN_LOOP_SHOOT = 0.45,
+      OPEN_LOOP_RAMP = 0.125,  // TODO tune
+      TIMEOUT_STOW = 0.5;  // TODO tune
   }
   
   public static final class Climber {
-    public static final boolean TUNING = true;
+    public static final boolean TUNING = false;
 
-    public static final double LIMIT_F = -1.0;
+    public static final double
+      DEADBAND = 0.2,
+      LIMIT_F = -1.0;
+  }  
+
+  public static final class ColorSensor {
+    public static final boolean TUNING = false;
+    
+    public static final I2C.Port I2C_PORT = I2C.Port.kMXP;
+
+    public static final int DISTANCE_MIN = 75;
+    public static final Color 
+      MATCH_BLUE = new Color(0.143, 0.427, 0.429), // TODO fill these out based on readings
+      MATCH_RED = new Color(0.561, 0.232, 0.114); // TODO fill these out based on readings
   }
 
   public static final class Diagnostic {
@@ -70,9 +85,9 @@ public final class Constants {
     public static final DiagnosticState
       FAULT_CARGO = new DiagnosticState(Diagnostics.toColor(255, 0, 255, 0.1)),
       FAULT_TURRET = new DiagnosticState(Diagnostics.toColor(255, 255, 0, 1.0), true),
-      AIMING = new DiagnosticState(Diagnostics.toColor(0, 255, 255, .1)),
       CLIMBING = new DiagnosticState(Diagnostics.toColor(0, 255, 255, 0.5)),
-      SHOOTING = new DiagnosticState(Diagnostics.toColor(255, 0, 0, .1));
+      SHOOTING = new DiagnosticState(Diagnostics.toColor(255, 0, 0, .1)),
+      TURRET_AIMED = new DiagnosticState(Diagnostics.toColor(0, 255, 255, .1));
   }
 
   public static final class Drivetrain {
@@ -136,9 +151,11 @@ public final class Constants {
 
   public static final class Feeder {
     public static final double
-      OPEN_LOOP_LOADING = 0.3,  
-      OPEN_LOOP_SHOOTING = 0.5,
-      OPEN_LOOP_RAMP = 0.25;  // TODO tune
+      OPEN_LOOP_EXHAUST = 0.1,
+      OPEN_LOOP_LOAD = 0.3,
+      OPEN_LOOP_SHOOT = 0.5,
+      OPEN_LOOP_RAMP = 0.25,  // TODO tune
+      TIMEOUT_LOAD = 3.0;
   }
 
   public static final class Hood {
@@ -158,7 +175,7 @@ public final class Constants {
 
     public static int  RPM_STABLE_COUNTS = 5;
     public static final double
-      OPEN_LOOP = .5,
+      OPEN_LOOP = .35,  // TODO switch to using default rpm instead
       OPEN_LOOP_REV_SECONDS = 1.0,
       OPEN_LOOP_RPM = 2300.0,
       RPM_MAX = 6380.0 * 1.084,  //  Tuned 2/22
@@ -176,8 +193,8 @@ public final class Constants {
 
     public static final double
       STICK_GAIN = 25.0,
-      STICK_DEADBAND = 0.2,
-      
+      STICK_DEADBAND = 0.4,  // Reduce when switch to new controller
+
       GEAR_RATIO = 72.0 / 14.0 * 154.0 / 16.0,  // Number > 1 means "geared down"
       GEAR_RATIO_WRONG = 24.0 / 8.0 * 240.0 / 14.0,
       VELOCITY_MAX = 2200.0;  // TODO real value
@@ -191,18 +208,18 @@ public final class Constants {
       SERVO.kSupplyPeakCurrentLimit = 40; // amps
       SERVO.kSupplyPeakCurrentDuration = 10; // ms
 
-      SERVO.kMinUnitsLimit = 80.0;
-      SERVO.kMaxUnitsLimit = 280.0;
+      SERVO.kMinUnitsLimit = 85.0;
+      SERVO.kMaxUnitsLimit = 415.0;
       SERVO.kHomePosition = 180.0;
       SERVO.kTicksPerUnitDistance = 2048.0 * GEAR_RATIO_WRONG / 360.0;
 
       SERVO.kPositionKp = 0.05;
-      SERVO.kPositionKi = 0.0;
+      SERVO.kPositionKi = 0.0;  // TODO
       SERVO.kPositionKd = 0.25;
       SERVO.kPositionKf = 0.0;
       SERVO.kPositionIZone = 40.0;
-      SERVO.kPositionMaxIntegralAccumulator = 2000.0;
-      SERVO.kPositionDeadband = 1.0 * SERVO.kTicksPerUnitDistance; // Ticks  // TODO try .1 again
+      SERVO.kPositionMaxIntegralAccumulator = 20000.0;  // TODO
+      SERVO.kPositionDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks  // TODO try .1 again
 
       // SERVO.kMotionMagicKp = 0.0;
       // SERVO.kMotionMagicKi = 0.0;
@@ -224,7 +241,7 @@ public final class Constants {
       HORIZONTAL_FOV = 54.0,  // Degrees (LL1: 54.0, LL2: 59.6)
       VERTICAL_FOV = 41.0,  // Degrees (LL1: 41.0, LL2: 49.7)
       CAMERA_MOUNTING_HEIGHT = 40.0,  // Inches
-      CAMERA_MOUNTING_ANGLE = 32.0;  // Degrees
+      CAMERA_MOUNTING_ANGLE = 30.15;  // Degrees, tuned 2/27
 
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>
       LOB_RPMS = new InterpolatingTreeMap<>(),
@@ -240,26 +257,17 @@ public final class Constants {
       LOB_DEGREES.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
     }
     static {
-      RPM_MAP.put(new InterpolatingDouble(64.0), new InterpolatingDouble(1900.0));
-      RPM_MAP.put(new InterpolatingDouble(117.0), new InterpolatingDouble(2350.0));
+      RPM_MAP.put(new InterpolatingDouble(51.5), new InterpolatingDouble(2100.0));  // tuned 2/27
+      RPM_MAP.put(new InterpolatingDouble(71.6), new InterpolatingDouble(2200.0));
+      RPM_MAP.put(new InterpolatingDouble(89.3), new InterpolatingDouble(2275.0));
     }
     static {
       ANGLE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
     }
   }
 
-  public static final class ColorSensor {
-    public static final boolean TUNING = false;
-    
-    public static final Color BLUE_CARGO_TARGET = new Color(0.143, 0.427, 0.429); // TODO fill these out based on readings
-    public static final Color RED_CARGO_TARGET = new Color(0.561, 0.232, 0.114); // TODO fill these out based on readings
-
-    public static final int PROXIMITY_TO_CARGO = 1000; // TODO tune distance from sensor to cargo
-
-    public static final I2C.Port I2C_PORT = I2C.Port.kMXP;
-  }
-
   public static final class Field {
+    public static final double CLIMBER_TIME_REQUIRED_TO_HOLD = 5.0;
     public static final double VISION_TAPE_INCHES = 102.0;
   }
 }

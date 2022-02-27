@@ -1,6 +1,7 @@
 package frc.robot.commands.climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 
@@ -13,7 +14,12 @@ public class ClimberManual extends CommandBase {
 
   @Override
   public void execute() {
-    double setpoint = RobotContainer.CONTROLS.operator.getClimberStick();
+    double setpoint = 0.0;
+    double stick = RobotContainer.CONTROLS.operator.getClimberStick();
+
+    if (Math.abs(stick) > Constants.Climber.DEADBAND) {
+      setpoint = stick;
+    }
     subsystem.setOpenLoop(setpoint);
   }
 }

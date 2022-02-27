@@ -3,8 +3,10 @@ package frc.robot;
 import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.OnDisabledDelayed;
 import frc.robot.commands.SignalDriveTeam;
+import frc.robot.commands.agitator.AgitatorAuto;
 import frc.robot.commands.climber.ClimberManual;
 import frc.robot.commands.drivetrain.DriveTeleop;
+import frc.robot.commands.feeder.FeederAuto;
 import frc.robot.commands.turret.TurretAim;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
@@ -32,9 +34,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RobotContainer {
-  private final double TIME_CLIMBER_REQUIRED_TO_HOLD = 5.0;
-  private final double TIME_ON_DISABLE_DELAYED = TIME_CLIMBER_REQUIRED_TO_HOLD * 2.0;
-
   public static Agitator AGITATOR;
   public static Climber CLIMBER;
   public static CargoHolder CARGO_HOLDER;
@@ -59,7 +58,7 @@ public class RobotContainer {
     AGITATOR = new Agitator();
     // CARGO_HOLDER = new CargoHolder();
     CLIMBER = new Climber();
-    // COLOR_SENSOR = new ColorSensor();
+    COLOR_SENSOR = new ColorSensor();
     DIAGNOSTICS = new Diagnostics();
     DRIVETRAIN = new Drivetrain();
     FEEDER = new Feeder();
@@ -69,15 +68,17 @@ public class RobotContainer {
     SHOOTER = new Shooter();
     TURRET = new Turret();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(AGITATOR, CLIMBER, /*COLOR_SENSOR,*/ DRIVETRAIN, FEEDER, /*CARGO_HOLDER,*/ HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION, DIAGNOSTICS);
+    allSubsystems = Arrays.asList(AGITATOR, CLIMBER, COLOR_SENSOR, DRIVETRAIN, FEEDER, /*CARGO_HOLDER,*/ HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION, DIAGNOSTICS);
 
     CONTROLS = new Controls();  // Create after subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
-    TURRET.setDefaultCommand(new TurretAim());
-    // HOOD.setDefaultCommand(new HoodAim());
+    AGITATOR.setDefaultCommand(new AgitatorAuto());
     CLIMBER.setDefaultCommand(new ClimberManual());
+    FEEDER.setDefaultCommand(new FeederAuto());
+    // HOOD.setDefaultCommand(new HoodAim());
+    TURRET.setDefaultCommand(new TurretAim());
 
     autoModeSelector = new AutoModeSelector();
   }
@@ -98,13 +99,13 @@ public class RobotContainer {
 
   public void onDisable() {
     allSubsystems.forEach(SmartSubsystem::onDisable);
-    new OnDisabledDelayed().withTimeout(TIME_ON_DISABLE_DELAYED).schedule();
+    new OnDisabledDelayed().schedule();
   }
 
   public void runTests() {
     if (VISION != null) {
       VISION.setLED(LEDMode.BLINK);
-	}
+	  }
     Test.reset();
     Timer.delay(3.0);
     allSubsystems.forEach(SmartSubsystem::runTests);  // TODO try as lambda command so its cancellable

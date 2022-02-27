@@ -21,9 +21,9 @@ public class AgitatorAuto extends CommandBase {
     double demand = 0.0;
 
     if (shooter.isShooting()) {
-      demand = Constants.Agitator.OPEN_LOOP_SHOOTING;
+      demand = Constants.Agitator.OPEN_LOOP_SHOOT;
     } else if (intake.isExtended()) {
-      demand = Constants.Agitator.OPEN_LOOP_LOADING;
+      demand = Constants.Agitator.OPEN_LOOP_LOAD;
     }
     subsystem.setOpenLoop(demand);
   }

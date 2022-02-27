@@ -24,7 +24,7 @@ public class Climber extends SmartSubsystem {
   }
 
   private final TalonFX master, slave;
-  private final DoubleSolenoid armL, armR, ratchetL, ratchetR;
+  private final DoubleSolenoid armL, armR;//, ratchetL, ratchetR;
   private final DataCache cache = new DataCache();
 
   private boolean isBrakeMode = false, armsExtended = false, ratchetEngaged = false;
@@ -34,14 +34,15 @@ public class Climber extends SmartSubsystem {
     slave = TalonFXFactory.createPermanentSlaveTalon(Constants.CAN.CLIMBER_R, Constants.CAN.CLIMBER_L);
     armL = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.ARM_L_OUT, Constants.Solenoid.ARM_L_IN);
     armR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.ARM_R_OUT, Constants.Solenoid.ARM_R_IN);
-    ratchetL = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.RATCHET_L_OUT, Constants.Solenoid.RATCHET_L_IN);
-    ratchetR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.RATCHET_R_OUT, Constants.Solenoid.RATCHET_R_IN);
+    // ratchetL = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.RATCHET_L_OUT, Constants.Solenoid.RATCHET_L_IN);
+    // ratchetR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.RATCHET_R_OUT, Constants.Solenoid.RATCHET_R_IN);
 
     configureMotor(master, true, false);
     configureMotor(slave, false, true);
 
     isBrakeMode = false;
     setBrakeMode(true);
+    setArms(false);  // solenoid default is OFF, not IN
     setSoftLimitsEnabled(false);  // TODO enable
   }
 
@@ -80,8 +81,6 @@ public class Climber extends SmartSubsystem {
   public void updateDashboard() {
     SmartDashboard.putBoolean("Climber: Limit L", cache.limitL);
     SmartDashboard.putBoolean("Climber: Limit R", cache.limitR);
-    SmartDashboard.putBoolean("Climber: Arms", armsExtended);
-    SmartDashboard.putBoolean("Climber: Ratchet", ratchetEngaged);
     if (Constants.Climber.TUNING) {
       SmartDashboard.putNumber("Climber: Position", cache.position);
       SmartDashboard.putNumber("Climber: Velocity", cache.velocity);
@@ -121,8 +120,8 @@ public class Climber extends SmartSubsystem {
 
   public void setRatchet(boolean engage) {
     Value direction = (engage) ? Value.kForward : Value.kReverse;
-    ratchetL.set(direction);
-    ratchetR.set(direction);
+    // ratchetL.set(direction);
+    // ratchetR.set(direction);
     ratchetEngaged = engage;
   }
 
@@ -133,7 +132,7 @@ public class Climber extends SmartSubsystem {
   public boolean isRatchetEngaged() {
     return ratchetEngaged;
   }
-  
+
   public boolean isStalled() {
     return false;  // TODO zero if stalled at bottom rather than snap cable
   }
@@ -142,11 +141,11 @@ public class Climber extends SmartSubsystem {
   public void runTests() {
     Test.checkFirmware(this, master);
     Test.checkFirmware(this, slave);
-    Test.checkStatusFrames(master);
-    Test.checkStatusFrames(slave);
+    // Test.checkStatusFrames(master);
+    // Test.checkStatusFrames(slave);
     Test.checkSolenoid(this, armL);
     Test.checkSolenoid(this, armR);
-    Test.checkSolenoid(this, ratchetL);
-    Test.checkSolenoid(this, ratchetR);
+    // Test.checkSolenoid(this, ratchetL);
+    // Test.checkSolenoid(this, ratchetR);
   }
 }

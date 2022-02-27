@@ -12,123 +12,93 @@ import frc.robot.Constants;
 import frc.robot.util.Test;
 
 public class ColorSensor extends SmartSubsystem {
-  public static enum CargoColor {
-    NONE, CORRECT, WRONG
+  public static enum STATE {
+    NOT_PRESENT, CORRECT, WRONG, UNKNOWN_COLOR
   }
-  public static class DataCacheDetails {
-    public Color detectedColor;
-    public ColorMatchResult match;
-    public boolean hasCargo;
-
-    public int ir;
-    public int proximity;
-  }
-
   public static class DataCache {
-    public CargoColor color;
-    public DataCacheDetails details = new DataCacheDetails();
+    public STATE state;
+
+    public Color colorRaw;
+    public int infraredRaw;  // TODO remove?
+    public int distance;
+    public ColorMatchResult match;
   }
-  
-  private DataCache cache = new DataCache();
   
   private final ColorSensorV3 colorSensor;
   private final ColorMatch colorMatcher;
+  private DataCache cache = new DataCache();
 
-  private Alliance alliance, lastAlliance;
-  private Color allianceColor, opponentColor;
+  private Color colorAlliance = Constants.ColorSensor.MATCH_RED;
+  private Color colorOpponent = Constants.ColorSensor.MATCH_RED;
 
   public ColorSensor() {
     colorSensor = new ColorSensorV3(Constants.ColorSensor.I2C_PORT);
-
     colorMatcher = new ColorMatch();
-    colorMatcher.addColorMatch(Constants.ColorSensor.BLUE_CARGO_TARGET);
-    colorMatcher.addColorMatch(Constants.ColorSensor.RED_CARGO_TARGET); 
-    
-    lastAlliance = Alliance.Invalid;
+    colorMatcher.addColorMatch(Constants.ColorSensor.MATCH_BLUE);
+    colorMatcher.addColorMatch(Constants.ColorSensor.MATCH_RED);
   }
 
   @Override
   public void cacheSensors() {
-    alliance = DriverStation.getAlliance();
-    if(lastAlliance != alliance) {
-      // save alliance color target
-      if(alliance == Alliance.Red) {
-        allianceColor = Constants.ColorSensor.RED_CARGO_TARGET;
-        opponentColor = Constants.ColorSensor.BLUE_CARGO_TARGET;
-      }
-      else {
-        allianceColor = Constants.ColorSensor.BLUE_CARGO_TARGET;
-        opponentColor = Constants.ColorSensor.RED_CARGO_TARGET;
-      }
-      lastAlliance = alliance;
-    }
-
-    // get updated data from the sensor
     try {
       if(colorSensor.isConnected()) {
-        cache.details.detectedColor = colorSensor.getColor();
-        cache.details.ir = colorSensor.getIR();
-        cache.details.proximity = colorSensor.getProximity();
-        cache.details.match = colorMatcher.matchClosestColor(cache.details.detectedColor);
+        cache.colorRaw = colorSensor.getColor();
+        cache.infraredRaw = colorSensor.getIR();
+        cache.distance = colorSensor.getProximity();
+        cache.match = colorMatcher.matchClosestColor(cache.colorRaw);
+        // TODO switch to matchColor? Incorperates confidence level. Set confidence threshold?  
       }
     } catch (NullPointerException npe) {
-      cache.details.proximity = 0;
+      cache.distance = 0;  // TODO handle matcher returns null?
     }
-    
-    // if the detected distance is close enough, we have the cargo
-    // value is larger when closer, smaller when far away
-    cache.details.hasCargo = cache.details.proximity >= Constants.ColorSensor.PROXIMITY_TO_CARGO;
 
-    // set the color state
-    if(!cache.details.hasCargo)
-      cache.color = CargoColor.NONE;
-    else if(cache.details.match.color == allianceColor)
-      cache.color = CargoColor.CORRECT;
-    else if(cache.details.match.color == opponentColor)
-      cache.color = CargoColor.WRONG;
+    if(cache.distance < Constants.ColorSensor.DISTANCE_MIN)
+      cache.state = STATE.NOT_PRESENT;
+    else if(cache.match.color == colorAlliance)
+      cache.state = STATE.CORRECT;
+    else if(cache.match.color == colorOpponent)
+      cache.state = STATE.WRONG;
     else
-      cache.color = CargoColor.NONE;
+      cache.state = STATE.UNKNOWN_COLOR;
   }
 
   @Override
-  public void updateDashboard() {    
-    SmartDashboard.putBoolean("ColorSensor/Detected", isCargoDetected());
-    SmartDashboard.putBoolean("ColorSensor/Correct", getCargoColor() == CargoColor.CORRECT);
-    SmartDashboard.putBoolean("ColorSensor/Wrong", getCargoColor() == CargoColor.WRONG);
-
+  public void updateDashboard() {
+    SmartDashboard.putString("Color: State", getState().toString());
+    SmartDashboard.putNumber("Color: Distance", cache.distance);
     if (Constants.ColorSensor.TUNING) {
-      String colorString;
-      if (cache.details.match.color == Constants.ColorSensor.BLUE_CARGO_TARGET) {
-        colorString = "Blue";
-      } else if (cache.details.match.color == Constants.ColorSensor.RED_CARGO_TARGET) {
-        colorString = "Red";
-      } else {
-        colorString = "Unknown";
-      }
-      SmartDashboard.putBoolean("ColorSensor/HasCargo", cache.details.hasCargo);
-      SmartDashboard.putString("ColorSensor/Color", colorString);
-      SmartDashboard.putNumber("ColorSensor/Confidence", cache.details.match.confidence);
+      SmartDashboard.putNumber("Color: Confidence", cache.match.confidence);
 
-      SmartDashboard.putNumber("ColorSensor/Red", cache.details.detectedColor.red);
-      SmartDashboard.putNumber("ColorSensor/Green", cache.details.detectedColor.green);
-      SmartDashboard.putNumber("ColorSensor/Blue", cache.details.detectedColor.blue);
-      SmartDashboard.putNumber("ColorSensor/IR", cache.details.ir);
-      SmartDashboard.putNumber("ColorSensor/Proximity", cache.details.proximity);
+      SmartDashboard.putNumber("Color: Red", cache.colorRaw.red);
+      SmartDashboard.putNumber("Color: Green", cache.colorRaw.green);
+      SmartDashboard.putNumber("Color: Blue", cache.colorRaw.blue);
+      SmartDashboard.putNumber("Color: Infrared", cache.infraredRaw);
     }
   }
 
-  public boolean isCargoDetected() {
-    return cache.color != CargoColor.NONE;
+  @Override
+  public void onEnable(boolean isAutonomous) {
+    updateAlliance();
   }
 
-  public CargoColor getCargoColor() {
-    return cache.color;
+  @Override
+  public void onDisable() {
+    updateAlliance();
+  }
+
+  public STATE getState() { return cache.state; }
+  public boolean isCargoPresent() { return cache.state != STATE.NOT_PRESENT; }
+  public boolean isCorrectCargo() { return cache.state == STATE.CORRECT; }
+  public boolean isWrongCargo() { return cache.state == STATE.WRONG; }
+
+  private void updateAlliance() {
+    Alliance alliance = DriverStation.getAlliance();
+    colorAlliance = alliance == Alliance.Red ? Constants.ColorSensor.MATCH_RED : Constants.ColorSensor.MATCH_BLUE;
+    colorOpponent = alliance == Alliance.Red ? Constants.ColorSensor.MATCH_BLUE : Constants.ColorSensor.MATCH_RED;
   }
 
   @Override
   public void runTests() {
-    boolean isConnected = colorSensor.isConnected();
-
-    Test.add(this, "Color Sensor - Is Connected", isConnected);
+    Test.add(this, "Is Connected", colorSensor.isConnected());
   }
 }

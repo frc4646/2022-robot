@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ColorSensor.CargoColor;
+import frc.robot.subsystems.ColorSensor.STATE;
 
 /***
  * In it's current state, it will just monitor the state of the sensors for where cargo is at
@@ -20,20 +20,20 @@ public class CargoHolder extends SmartSubsystem {
 
   @Override
   public void cacheSensors() {
-    CargoColor color = RobotContainer.COLOR_SENSOR.getCargoColor();
-    boolean isShooterLoaded = RobotContainer.FEEDER.isCargoPresent();
+    STATE state = RobotContainer.COLOR_SENSOR.getState();
+    boolean isShooterLoaded = RobotContainer.FEEDER.isShooterLoaded();
     boolean shootRequested = RobotContainer.SHOOTER.isShooting(); // not technically correct, but works for monitoring
   
     switch (currentState) {
       case IDLE:
         // here if we have our cargo loaded for the shooter and may or may not have our cargo in the intake
-        if ((color == CargoColor.CORRECT) && !isShooterLoaded) {
+        if ((state == STATE.CORRECT) && !isShooterLoaded) {
           currentState = State.INTAKING;  // got a lower cargo and need to intake it to the top
         }
-        if ((color == CargoColor.WRONG) && !isShooterLoaded) {
+        if ((state == STATE.WRONG) && !isShooterLoaded) {
           currentState = State.EJECT_SHOOT;  // got the wrong cargo and need to shoot it out the top
         }
-        if ((color == CargoColor.WRONG) && isShooterLoaded) {
+        if ((state == STATE.WRONG) && isShooterLoaded) {
           currentState = State.EJECT_INTAKE;  // got the wrong cargo and have one already, so shoot it out the intake
         }
         if (shootRequested) {
@@ -45,10 +45,10 @@ public class CargoHolder extends SmartSubsystem {
         if (isShooterLoaded) {
           currentState = State.IDLE;  // we now have a cargo ready for the shooter, so idle
         }
-        if ((color == CargoColor.WRONG) && !isShooterLoaded) {
+        if ((state == STATE.WRONG) && !isShooterLoaded) {
           currentState = State.EJECT_SHOOT;   // got the wrong cargo and need to shoot it out the top
         }        
-        if ((color == CargoColor.WRONG) && isShooterLoaded) {
+        if ((state == STATE.WRONG) && isShooterLoaded) {
           currentState = State.EJECT_INTAKE;  // got the wrong cargo and have one already, so shoot it out the intake
         }
         if (shootRequested) {
@@ -68,7 +68,7 @@ public class CargoHolder extends SmartSubsystem {
         }
         break;
       case EJECT_INTAKE:
-        if ((color == CargoColor.CORRECT) || (color == CargoColor.NONE) || (ejectionTimer > 0)) {
+        if ((state == STATE.CORRECT) || (state == STATE.NOT_PRESENT) || (ejectionTimer > 0)) {
           ejectionTimer++;  // only wait for X time if it's not the wrong cargo
         }
         if (ejectionTimer >= 10) {
@@ -82,6 +82,6 @@ public class CargoHolder extends SmartSubsystem {
 
   @Override
   public void updateDashboard() {
-    SmartDashboard.putString("CargoHolder/State", currentState.toString());
+    SmartDashboard.putString("CargoHolder: State", currentState.toString());
   }
 }
