@@ -155,6 +155,7 @@ public final class Constants {
       OPEN_LOOP_LOAD = 0.3,
       OPEN_LOOP_SHOOT = 0.5,
       OPEN_LOOP_RAMP = 0.25,  // TODO tune
+      TIMEOUT_EXHAUST = 0.5,
       TIMEOUT_LOAD = 3.0;
   }
 

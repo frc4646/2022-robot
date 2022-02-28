@@ -10,7 +10,6 @@ import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.ExhaustIntake;
 import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.ShootVision;
-import frc.robot.commands.sequence.StopShoot;
 import frc.robot.commands.sequence.StowIntake;
 
 public class OperatorControls {
@@ -47,9 +46,7 @@ public class OperatorControls {
     
     // Shooter
     bumperL.whenPressed(new ShootOpenLoop());
-    bumperL.whenReleased(new StopShoot());  // TODO default shooter command?
     bumperR.whenPressed(new ShootVision());
-    bumperR.whenReleased(new StopShoot());
 
     // Turret
     // TODO move to zero

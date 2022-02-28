@@ -5,10 +5,10 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 
-public class ClimberManual extends CommandBase {
+public class ClimberAuto extends CommandBase {
   private final Climber subsystem = RobotContainer.CLIMBER;
 
-  public ClimberManual() {
+  public ClimberAuto() {
     addRequirements(subsystem);
   }
 

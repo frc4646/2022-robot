@@ -4,9 +4,10 @@ import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.OnDisabledDelayed;
 import frc.robot.commands.SignalDriveTeam;
 import frc.robot.commands.agitator.AgitatorAuto;
-import frc.robot.commands.climber.ClimberManual;
+import frc.robot.commands.climber.ClimberAuto;
 import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.feeder.FeederAuto;
+import frc.robot.commands.shooter.ShooterAuto;
 import frc.robot.commands.turret.TurretAim;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
@@ -75,9 +76,10 @@ public class RobotContainer {
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
     AGITATOR.setDefaultCommand(new AgitatorAuto());
-    CLIMBER.setDefaultCommand(new ClimberManual());
+    CLIMBER.setDefaultCommand(new ClimberAuto());
     FEEDER.setDefaultCommand(new FeederAuto());
     // HOOD.setDefaultCommand(new HoodAim());
+    SHOOTER.setDefaultCommand(new ShooterAuto());
     TURRET.setDefaultCommand(new TurretAim());
 
     autoModeSelector = new AutoModeSelector();
@@ -105,7 +107,7 @@ public class RobotContainer {
   public void runTests() {
     if (VISION != null) {
       VISION.setLED(LEDMode.BLINK);
-	  }
+    }
     Test.reset();
     Timer.delay(3.0);
     allSubsystems.forEach(SmartSubsystem::runTests);  // TODO try as lambda command so its cancellable

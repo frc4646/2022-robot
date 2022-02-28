@@ -45,7 +45,7 @@ public class Feeder extends SmartSubsystem {
 
   public boolean isShooterLoaded() {
     return cache.shooterLoaded;
-  } 
+  }
 
   @Override
   public void runTests() {

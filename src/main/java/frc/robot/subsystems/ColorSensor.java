@@ -88,6 +88,7 @@ public class ColorSensor extends SmartSubsystem {
 
   public STATE getState() { return cache.state; }
   public boolean isCargoPresent() { return cache.state != STATE.NOT_PRESENT; }
+  public boolean isCargoAbsent() { return cache.state == STATE.NOT_PRESENT; }
   public boolean isCorrectCargo() { return cache.state == STATE.CORRECT; }
   public boolean isWrongCargo() { return cache.state == STATE.WRONG; }
 
