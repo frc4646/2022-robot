@@ -28,7 +28,6 @@ public class Shooter extends SmartSubsystem {
 
   private double targetVelocityRPM = Double.POSITIVE_INFINITY;
   private double demand = 0.0;
-  private int stableVisionCounts = 0;
   private int stableRPMCounts = 0;
 
   public Shooter() {
@@ -75,10 +74,6 @@ public class Shooter extends SmartSubsystem {
     cache.ampsStatorR = masterR.getStatorCurrent();
     cache.errorL = (masterL.getControlMode() == ControlMode.Velocity) ? masterL.getClosedLoopError(0) : 0.0;
     cache.errorR = (masterR.getControlMode() == ControlMode.Velocity) ? masterR.getClosedLoopError(0) : 0.0;
-    stableVisionCounts++;
-    if (!isOnTarget()) {
-      stableVisionCounts = 0;
-    }
 
     stableRPMCounts++;
     if(Math.abs(targetVelocityRPM - getRPM()) > Constants.Shooter.RPM_ERROR_ALLOWED) {
@@ -119,7 +114,6 @@ public class Shooter extends SmartSubsystem {
   public double getRPM() { return (cache.rpmL + cache.rpmR) / 2.0; }
   public double getVoltage() { return (cache.voltsL + cache.voltsR) / 2.0; }
 
-  public boolean isOnTarget() { return stableVisionCounts > Constants.Shooter.VISION_STABLE_COUNTS; }
   public boolean isShooting() { return !Util.epsilonEquals(demand, 0.0); }
   public boolean isStable() { return stableRPMCounts > Constants.Shooter.RPM_STABLE_COUNTS; }
   
