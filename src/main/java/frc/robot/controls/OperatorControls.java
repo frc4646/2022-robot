@@ -5,12 +5,13 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.climber.ClimberArms;
+import frc.robot.commands.climber.ClimberArmsExtend;
 import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.ExhaustIntake;
 import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.sequence.StowIntake;
+import frc.robot.commands.turret.TurretDisable;
 
 public class OperatorControls {
   private final int TRIGGER_L = 2, TRIGGER_R = 3;
@@ -28,8 +29,8 @@ public class OperatorControls {
     aimFar = new Trigger() { @Override public boolean get() { return getAimFar(); } };
 
     // Climber
-    buttonB.whenPressed(new ClimberArms(true));
-    buttonB.whenReleased(new ClimberArms(false));
+    start.whenPressed(new ClimberArmsExtend(true));
+    start.whenReleased(new ClimberArmsExtend(false));
     // buttonB.and(Fn).whenPressed(new ClimberRelease());
 
     // Hood

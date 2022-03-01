@@ -28,7 +28,8 @@ public class Shooter extends SmartSubsystem {
 
   private double targetVelocityRPM = Double.POSITIVE_INFINITY;
   private double demand = 0.0;
-  private int stableCounts = 0;
+  private int stableVisionCounts = 0;
+  private int stableRPMCounts = 0;
 
   public Shooter() {
     masterL = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_L);
@@ -74,15 +75,21 @@ public class Shooter extends SmartSubsystem {
     cache.ampsStatorR = masterR.getStatorCurrent();
     cache.errorL = (masterL.getControlMode() == ControlMode.Velocity) ? masterL.getClosedLoopError(0) : 0.0;
     cache.errorR = (masterR.getControlMode() == ControlMode.Velocity) ? masterR.getClosedLoopError(0) : 0.0;
-    stableCounts++;
+    stableVisionCounts++;
     if (!isOnTarget()) {
-      stableCounts = 0;
+      stableVisionCounts = 0;
+    }
+
+    stableRPMCounts++;
+    if(Math.abs(targetVelocityRPM - getRPM()) > Constants.Shooter.RPM_ERROR_ALLOWED) {
+      stableRPMCounts = 0;
     }
   }
 
   @Override
   public void updateDashboard() {
     SmartDashboard.putNumber("Shooter: RPM", getRPM());
+    SmartDashboard.putBoolean("Shooter: IsStable", isStable());
     if (Constants.Shooter.TUNING) {
       SmartDashboard.putNumber("Shooter: Demand", demand);
       SmartDashboard.putNumber("Shooter: Amps Supply L", cache.ampsSupplyL);
@@ -112,9 +119,9 @@ public class Shooter extends SmartSubsystem {
   public double getRPM() { return (cache.rpmL + cache.rpmR) / 2.0; }
   public double getVoltage() { return (cache.voltsL + cache.voltsR) / 2.0; }
 
-  public boolean isOnTarget() { return Math.abs(targetVelocityRPM - getRPM()) < Constants.Shooter.RPM_ERROR_ALLOWED; }
+  public boolean isOnTarget() { return stableVisionCounts > Constants.Shooter.VISION_STABLE_COUNTS; }
   public boolean isShooting() { return !Util.epsilonEquals(demand, 0.0); }
-  public boolean isStable() { return stableCounts > Constants.Shooter.RPM_STABLE_COUNTS; }
+  public boolean isStable() { return stableRPMCounts > Constants.Shooter.RPM_STABLE_COUNTS; }
   
   private double nativeUnitsToRPM(double ticks_per_100_ms) {
     return ticks_per_100_ms * 10.0 * 60.0 / Constants.Shooter.TICKS_PER_REV;

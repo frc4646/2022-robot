@@ -167,14 +167,15 @@ public final class Constants {
 
   public static final class Intake {
     public static final double
-      OPEN_LOOP = 0.40,
+      OPEN_LOOP = 0.32846,
       OPEN_LOOP_RAMP = 0.4;
   }
 
   public static final class Shooter {
     public static final boolean TUNING = false;
 
-    public static int  RPM_STABLE_COUNTS = 5;
+    public static int VISION_STABLE_COUNTS = 5;
+    public static int RPM_STABLE_COUNTS = 5;
     public static final double
       OPEN_LOOP = .35,  // TODO switch to using default rpm instead
       OPEN_LOOP_REV_SECONDS = 1.0,
