@@ -10,4 +10,8 @@ public class Controls {
     operator = new OperatorControls();
     dashboard = new DashboardControls();
   }
+
+  public void configureButtons() {
+    operator.configureButtons();
+  }
 }

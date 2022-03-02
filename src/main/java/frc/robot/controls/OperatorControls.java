@@ -5,13 +5,14 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.climber.ClimberArmsExtend;
+import frc.robot.commands.climber.ClimberArms;
+import frc.robot.commands.feeder.FeederPosition;
+import frc.robot.commands.sequence.ClimbMode;
 import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.ExhaustIntake;
 import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.sequence.StowIntake;
-import frc.robot.commands.turret.TurretDisable;
 
 public class OperatorControls {
   private final int TRIGGER_L = 2, TRIGGER_R = 3;
@@ -27,11 +28,14 @@ public class OperatorControls {
     Fn = makeButton(Button.kBack); start = makeButton(Button.kStart);
     aimLob = new Trigger() { @Override public boolean get() { return getAimLob(); } };
     aimFar = new Trigger() { @Override public boolean get() { return getAimFar(); } };
+  }
 
+  public void configureButtons() {
     // Climber
-    start.whenPressed(new ClimberArmsExtend(true));
-    start.whenReleased(new ClimberArmsExtend(false));
-    // buttonB.and(Fn).whenPressed(new ClimberRelease());
+    start.whenPressed(new ClimberArms(true));
+    start.whenReleased(new ClimberArms(false));
+    buttonX.toggleWhenPressed(new ClimbMode());
+    // Fn.whenPressed(new ClimberZero() or new ClimberOverrideLimits());  // auto zero will do wrong thing if spool rolls over
 
     // Hood
     // aimLob.whenActive(new HoodExtend(false));  // TODO test these
@@ -49,13 +53,9 @@ public class OperatorControls {
     bumperL.whenPressed(new ShootOpenLoop());
     bumperR.whenPressed(new ShootVision());
 
-    // Turret
-    // TODO move to zero
-
-    // Sensor
-    // new Trigger(RobotContainer.COLOR_SENSOR::isWrongCargoDetected)
-    // .whenActive(new ExhaustIntake())
-    // .whenInactive(new ParallelCommandGroup(new StowIntake(), new FeederOpenLoop(0.0)));
+    // Testing
+    buttonB.whenActive(new FeederPosition(1.0));
+    buttonB.whenInactive(new FeederPosition(-1.0));
   }
 
   public boolean getAimLob() { return operator.getRawAxis(TRIGGER_L) > TRIGGER_DEADBAND; }

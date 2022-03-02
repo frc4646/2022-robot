@@ -30,8 +30,6 @@ public class ShooterTune extends CommandBase {
     System.out.println("Tune,"
     + " range: " + vision.getGroundDistanceToHubInches()
     + " rpm: " + subsystem.getRPM()
-    + " volts: " + subsystem.getVoltage()
-    + " amps supply: " + subsystem.getAmpsSupply()
     + " amps stator: " + subsystem.getAmpsStator());
   }
 }

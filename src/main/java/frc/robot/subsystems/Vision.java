@@ -15,7 +15,7 @@ public class Vision extends SmartSubsystem {
     public double yDegrees;     // Vertical Offset From Crosshair To Target (LL1: -20.5 degrees to 20.5 degrees | LL2: -24.85 to 24.85 degrees)
     public double area;         // Target Area (0% of image to 100% of image)
     public boolean seesTarget;  // Whether the limelight has any valid targets (0 or 1)
-    public int modeLED;
+    public int modeLED = LEDMode.PIPELINE.ordinal();
     public double distance;
   }
 
@@ -24,6 +24,7 @@ public class Vision extends SmartSubsystem {
 
   private final NetworkTable table;
   private final DataCache cache = new DataCache();
+  private int stableCounts = 0;  // TODO use moving average of linear filter on vision data instead?
 
   public Vision() {
     table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -39,6 +40,11 @@ public class Vision extends SmartSubsystem {
     cache.area = table.getEntry("ta").getDouble(0.0);
     cache.seesTarget = table.getEntry("tv").getDouble(0) == 1.0;
     cache.distance = getGroundDistanceToHubInches();
+
+    stableCounts++;
+    if (!isTargetPresent()) {
+      stableCounts = 0;
+    }
   }
 
   @Override
@@ -95,9 +101,8 @@ public class Vision extends SmartSubsystem {
     return cache.xDegrees;
   }
 
-  public boolean isTargetPresent() {
-    return cache.seesTarget;
-  }
+  public boolean isTargetPresent() { return cache.seesTarget; }  
+  public boolean isStable() { return stableCounts >= Constants.Vision.STABLE_COUNTS; }
 
   @Override
   public void runTests() {

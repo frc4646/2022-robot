@@ -1,12 +1,11 @@
 package frc.robot;
 
 import frc.robot.commands.CompressorAuto;
-import frc.robot.commands.OnDisabledDelayed;
 import frc.robot.commands.SignalDriveTeam;
 import frc.robot.commands.agitator.AgitatorAuto;
-import frc.robot.commands.climber.ClimberArmsExtend;
 import frc.robot.commands.climber.ClimberAuto;
 import frc.robot.commands.drivetrain.DriveTeleop;
+import frc.robot.commands.drivetrain.DriveDisabled;
 import frc.robot.commands.feeder.FeederAuto;
 import frc.robot.commands.shooter.ShooterAuto;
 import frc.robot.commands.turret.TurretAim;
@@ -16,7 +15,6 @@ import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.CargoHolder;
 import frc.robot.subsystems.Diagnostics;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.ClimberArms;
 import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
@@ -39,7 +37,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   public static Agitator AGITATOR;
   public static Climber CLIMBER;
-  public static ClimberArms CLIMBER_ARMS;
   public static CargoHolder CARGO_HOLDER;
   public static ColorSensor COLOR_SENSOR;
   public static Diagnostics DIAGNOSTICS;
@@ -62,7 +59,6 @@ public class RobotContainer {
     AGITATOR = new Agitator();
     // CARGO_HOLDER = new CargoHolder();
     CLIMBER = new Climber();
-    CLIMBER_ARMS = new ClimberArms();
     COLOR_SENSOR = new ColorSensor();
     DIAGNOSTICS = new Diagnostics();
     DRIVETRAIN = new Drivetrain();
@@ -73,15 +69,16 @@ public class RobotContainer {
     SHOOTER = new Shooter();
     TURRET = new Turret();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(AGITATOR, CLIMBER, CLIMBER_ARMS, COLOR_SENSOR, DRIVETRAIN, FEEDER, /*CARGO_HOLDER,*/ HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION, DIAGNOSTICS);
+    allSubsystems = Arrays.asList(AGITATOR, CLIMBER, COLOR_SENSOR, DRIVETRAIN, FEEDER, /*CARGO_HOLDER,*/ HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION, DIAGNOSTICS);
 
     CONTROLS = new Controls();  // Create after subsystems
+    // TODO split adding control buttons from constructor so that objects can save static references to controls
+    CONTROLS.configureButtons();
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
     AGITATOR.setDefaultCommand(new AgitatorAuto());
     CLIMBER.setDefaultCommand(new ClimberAuto());
-    CLIMBER_ARMS.setDefaultCommand(new ClimberArmsExtend(false));
     FEEDER.setDefaultCommand(new FeederAuto());
     // HOOD.setDefaultCommand(new HoodAim());
     SHOOTER.setDefaultCommand(new ShooterAuto());
@@ -106,7 +103,7 @@ public class RobotContainer {
 
   public void onDisable() {
     allSubsystems.forEach(SmartSubsystem::onDisable);
-    new OnDisabledDelayed().schedule();
+    new DriveDisabled().schedule();
   }
 
   public void runTests() {

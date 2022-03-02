@@ -33,8 +33,7 @@ public final class Constants {
   public static final class Solenoid {
     public static final int
       INTAKE_OUT = 0, INTAKE_IN = 1,
-      ARM_L_OUT = 5, ARM_L_IN = 4, ARM_R_OUT = 7, ARM_R_IN = 6,
-      RATCHET_L_OUT = 0, RATCHET_L_IN = 1, RATCHET_R_OUT = 2, RATCHET_R_IN = 3;
+      ARM_L_OUT = 5, ARM_L_IN = 4, ARM_R_OUT = 7, ARM_R_IN = 6;
   }
 
   public static final class Digital {
@@ -55,8 +54,10 @@ public final class Constants {
     public static final boolean TUNING = false;
 
     public static final double
+      OPEN_LOOP_ZERO = 0.1,
       DEADBAND = 0.2,
-      LIMIT_F = -1.0;
+      TIMEOUT_ZERO = 5.0,
+      LIMIT_F = 999999.0;
   }  
 
   public static final class ColorSensor {
@@ -64,7 +65,7 @@ public final class Constants {
     
     public static final I2C.Port I2C_PORT = I2C.Port.kMXP;
 
-    public static final int DISTANCE_MIN = 75;
+    public static final int DISTANCE_MIN = 80;
     public static final Color 
       MATCH_BLUE = new Color(0.143, 0.427, 0.429), // TODO fill these out based on readings
       MATCH_RED = new Color(0.561, 0.232, 0.114); // TODO fill these out based on readings
@@ -93,22 +94,21 @@ public final class Constants {
   public static final class Drivetrain {
     public static final boolean TUNING = false;
 
-    public static final double 
-      WHEEL_DIAMETER = 6.0,
-      WHEEL_SCRUB_FACTOR = 1.02,
-      WHEEL_TRACK_WIDTH_INCHES = 26.0,
-      WHEEL_TRACK_WIDTH_METERS = 0.0254 * WHEEL_TRACK_WIDTH_INCHES;
-
     public static final double
+      TIMEOUT_DISABLED_COAST = 5.0,
       THROTTLE_SLEW_LIMIT = 1.0,  // % output per second
       THROTTLE_DEADBAND = 0.04,
       TURNING_DEADBAND = 0.035;
         
     public static final double VOLTAGE_COMPENSATION = 9.0;  // TODO INCREASE BEFORE COMPETITION
     public static final int CURRENT_LIMIT = 30;
-    //public static final int kDriveCurrentUnThrottledLimit = 80; // TODO use case?
 
-    public static final double
+    public static final double 
+      WHEEL_DIAMETER = 6.0,
+      WHEEL_SCRUB_FACTOR = 1.02,
+      WHEEL_TRACK_WIDTH_INCHES = 26.0,
+      WHEEL_TRACK_WIDTH_METERS = 0.0254 * WHEEL_TRACK_WIDTH_INCHES,
+
       FEED_FORWARD_GAIN_STATIC = 0.0,  // TODO
       FEED_FORWARD_GAIN_VELOCITY = 0.0,  // TODO
       FEED_FORWARD_GAIN_ACCEL = 0.0,  // TODO
@@ -122,7 +122,6 @@ public final class Constants {
       I_RIGHT = 0.0,
       D_RIGHT = 0.0,
       F_RIGHT = 0.0;  // TODO
-
       //Left and right should be tuned via a step response to a velocity change - P = V, D = A, I = dist. Start
 
     public static final boolean IS_LEFT_ENCODER_INVERTED = false;
@@ -137,14 +136,13 @@ public final class Constants {
       AUTO_MAX_VOLTS = 10.0,
       MAX_SPEED_METERS_PER_SECOND = 3.0,
       MAX_ACCEL_METERS_PER_SECOND_SQUARED = 3.0,
-      RAMSETE_B = 2.0,     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
-      RAMSETE_ZETA = 0.7;  // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+      RAMSETE_B = 2.0,     // FRC recommends 2.0
+      RAMSETE_ZETA = 0.7;  // FRC recommends 0.7
       
     public static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
       FEED_FORWARD, DRIVE_KINEMATICS, AUTO_MAX_VOLTS
     );
-    public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(
-      MAX_SPEED_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED)
+    public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED)
       .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
       .addConstraint(AUTO_VOLTAGE_CONSTRAINT);
   }
@@ -156,7 +154,12 @@ public final class Constants {
       OPEN_LOOP_SHOOT = 0.5,
       OPEN_LOOP_RAMP = 0.25,  // TODO tune
       TIMEOUT_EXHAUST = 0.5,
-      TIMEOUT_LOAD = 3.0;
+      TIMEOUT_LOAD = 3.0,
+      GEAR_RATIO = 72.0 / 14.0,
+      POSITION_DEADBAND = 0.1,
+      P = 0.1,
+      I = 0.0,
+      D = 0.0;
   }
 
   public static final class Hood {
@@ -174,15 +177,12 @@ public final class Constants {
   public static final class Shooter {
     public static final boolean TUNING = false;
 
-    public static int VISION_STABLE_COUNTS = 5;
-    public static int RPM_STABLE_COUNTS = 5;
+    public static int STABLE_COUNTS = 2;
     public static final double
-      OPEN_LOOP = .35,  // TODO switch to using default rpm instead
       OPEN_LOOP_REV_SECONDS = 1.0,
-      OPEN_LOOP_RPM = 2300.0,
       RPM_MAX = 6380.0 * 1.084,  //  Tuned 2/22
-      RPM_DEFAULT = RPM_MAX / 2.0,
-      RPM_ERROR_ALLOWED = 250.0,
+      RPM_DEFAULT = 2200.0,
+      RPM_ERROR_ALLOWED = 30.0,  // Tuned 3/1, 25-50 seem to work well
       TICKS_PER_REV = 2048.0,
       P = 0.01,  // Probably between 0.0075 and 0.25
       I = 0.0,  // Use 0 if possible. But if we do use non-zero, make sure to use i zone
@@ -239,6 +239,8 @@ public final class Constants {
   public static final class Vision {
     public static final boolean TUNING = false;
 
+    public static int STABLE_COUNTS = 0;
+
     public static final double
       HORIZONTAL_FOV = 54.0,  // Degrees (LL1: 54.0, LL2: 59.6)
       VERTICAL_FOV = 41.0,  // Degrees (LL1: 41.0, LL2: 49.7)
@@ -261,7 +263,7 @@ public final class Constants {
     static {
       RPM_MAP.put(new InterpolatingDouble(51.5), new InterpolatingDouble(2100.0));  // tuned 2/27
       RPM_MAP.put(new InterpolatingDouble(71.6), new InterpolatingDouble(2200.0));
-      RPM_MAP.put(new InterpolatingDouble(89.3), new InterpolatingDouble(2275.0));
+      RPM_MAP.put(new InterpolatingDouble(89.3), new InterpolatingDouble(2325.0));
     }
     static {
       ANGLE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));

@@ -12,18 +12,18 @@ public class WaitForAim extends CommandBase {
   // private final Hood hood = RobotContainer.HOOD;
   private final Shooter shooter = RobotContainer.SHOOTER;
   private final Turret turret = RobotContainer.TURRET;
-  private double timeStart = Double.MAX_VALUE;
+  // private double timeStart = Double.MAX_VALUE;
 
-  @Override
-  public void initialize() {
-    timeStart = Timer.getFPGATimestamp();
-  }
+  // @Override
+  // public void initialize() {
+  //   timeStart = Timer.getFPGATimestamp();
+  // }
 
   @Override
   public boolean isFinished() {
-    if (RobotContainer.CONTROLS.operator.getFn()) {  // Manual override
-      return Timer.getFPGATimestamp() - timeStart > Constants.Shooter.OPEN_LOOP_REV_SECONDS;
-    }
+    // if (RobotContainer.CONTROLS.operator.getFn()) {  // Manual override
+    //   return Timer.getFPGATimestamp() - timeStart > Constants.Shooter.OPEN_LOOP_REV_SECONDS;
+    // }
     // return shooter.isStable() && hood.isOnTarget() && turret.isOnTarget();
     return shooter.isStable() && turret.isOnTarget();
   }

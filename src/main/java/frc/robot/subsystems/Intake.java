@@ -45,10 +45,6 @@ public class Intake extends SmartSubsystem {
     return extended;
   }
 
-  public boolean isStalled() {
-    return false;  // TODO need talon/sparkmax to detect
-  }
-
   @Override
   public void runTests() {
     Test.checkFirmware(this, motor);

@@ -31,7 +31,6 @@ public class Drivetrain extends SmartSubsystem {
   private final AHRS gyro;
   private final DifferentialDriveOdometry odometry;
   private DataCache cache = new DataCache();
-  // private final NetworkTableEntry dashDistanceL, dashDistanceR, dashRPML, dashRPMR, dashHeading, dashPitch;
   
   private boolean isBrakeMode;
   private Rotation2d gyroOffset = Rotation2d.fromDegrees(0.0);
@@ -62,14 +61,6 @@ public class Drivetrain extends SmartSubsystem {
     resetEncoders();
     gyro.reset();
     odometry = new DifferentialDriveOdometry(cache.heading);
-    
-    // ShuffleboardTab tab = Shuffleboard.getTab("Drive");
-    // dashDistanceL = DashboardControls.getGraph(tab, "Distance L", 0.0).getEntry();
-    // dashDistanceR = DashboardControls.getGraph(tab, "Distance R", 0.0).getEntry();
-    // dashRPML = DashboardControls.getGraph(tab, "RPM L", 0.0).getEntry();
-    // dashRPMR = DashboardControls.getGraph(tab, "RPM R", 0.0).getEntry();
-    // dashHeading = DashboardControls.getGraph(tab, "Heading", 0.0).getEntry();
-    // dashPitch = DashboardControls.getGraph(tab, "Pitch", 0.0).getEntry();
   }
 
   public void configureMotor(CANSparkMax motor, boolean isLeft, boolean isMaster) {
@@ -86,20 +77,11 @@ public class Drivetrain extends SmartSubsystem {
     cache.rpmR = masterR.getEncoder().getVelocity();
     cache.heading = Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(gyroOffset);
     cache.pitch = Rotation2d.fromDegrees(gyro.getPitch());
-    double metersL = 0.0;  // TODO m_leftEncoder.getDistance()
-    double metersR = 0.0;  // TODO m_rightEncoder.getDistance()
-    odometry.update(getHeading(), metersL, metersR);
+    odometry.update(getHeading(), rotationsToMeters(cache.distanceL), rotationsToMeters(cache.distanceR));
   }
 
   @Override
   public void updateDashboard() {
-    // dashDistanceL.setDouble(cache.distanceL);
-    // dashDistanceR.setDouble(cache.distanceR);
-    // dashRPML.setDouble(cache.rpmL);
-    // dashRPMR.setDouble(cache.rpmR);
-    // dashHeading.setDouble(cache.heading.getDegrees());
-    // dashPitch.setDouble(cache.pitch.getDegrees());
-
     SmartDashboard.putNumber("Drive: Heading", cache.heading.getDegrees());
     SmartDashboard.putNumber("Drive: Pitch", cache.pitch.getDegrees());
     if (Constants.Drivetrain.TUNING) {
@@ -119,7 +101,6 @@ public class Drivetrain extends SmartSubsystem {
   public void resetPose(Pose2d pose) {
     resetEncoders();
     odometry.resetPosition(pose, gyro.getRotation2d());
-    // TODO update cache or something else about gyro?
   }
 
   public void setBrakeMode(boolean enable) {
@@ -140,44 +121,34 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   public void setVolts(double left, double right) {
-    // TODO is it this? masterL.getPIDController().setReference(left, ControlType.kVoltage);
-    // TODO is it this? masterR.getPIDController().setReference(right, ControlType.kVoltage);
+    masterL.getPIDController().setReference(left, ControlType.kVoltage);
+    masterR.getPIDController().setReference(right, ControlType.kVoltage);
   }
 
   public void setClosedLoopVelocity(DifferentialDriveWheelSpeeds speeds) {
-    double leftFeedforward = Constants.Drivetrain.FEED_FORWARD.calculate(speeds.leftMetersPerSecond);
-    double rightFeedforward = Constants.Drivetrain.FEED_FORWARD.calculate(speeds.rightMetersPerSecond);
-    // TODO leftMaster.getPIDController().setReference(value, ctrl, pidSlot, arbFeedforward)
-    // TODO rightMaster.getPIDController().setReference(value, ctrl, pidSlot, arbFeedforward)
+    double feedforwardL = Constants.Drivetrain.FEED_FORWARD.calculate(speeds.leftMetersPerSecond);
+    double feedforwardR = Constants.Drivetrain.FEED_FORWARD.calculate(speeds.rightMetersPerSecond);
+    masterL.getPIDController().setReference(feedforwardL, ControlType.kDutyCycle);
+    masterR.getPIDController().setReference(feedforwardR, ControlType.kDutyCycle);
   }
 
   public void setHeading(Rotation2d heading) {
     // gyroOffset = heading.rotateBy(Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(Rotation2d.fromDegrees(180.0)));
     cache.heading = heading;
   }
-
-  public double getDistance() {
-    return (cache.distanceL + cache.distanceR) / 2.0;
-  }
-
-  public double getRPM(){
-    return (cache.rpmL + cache.rpmR) / 2.0;
-  }
-
-  public Rotation2d getHeading() {
-    return cache.heading;
-  }
-
-  public Rotation2d getPitch() {
-    return cache.pitch;
-  }
-
-  public Pose2d getPose() {
-    return null;  // TODO
-  }
-
+  
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return null;  // TODO
+    return new DifferentialDriveWheelSpeeds(rotationsToMeters(cache.rpmL), rotationsToMeters(cache.rpmR));
+  }
+
+  public Pose2d getPose() { return odometry.getPoseMeters(); }
+  public double getDistance() { return (cache.distanceL + cache.distanceR) / 2.0; }
+  public double getRPM(){ return (cache.rpmL + cache.rpmR) / 2.0; }
+  public Rotation2d getHeading() { return cache.heading; }
+  public Rotation2d getPitch() { return cache.pitch; }
+
+  private double rotationsToMeters(double rotations) {
+    return rotations * Constants.Drivetrain.WHEEL_DIAMETER * Math.PI * 0.0254;
   }
 
   @Override
