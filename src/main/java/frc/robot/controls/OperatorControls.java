@@ -13,6 +13,7 @@ import frc.robot.commands.sequence.ExhaustIntake;
 import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.sequence.StowIntake;
+import frc.robot.commands.shooter.ShooterOpenLoop;
 
 public class OperatorControls {
   private final int TRIGGER_L = 2, TRIGGER_R = 3;
@@ -51,7 +52,9 @@ public class OperatorControls {
     
     // Shooter
     bumperL.whenPressed(new ShootOpenLoop());
+    bumperL.whenReleased(new ShooterOpenLoop(0.0));
     bumperR.whenPressed(new ShootVision());
+    bumperL.whenReleased(new ShooterOpenLoop(0.0));
 
     // Testing
     buttonB.whenActive(new FeederPosition(1.0));

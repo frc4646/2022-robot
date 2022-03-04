@@ -78,7 +78,8 @@ public class RobotContainer {
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
     AGITATOR.setDefaultCommand(new AgitatorAuto());
-    CLIMBER.setDefaultCommand(new ClimberAuto());
+    // CLIMBER.setDefaultCommand(new ClimberAuto());
+    CLIMBER.setDefaultCommand(new ClimberAuto.ClimberTeleop());
     FEEDER.setDefaultCommand(new FeederAuto());
     // HOOD.setDefaultCommand(new HoodAim());
     SHOOTER.setDefaultCommand(new ShooterAuto());

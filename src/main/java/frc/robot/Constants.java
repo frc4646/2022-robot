@@ -100,7 +100,7 @@ public final class Constants {
       THROTTLE_DEADBAND = 0.04,
       TURNING_DEADBAND = 0.035;
         
-    public static final double VOLTAGE_COMPENSATION = 9.0;  // TODO INCREASE BEFORE COMPETITION
+    public static final double VOLTAGE_COMPENSATION = 10.0;  // TODO INCREASE BEFORE COMPETITION
     public static final int CURRENT_LIMIT = 30;
 
     public static final double 
@@ -210,8 +210,10 @@ public final class Constants {
       SERVO.kSupplyPeakCurrentLimit = 40; // amps
       SERVO.kSupplyPeakCurrentDuration = 10; // ms
 
-      SERVO.kMinUnitsLimit = 85.0;
-      SERVO.kMaxUnitsLimit = 415.0;
+      //SERVO.kMinUnitsLimit = 85.0;
+      //SERVO.kMaxUnitsLimit = 415.0;
+      SERVO.kMinUnitsLimit = 150.0;
+      SERVO.kMaxUnitsLimit = 210.0;
       SERVO.kHomePosition = 180.0;
       SERVO.kTicksPerUnitDistance = 2048.0 * GEAR_RATIO_WRONG / 360.0;
 

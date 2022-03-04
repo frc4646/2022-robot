@@ -16,7 +16,7 @@ public class ClimberAuto extends ConditionalCommand {
     );
   }
 
-  private static class ClimberTeleop extends CommandBase {
+  public static class ClimberTeleop extends CommandBase {
     private final Climber subsystem = RobotContainer.CLIMBER;
 
     public ClimberTeleop() {

@@ -25,11 +25,9 @@ public class TurretAim extends CommandBase {
 
     if (vision.isTargetPresent() && !controls.getFn()) {
       setpoint -= vision.getDegreesX();
-    }
-    else if (snap != -1) {
+    } else if (snap != -1) {
       setpoint = snap;
-    }
-    else if (Math.abs(stick) >= Constants.Turret.STICK_DEADBAND) {
+    } else if (Math.abs(stick) >= Constants.Turret.STICK_DEADBAND) {
       setpoint += stick * Constants.Turret.STICK_GAIN;
     }
     turret.setSetpointPositionPID(setpoint, feedforward);
