@@ -11,7 +11,7 @@ public class ShootVision extends SequentialCommandGroup {
       deadline(
         new WaitForAim(),
         new ShooterAim(),
-        new AgitateOpenLoop(Constants.Agitator.OPEN_LOOP_SHOOT)
+        new AgitateOpenLoop(Constants.AGITATOR.OPEN_LOOP_SHOOT)
         // TODO should drivetrain lock?
       ),
       new FireCargo()

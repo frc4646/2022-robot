@@ -1,20 +1,14 @@
 package frc.robot.commands.climber;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Climber;
 
-public class ClimberAuto extends SelectCommand {
-    public ClimberAuto() {
-      super(ClimberAuto::nextCommand);
-    }
+public class ClimberAuto extends ConditionalCommand {
+  public ClimberAuto() {
+    super(new ClimberTeleop(), new ClimberZero(), ClimberAuto::isClimberZeroed);
+  }
 
-  private static Command nextCommand() {
-    return new ClimberTeleop();
-    // if (climber.hasBeenZeroed()) {
-    //   return new ClimberTeleop();
-    // }
-    // return new ClimberZero();
+  private static boolean isClimberZeroed() {
+    return RobotContainer.CLIMBER.IsZeroed();
   }
 }

@@ -22,7 +22,7 @@ public class ClimbMode extends ConditionalCommand {
     public SetMode(LEDMode led, boolean extend) {
       addCommands(        
         new VisionLED(led),
-        new TurretPosition(Constants.Turret.SERVO.kHomePosition, 0.1).withTimeout(1.0),  // TODO bigger tolerance instead of timeout?
+        new TurretPosition(Constants.TURRET.SERVO.kHomePosition, 0.1).withTimeout(1.0),  // TODO bigger tolerance instead of timeout?
         new ClimberArms(extend),
         new IntakeExtend(extend)
         // new FeederOpenLoop(0.0).perpetually(),

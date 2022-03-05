@@ -25,9 +25,9 @@ public class AgitatorAuto extends CommandBase {
     if (climber.isInClimbMode()) {
       demand = 0.0;
     } else if (shooter.isShooting()) {
-      demand = Constants.Agitator.OPEN_LOOP_SHOOT;
+      demand = Constants.AGITATOR.OPEN_LOOP_SHOOT;
     } else if (intake.isExtended()) {
-      demand = Constants.Agitator.OPEN_LOOP_LOAD;
+      demand = Constants.AGITATOR.OPEN_LOOP_LOAD;
     }
     subsystem.setOpenLoop(demand);
   }

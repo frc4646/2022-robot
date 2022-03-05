@@ -54,8 +54,8 @@ public class FeederAuto extends CommandBase {
     double setpoint = 0.0;
 
     if(stateCurrent == STATE.LOADING) {
-      setpoint = Constants.Feeder.OPEN_LOOP_LOAD;
-      if (Timer.getFPGATimestamp() - timeStartState > Constants.Feeder.TIMEOUT_LOAD) {
+      setpoint = Constants.FEEDER.OPEN_LOOP_LOAD;
+      if (Timer.getFPGATimestamp() - timeStartState > Constants.FEEDER.TIMEOUT_LOAD) {
         setState(STATE.IDLE);
       }
     }

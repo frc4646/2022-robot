@@ -54,6 +54,6 @@ public class Canifier extends SmartSubsystem {
   @Override
   public void runTests() {
     Test.checkFirmware(this, canifier);
-    // TODO test turret home
+    Test.add(this, "Turret Home", cache.isTurrentHome);
   }
 }

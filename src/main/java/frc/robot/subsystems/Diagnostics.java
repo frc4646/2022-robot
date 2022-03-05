@@ -30,7 +30,7 @@ import frc.robot.util.DiagnosticState;
 import frc.robot.util.Test;
 
 public class Diagnostics extends SmartSubsystem {
-  public static Animation toColor(int red, int green, int blue, double percentFade) { return new SingleFadeAnimation(red, green, blue, 0, percentFade, Constants.Diagnostic.LED_COUNT); }
+  public static Animation toColor(int red, int green, int blue, double percentFade) { return new SingleFadeAnimation(red, green, blue, 0, percentFade, Constants.DIAGNOSTICS.LED_COUNT); }
   public static double BRIGHT = 1.0, DIM = 0.2;
   public static double FAST = 1.0, SLOW = 0.2, STATIC = 0.0;
 
@@ -47,7 +47,7 @@ public class Diagnostics extends SmartSubsystem {
   
   public Diagnostics() {
     candle = new CANdle(Constants.CAN.CANDLE);
-    candle.configAllSettings(Constants.Diagnostic.LED_CONFIG, Constants.CAN_TIMEOUT);
+    candle.configAllSettings(Constants.DIAGNOSTICS.LED_CONFIG, Constants.CAN_TIMEOUT);
     // TODO configure status frames
     DriverStation.silenceJoystickConnectionWarning(true);
   }
@@ -56,9 +56,9 @@ public class Diagnostics extends SmartSubsystem {
   public void updateDashboard() {
     // TODO reduce calls to CAN HAL?
     candle.animate(robotState);
-    double rumble = (DriverStation.isDisabled() && isCriticalIssuePresent) ? Constants.Diagnostic.RUMBLE_PERCENT : 0.0;
-    RobotContainer.CONTROLS.operator.setRumble(true, rumble);  // tune which side is better
-    RobotContainer.CONTROLS.operator.setRumble(false, rumble);
+    double rumble = (DriverStation.isDisabled() && isCriticalIssuePresent) ? Constants.DIAGNOSTICS.RUMBLE_PERCENT : 0.0;
+    RobotContainer.CONTROLS.getOperator().setRumble(true, rumble);  // tune which side is better
+    RobotContainer.CONTROLS.getOperator().setRumble(false, rumble);
   }
 
   @Override
@@ -104,15 +104,15 @@ public class Diagnostics extends SmartSubsystem {
     System.out.println(String.format("Frame 6: %d", candle.getStatusFramePeriod(CANdleStatusFrame.CANdleStatusFrame_Status_6_BottomPixels)));
     System.out.println(String.format("Frame 7: %d", candle.getStatusFramePeriod(CANdleStatusFrame.CANdleStatusFrame_Status_7_TopPixels)));
 
-    Animation COLOR_FLOW = new ColorFlowAnimation(255, 0, 0, 0, SLOW, Constants.Diagnostic.LED_COUNT, Direction.Forward);
-    Animation FIRE = new FireAnimation(BRIGHT, SLOW, Constants.Diagnostic.LED_COUNT, 0.8, 0.2);
-    Animation LARSON = new LarsonAnimation(255, 0, 0, 0, SLOW, Constants.Diagnostic.LED_COUNT, BounceMode.Front, 4);
-    Animation RAINBOW = new RainbowAnimation(BRIGHT, SLOW, Constants.Diagnostic.LED_COUNT);
-    Animation RGB_FADE = new RgbFadeAnimation(BRIGHT, FAST, Constants.Diagnostic.LED_COUNT);
-    Animation SINGLE_FADE = new SingleFadeAnimation(255, 0, 0, 0, STATIC, Constants.Diagnostic.LED_COUNT);
-    Animation STROBE = new StrobeAnimation(255, 0, 0, 0, STATIC, Constants.Diagnostic.LED_COUNT);
-    Animation TWINKLE = new TwinkleAnimation(255, 0, 0, 0, STATIC, Constants.Diagnostic.LED_COUNT, TwinklePercent.Percent100);
-    Animation TWINKLE_OFF = new TwinkleOffAnimation(255, 0, 0, 0, STATIC, Constants.Diagnostic.LED_COUNT, TwinkleOffPercent.Percent100);
+    Animation COLOR_FLOW = new ColorFlowAnimation(255, 0, 0, 0, SLOW, Constants.DIAGNOSTICS.LED_COUNT, Direction.Forward);
+    Animation FIRE = new FireAnimation(BRIGHT, SLOW, Constants.DIAGNOSTICS.LED_COUNT, 0.8, 0.2);
+    Animation LARSON = new LarsonAnimation(255, 0, 0, 0, SLOW, Constants.DIAGNOSTICS.LED_COUNT, BounceMode.Front, 4);
+    Animation RAINBOW = new RainbowAnimation(BRIGHT, SLOW, Constants.DIAGNOSTICS.LED_COUNT);
+    Animation RGB_FADE = new RgbFadeAnimation(BRIGHT, FAST, Constants.DIAGNOSTICS.LED_COUNT);
+    Animation SINGLE_FADE = new SingleFadeAnimation(255, 0, 0, 0, STATIC, Constants.DIAGNOSTICS.LED_COUNT);
+    Animation STROBE = new StrobeAnimation(255, 0, 0, 0, STATIC, Constants.DIAGNOSTICS.LED_COUNT);
+    Animation TWINKLE = new TwinkleAnimation(255, 0, 0, 0, STATIC, Constants.DIAGNOSTICS.LED_COUNT, TwinklePercent.Percent100);
+    Animation TWINKLE_OFF = new TwinkleOffAnimation(255, 0, 0, 0, STATIC, Constants.DIAGNOSTICS.LED_COUNT, TwinkleOffPercent.Percent100);
     List<Animation> ALL_ANIMATIONS = Arrays.asList(COLOR_FLOW, FIRE, LARSON, RAINBOW, RGB_FADE, SINGLE_FADE, STROBE, TWINKLE, TWINKLE_OFF);
   
     // for(Animation animation : ALL_ANIMATIONS) {

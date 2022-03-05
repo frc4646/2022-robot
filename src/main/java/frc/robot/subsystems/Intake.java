@@ -19,13 +19,13 @@ public class Intake extends SmartSubsystem {
 
   public Intake() {
     motor = TalonFXFactory.createDefaultTalon(Constants.CAN.INTAKE);
-    solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.INTAKE_OUT, Constants.Solenoid.INTAKE_IN);
+    solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID.INTAKE_OUT, Constants.SOLENOID.INTAKE_IN);
 
     motor.setInverted(true);
     motor.setNeutralMode(NeutralMode.Coast);
     motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
     motor.enableVoltageCompensation(true);
-    motor.configOpenloopRamp(Constants.Intake.OPEN_LOOP_RAMP);
+    motor.configOpenloopRamp(Constants.INTAKE.OPEN_LOOP_RAMP);
     // TODO supply current limiting
 
     setExtend(false);  // solenoid default is OFF, not IN

@@ -6,22 +6,21 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 
 public class ClimberZero extends CommandBase {
-  private final Climber subsystem;
+  private final Climber subsystem = RobotContainer.CLIMBER;
 
   public ClimberZero() {
-    subsystem = RobotContainer.CLIMBER;
     addRequirements(subsystem);
   }
 
   @Override
   public void initialize() {
     subsystem.setSoftLimitsEnabled(false);
-    subsystem.setOpenLoop(-Constants.Climber.OPEN_LOOP_ZERO);
+    subsystem.setOpenLoop(-Constants.CLIMBER.OPEN_LOOP_ZERO);
   }
 
   @Override
   public boolean isFinished() {
-    return subsystem.atHomingLocation(true) && subsystem.atHomingLocation(false);
+    return subsystem.IsAtHomingLocation(true) && subsystem.IsAtHomingLocation(false);
   }
 
   @Override

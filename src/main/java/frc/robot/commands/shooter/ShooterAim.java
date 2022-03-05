@@ -9,6 +9,7 @@ import frc.robot.subsystems.Vision;
 public class ShooterAim extends CommandBase {
   private final Shooter shooter = RobotContainer.SHOOTER;
   private final Vision vision = RobotContainer.VISION;
+  // private final OperatorControls operator = RobotContainer.CONTROLS.getOperator();
 
   public ShooterAim() {
     addRequirements(shooter);
@@ -16,11 +17,13 @@ public class ShooterAim extends CommandBase {
 
   @Override
   public void execute() {
-    double setpoint = Constants.Shooter.RPM_DEFAULT;
+    double setpoint = Constants.SHOOTER.RPM_DEFAULT;
+    double trim = RobotContainer.CONTROLS.getOperator().getShooterTrim();
+    boolean override = RobotContainer.CONTROLS.getOperator().getFn();
 
-    if (vision.isTargetPresent() && !RobotContainer.CONTROLS.operator.getFn()) {
+    if (vision.isTargetPresent() && !override) {
       setpoint = vision.getShooterRPM();
     }
-    shooter.setClosedLoop(setpoint);
+    shooter.setClosedLoop(setpoint + trim);
   }
 }

@@ -10,7 +10,7 @@ import frc.robot.subsystems.Vision;
 public class TurretAim extends CommandBase {
   private final Turret turret = RobotContainer.TURRET;
   private final Vision vision = RobotContainer.VISION;
-  private final OperatorControls controls = RobotContainer.CONTROLS.operator;
+  private final OperatorControls controls = RobotContainer.CONTROLS.getOperator();
 
   public TurretAim() {
     addRequirements(turret);
@@ -23,13 +23,18 @@ public class TurretAim extends CommandBase {
     double stick = controls.getTurretStick();
     int snap = controls.getTurretSnap();
 
-    if (vision.isTargetPresent() && !controls.getFn()) {
+    if (isVisionWanted()) {
       setpoint -= vision.getDegreesX();
     } else if (snap != -1) {
       setpoint = snap;
-    } else if (Math.abs(stick) >= Constants.Turret.STICK_DEADBAND) {
-      setpoint += stick * Constants.Turret.STICK_GAIN;
+    } else if (Math.abs(stick) >= Constants.TURRET.STICK_DEADBAND) {
+      setpoint += stick * Constants.TURRET.STICK_GAIN;
     }
     turret.setSetpointPositionPID(setpoint, feedforward);
+  }
+
+  private boolean isVisionWanted() {
+    // TODO deadzones where climber is
+    return vision.isTargetPresent() && !controls.getFn();
   }
 }

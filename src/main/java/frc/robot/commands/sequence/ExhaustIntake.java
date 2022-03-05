@@ -12,13 +12,13 @@ public class ExhaustIntake extends SequentialCommandGroup {
   public ExhaustIntake() {
     addCommands(
       new IntakeExtend(true),
-      new IntakeActivate(-Constants.Intake.OPEN_LOOP),
+      new IntakeActivate(-Constants.INTAKE.OPEN_LOOP),
       new WaitCommand(0.5),  // Wait for intake out and running before feeder pulse
       parallel(
-        new AgitateOpenLoop(-Constants.Agitator.OPEN_LOOP_EXHAUST),
-        new FeederOpenLoop(-Constants.Feeder.OPEN_LOOP_EXHAUST)
+        new AgitateOpenLoop(-Constants.AGITATOR.OPEN_LOOP_EXHAUST),
+        new FeederOpenLoop(-Constants.FEEDER.OPEN_LOOP_EXHAUST)
       ),
-      new WaitCommand(Constants.Feeder.TIMEOUT_EXHAUST),
+      new WaitCommand(Constants.FEEDER.TIMEOUT_EXHAUST),
       new FeederOpenLoop(0.0),
       // TODO wait for correct cargo loading sensor so reload correct cargo + no need to stop feeder exhaust?
       new WaitCommand(2.0)

@@ -6,19 +6,18 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 
 public class ClimberTeleop extends CommandBase{
-  private final Climber subsystem;
+  private final Climber subsystem = RobotContainer.CLIMBER;
 
   public ClimberTeleop() {
-    subsystem = RobotContainer.CLIMBER;
     addRequirements(subsystem);
   }
 
   @Override
   public void execute() {
     double setpoint = 0.0;
-    double stick = RobotContainer.CONTROLS.operator.getClimberStick();
+    double stick = RobotContainer.CONTROLS.getOperator().getClimberStick();
 
-    if (Math.abs(stick) > Constants.Climber.DEADBAND) {
+    if (Math.abs(stick) > Constants.CLIMBER.DEADBAND) {
       setpoint = stick;
     }
     subsystem.setOpenLoop(setpoint);

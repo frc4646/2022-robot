@@ -20,13 +20,13 @@ public class DriveTrajectory extends SequentialCommandGroup {
       new RamseteCommand(
         trajectory,
         RobotContainer.DRIVETRAIN::getPose,
-        new RamseteController(Constants.Drivetrain.RAMSETE_B, Constants.Drivetrain.RAMSETE_ZETA),
-        Constants.Drivetrain.FEED_FORWARD,
-        Constants.Drivetrain.DRIVE_KINEMATICS,
+        new RamseteController(Constants.DRIVETRAIN.RAMSETE_B, Constants.DRIVETRAIN.RAMSETE_ZETA),
+        Constants.DRIVETRAIN.FEED_FORWARD,
+        Constants.DRIVETRAIN.DRIVE_KINEMATICS,
         RobotContainer.DRIVETRAIN::getWheelSpeeds,
         // TODO Do we want the ramsete volts or velocity constructor?
-        new PIDController(Constants.Drivetrain.P_LEFT, Constants.Drivetrain.I_LEFT, Constants.Drivetrain.D_LEFT),
-        new PIDController(Constants.Drivetrain.P_RIGHT, Constants.Drivetrain.I_RIGHT, Constants.Drivetrain.D_RIGHT),
+        new PIDController(Constants.DRIVETRAIN.P_LEFT, Constants.DRIVETRAIN.I_LEFT, Constants.DRIVETRAIN.D_LEFT),
+        new PIDController(Constants.DRIVETRAIN.P_RIGHT, Constants.DRIVETRAIN.I_RIGHT, Constants.DRIVETRAIN.D_RIGHT),
         RobotContainer.DRIVETRAIN::setVolts,
         RobotContainer.DRIVETRAIN
       )

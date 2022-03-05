@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -26,13 +29,14 @@ public class Climber extends SmartSubsystem {
   private final TalonFX masterL, masterR;
   private final DoubleSolenoid armL, armR;
   private final DataCache cache = new DataCache();
-  private boolean isBrakeMode = false, armsExtended = false, mHasBeenZeroedL = false, mHasBeenZeroedR = false, inClimbMode = false;
+  private boolean isBrakeMode = false, armsExtended = false, hasBeenZeroedL = false, hasBeenZeroedR = false, inClimbMode = false;
+  private double demand = 0.0;
 
   public Climber() {
     masterL = TalonFXFactory.createDefaultTalon(Constants.CAN.CLIMBER_L);
     masterR = TalonFXFactory.createDefaultTalon(Constants.CAN.CLIMBER_R);
-    armL = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.ARM_L_OUT, Constants.Solenoid.ARM_L_IN);
-    armR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Solenoid.ARM_R_OUT, Constants.Solenoid.ARM_R_IN);
+    armL = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID.ARM_L_OUT, Constants.SOLENOID.ARM_L_IN);
+    armR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID.ARM_R_OUT, Constants.SOLENOID.ARM_R_IN);
 
     configureMotor(masterL, true, false);
     configureMotor(masterR, true, true);
@@ -49,10 +53,16 @@ public class Climber extends SmartSubsystem {
     TalonUtil.checkError(motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set reverse limit switch: ");
     if (isMaster) {
       TalonUtil.checkError(motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), getName() + ": Could not detect encoder: ");
-      TalonUtil.checkError(motor.configForwardSoftLimitThreshold(Constants.Climber.LIMIT_F, Constants.CAN_TIMEOUT), getName() + ": Could not set forward soft limit: ");
+      TalonUtil.checkError(motor.configForwardSoftLimitThreshold(Constants.CLIMBER.LIMIT_F, Constants.CAN_TIMEOUT), getName() + ": Could not set forward soft limit: ");
       TalonUtil.checkError(motor.configForwardSoftLimitEnable(true, Constants.CAN_TIMEOUT), getName() + ": Could not enable forward soft limit: ");
       TalonUtil.checkError(motor.configReverseSoftLimitThreshold(0.0, Constants.CAN_TIMEOUT), getName() + ": Could not set reverse soft limit: ");
       TalonUtil.checkError(motor.configReverseSoftLimitEnable(true, Constants.CAN_TIMEOUT), getName() + ": Could not enable reverse soft limit: ");
+
+      TalonUtil.checkError(motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), getName() + ": Could not detect encoder: ");
+      TalonUtil.checkError(motor.config_kP(0, Constants.CLIMBER.P, Constants.CAN_TIMEOUT), getName() + ": could not set P: ");
+      TalonUtil.checkError(motor.config_kI(0, Constants.CLIMBER.I, Constants.CAN_TIMEOUT), getName() + ": could not set I: ");
+      TalonUtil.checkError(motor.config_kD(0, Constants.CLIMBER.D, Constants.CAN_TIMEOUT), getName() + ": could not set D: ");
+      TalonUtil.checkError(motor.config_kF(0, Constants.CLIMBER.F, Constants.CAN_TIMEOUT), getName() + ": could not set F: ");
     }
 
     StatorCurrentLimitConfiguration limitStator = new StatorCurrentLimitConfiguration(true, 60, 60, 0.2);
@@ -62,7 +72,8 @@ public class Climber extends SmartSubsystem {
 
     motor.setInverted(isInverted);
     if (isMaster) {
-      // master.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 60, Constants.CAN_TIMEOUT);
+      // masterL.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 60, Constants.CAN_TIMEOUT);
+      // masterR.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 60, Constants.CAN_TIMEOUT);
     }
     motor.overrideLimitSwitchesEnable(true);
   }
@@ -77,14 +88,19 @@ public class Climber extends SmartSubsystem {
     cache.positionR = masterR.getSelectedSensorPosition(0);
     cache.velocityR = masterR.getSelectedSensorVelocity(0);
     cache.currentR = masterR.getStatorCurrent();
-    resetIfAtHome();  // TODO test this
+    if (IsAtHomingLocation(true)) {
+      zeroSensors(true);
+    }
+    if (IsAtHomingLocation(false)) {
+      zeroSensors(false);
+    }
   }
 
   @Override
   public void updateDashboard() {
     SmartDashboard.putBoolean("Climber: Limit L", cache.limitL);
     SmartDashboard.putBoolean("Climber: Limit R", cache.limitR);
-    if (Constants.Climber.TUNING) {
+    if (Constants.CLIMBER.TUNING) {
       SmartDashboard.putNumber("Climber: PositionL", cache.positionL);
       SmartDashboard.putNumber("Climber: VelocityL", cache.velocityL);
       SmartDashboard.putNumber("Climber: CurrentL", cache.currentL);
@@ -99,21 +115,12 @@ public class Climber extends SmartSubsystem {
     setBrakeMode(true);
   }
 
-  public void resetIfAtHome() {
-    if (atHomingLocation(true)) {
-      zeroSensors(true);
-    }
-    if (atHomingLocation(false)) {
-      zeroSensors(false);
-    }
-  }
-
   public void zeroSensors(boolean left) {
     forceZero(left);
     if (left) {
-      mHasBeenZeroedL = true;
+      hasBeenZeroedL = true;
     } else {      
-      mHasBeenZeroedR = true;
+      hasBeenZeroedR = true;
     }
   }
 
@@ -141,6 +148,13 @@ public class Climber extends SmartSubsystem {
   public void setOpenLoop(double percent) {
     masterL.set(TalonFXControlMode.PercentOutput, percent);
     masterR.set(TalonFXControlMode.PercentOutput, percent);
+    demand = percent;
+  }
+
+  public void setClosedLoopPosition(double position) {
+    demand = unitsToTicks(position);
+    masterL.set(ControlMode.Position, demand, DemandType.ArbitraryFeedForward, 0.0);
+    masterR.set(ControlMode.Position, demand, DemandType.ArbitraryFeedForward, 0.0);
   }
 
   public void setArms(boolean extend) {
@@ -154,10 +168,18 @@ public class Climber extends SmartSubsystem {
     inClimbMode = enable;
   }
 
+  public double getPosition(boolean left) {
+    return ticksToUnits((left) ? cache.positionL : cache.positionR);
+  }
+
   public boolean isArmsExtended() { return armsExtended; }
   public boolean isInClimbMode() { return inClimbMode; }
-  public boolean hasBeenZeroed() { return mHasBeenZeroedL && mHasBeenZeroedR; }
-  public boolean atHomingLocation(boolean left) { return (left) ? cache.limitL : cache.limitR; }
+  public boolean IsZeroed() { return hasBeenZeroedL && hasBeenZeroedR; }
+  public boolean IsAtHomingLocation(boolean left) { return (left) ? cache.limitL : cache.limitR; }
+  public boolean isOnTarget(boolean left) { return Math.abs(getPosition(left) - demand) < Constants.CLIMBER.POSITION_DEADBAND; }
+
+  protected double ticksToUnits(double ticks) { return ticks / Constants.CLIMBER.TICKS_PER_UNIT_DISTANCE; }
+  protected double unitsToTicks(double units) { return units * Constants.CLIMBER.TICKS_PER_UNIT_DISTANCE; }
 
   @Override
   public void runTests() {

@@ -17,7 +17,7 @@ public class DriveDisabled extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Timer.getFPGATimestamp() - timeStarted > Constants.Drivetrain.TIMEOUT_DISABLED_COAST;
+    return Timer.getFPGATimestamp() - timeStarted > Constants.DRIVETRAIN.TIMEOUT_DISABLED_COAST;
   }
 
   @Override

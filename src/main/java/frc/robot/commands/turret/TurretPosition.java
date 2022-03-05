@@ -21,6 +21,6 @@ public class TurretPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(subsystem.getPosition() - setpoint) < tolerance;
+    return Math.abs(subsystem.getPosition() - setpoint) < tolerance;  // TODO use isOnTarget
   }
 }

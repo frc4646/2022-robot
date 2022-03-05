@@ -1,9 +1,9 @@
 package frc.robot.controls;
 
 public class Controls {
-  public final DriverControls driver;
-  public final OperatorControls operator;
-  public final DashboardControls dashboard;
+  private final DriverControls driver;
+  private final OperatorControls operator;
+  private final DashboardControls dashboard;
 
   public Controls() {
     driver = new DriverControls();
@@ -13,5 +13,14 @@ public class Controls {
 
   public void configureButtons() {
     operator.configureButtons();
+    dashboard.configureButtons();
+  }
+
+  public DriverControls getDriver() {
+    return driver;
+  }
+
+  public OperatorControls getOperator() {
+    return operator;
   }
 }

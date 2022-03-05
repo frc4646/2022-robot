@@ -14,7 +14,7 @@ public class Hood extends SmartSubsystem {
   private boolean extended = false;
 
   public Hood() {
-    servo = new Servo(Constants.Digital.HOOD);
+    servo = new Servo(Constants.DIGITAL.HOOD);
   }
 
   @Override

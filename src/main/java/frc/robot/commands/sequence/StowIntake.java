@@ -12,7 +12,7 @@ public class StowIntake extends SequentialCommandGroup {
     addCommands(
       new IntakeExtend(false),
       new IntakeActivate(0.0),
-      new WaitCommand(Constants.Agitator.TIMEOUT_STOW),  // Let agitators settle cargo
+      new WaitCommand(Constants.AGITATOR.TIMEOUT_STOW),  // Let agitators settle cargo
       new AgitateOpenLoop(0.0)
     );
   }

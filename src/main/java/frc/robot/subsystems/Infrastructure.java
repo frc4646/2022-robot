@@ -17,20 +17,18 @@ public class Infrastructure extends SmartSubsystem {
 
   private final Compressor compressor;
   private final PneumaticsControlModule pcm;
+  private final UsbCamera camera;
   private final DataCache cache = new DataCache();
-  // private final UsbCamera camera;
-
-  // private NetworkTableEntry dashPressureSwitch, dashCompressor, dashVoltage;
 
   public Infrastructure() {
     compressor = new Compressor(Constants.CAN.PNEUMATIC_CONTROL_MODULE, PneumaticsModuleType.CTREPCM);
     pcm = new PneumaticsControlModule(Constants.CAN.PNEUMATIC_CONTROL_MODULE);
-    // camera = CameraServer.startAutomaticCapture();
-
-    // ShuffleboardLayout layout = Shuffleboard.getTab("General").getLayout("Pneumatics", BuiltInLayouts.kList).withSize(2, 4);
-    // dashPressureSwitch = DashboardControls.getGraph(tab, "Pressure Switch", 0.0).getEntry();
-    // dashCompressor = DashboardControls.getGraph(tab, "Compressor", 0.0).getEntry();
-    // dashVoltage = DashboardControls.getGraph(tab, "Voltage", 0.0).withProperties(Map.of("min", 6, "max", 14)).getEntry();
+    if (Constants.INFRASTRUCTURE.CAMERA_STREAM) {
+      camera = CameraServer.startAutomaticCapture();
+    }
+    else {
+      camera = null;
+    }
   }
 
   @Override
@@ -48,25 +46,18 @@ public class Infrastructure extends SmartSubsystem {
   }
   
   @Override
-  public void updateDashboard() {
-    // dashPressureSwitch.setBoolean(pcm.getPressureSwitch());
-    // dashCompressor.setBoolean(compressor.enabled());
-    // dashVoltage.setDouble(RobotController.getBatteryVoltage());    
+  public void updateDashboard() {   
     SmartDashboard.putNumber("Battery", cache.battery);
   }
 
   @Override
   public void runTests() {
-    boolean isCurrentLowEnough = !pcm.getCompressorCurrentTooHighStickyFault();  // Max continuous 12V / 17A
-    boolean isConnected = !pcm.getCompressorNotConnectedStickyFault();
-    boolean isNotShorted = !pcm.getCompressorShortedStickyFault();
-    boolean isBatteryFull = RobotController.getBatteryVoltage() > 13.0;
-    // boolean isCameraEnabled = camera.isEnabled();
-
-    Test.add(this, "Compressor - Connected", isConnected);
-    Test.add(this, "Compressor - Current", isCurrentLowEnough);
-    Test.add(this, "Compressor - Shorted", isNotShorted);
-    Test.add(this, "Battery - Voltage", isBatteryFull);
-    // Test.add(this, "Camera - Enabled", isCameraEnabled);
+    Test.add(this, "Compressor - Connected", !pcm.getCompressorNotConnectedStickyFault());
+    Test.add(this, "Compressor - Current Low", !pcm.getCompressorCurrentTooHighStickyFault());  // Max continuous 12V / 17A
+    Test.add(this, "Compressor - Not Shorted", !pcm.getCompressorShortedStickyFault());
+    Test.add(this, "Battery - Voltage", RobotController.getBatteryVoltage() > 13.0);
+    if (Constants.INFRASTRUCTURE.CAMERA_STREAM) {
+      Test.add(this, "Camera - Enabled", camera.isEnabled());
+    }
   }
 }

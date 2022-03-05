@@ -46,14 +46,14 @@ public class Drivetrain extends SmartSubsystem {
     configureMotor(slaveL, true, false);
     configureMotor(masterR, false, true);
     configureMotor(slaveR, false, false);
-    masterL.getPIDController().setP(Constants.Drivetrain.P_LEFT);
-    masterL.getPIDController().setI(Constants.Drivetrain.I_LEFT);
-    masterL.getPIDController().setD(Constants.Drivetrain.D_LEFT);
-    masterL.getPIDController().setFF(Constants.Drivetrain.F_LEFT);
-    masterR.getPIDController().setP(Constants.Drivetrain.P_RIGHT);
-    masterR.getPIDController().setI(Constants.Drivetrain.I_RIGHT);
-    masterR.getPIDController().setD(Constants.Drivetrain.D_RIGHT);
-    masterR.getPIDController().setFF(Constants.Drivetrain.F_RIGHT);
+    masterL.getPIDController().setP(Constants.DRIVETRAIN.P_LEFT);
+    masterL.getPIDController().setI(Constants.DRIVETRAIN.I_LEFT);
+    masterL.getPIDController().setD(Constants.DRIVETRAIN.D_LEFT);
+    masterL.getPIDController().setFF(Constants.DRIVETRAIN.F_LEFT);
+    masterR.getPIDController().setP(Constants.DRIVETRAIN.P_RIGHT);
+    masterR.getPIDController().setI(Constants.DRIVETRAIN.I_RIGHT);
+    masterR.getPIDController().setD(Constants.DRIVETRAIN.D_RIGHT);
+    masterR.getPIDController().setFF(Constants.DRIVETRAIN.F_RIGHT);
 
     isBrakeMode = true;
     setBrakeMode(false);
@@ -65,8 +65,8 @@ public class Drivetrain extends SmartSubsystem {
 
   public void configureMotor(CANSparkMax motor, boolean isLeft, boolean isMaster) {
     // motor.setInverted(!isLeft);
-    motor.enableVoltageCompensation(Constants.Drivetrain.VOLTAGE_COMPENSATION);
-    motor.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
+    motor.enableVoltageCompensation(Constants.DRIVETRAIN.VOLTAGE_COMPENSATION);
+    motor.setSmartCurrentLimit(Constants.DRIVETRAIN.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
     // TODO faster status frames
   }
 
@@ -85,7 +85,7 @@ public class Drivetrain extends SmartSubsystem {
   public void updateDashboard() {
     SmartDashboard.putNumber("Drive: Heading", cache.heading.getDegrees());
     SmartDashboard.putNumber("Drive: Pitch", cache.pitch.getDegrees());
-    if (Constants.Drivetrain.TUNING) {
+    if (Constants.DRIVETRAIN.TUNING) {
       SmartDashboard.putNumber("Drive: Distance L", cache.distanceL);
       SmartDashboard.putNumber("Drive: Distance R", cache.distanceR);
       SmartDashboard.putNumber("Drive: RPM L", cache.rpmL);
@@ -127,8 +127,8 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   public void setClosedLoopVelocity(DifferentialDriveWheelSpeeds speeds) {
-    double feedforwardL = Constants.Drivetrain.FEED_FORWARD.calculate(speeds.leftMetersPerSecond);
-    double feedforwardR = Constants.Drivetrain.FEED_FORWARD.calculate(speeds.rightMetersPerSecond);
+    double feedforwardL = Constants.DRIVETRAIN.FEED_FORWARD.calculate(speeds.leftMetersPerSecond);
+    double feedforwardR = Constants.DRIVETRAIN.FEED_FORWARD.calculate(speeds.rightMetersPerSecond);
     masterL.getPIDController().setReference(feedforwardL, ControlType.kDutyCycle);
     masterR.getPIDController().setReference(feedforwardR, ControlType.kDutyCycle);
   }
@@ -149,7 +149,7 @@ public class Drivetrain extends SmartSubsystem {
   public Rotation2d getPitch() { return cache.pitch; }
 
   private double rotationsToMeters(double rotations) {
-    return rotations * Constants.Drivetrain.WHEEL_DIAMETER * Math.PI * 0.0254;
+    return rotations * Constants.DRIVETRAIN.WHEEL_DIAMETER * Math.PI * 0.0254;
   }
 
   @Override

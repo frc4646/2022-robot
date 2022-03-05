@@ -43,10 +43,10 @@ public class Shooter extends SmartSubsystem {
     motor.enableVoltageCompensation(true);
 
     TalonUtil.checkError(motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), "Shooter: Could not detect encoder: ");
-    TalonUtil.checkError(motor.config_kP(0, Constants.Shooter.P, Constants.CAN_TIMEOUT), "Shooter: could not set P: ");
-    TalonUtil.checkError(motor.config_kI(0, Constants.Shooter.I, Constants.CAN_TIMEOUT), "Shooter: could not set I: ");
-    TalonUtil.checkError(motor.config_kD(0, Constants.Shooter.D, Constants.CAN_TIMEOUT), "Shooter: could not set D: ");
-    TalonUtil.checkError(motor.config_kF(0, Constants.Shooter.F, Constants.CAN_TIMEOUT), "Shooter: could not set F: ");
+    TalonUtil.checkError(motor.config_kP(0, Constants.SHOOTER.P, Constants.CAN_TIMEOUT), "Shooter: could not set P: ");
+    TalonUtil.checkError(motor.config_kI(0, Constants.SHOOTER.I, Constants.CAN_TIMEOUT), "Shooter: could not set I: ");
+    TalonUtil.checkError(motor.config_kD(0, Constants.SHOOTER.D, Constants.CAN_TIMEOUT), "Shooter: could not set D: ");
+    TalonUtil.checkError(motor.config_kF(0, Constants.SHOOTER.F, Constants.CAN_TIMEOUT), "Shooter: could not set F: ");
 
     SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40.0, 100.0, 0.02);
     TalonUtil.checkError(motor.configSupplyCurrentLimit(limit), "Shooter: Could not set supply current limit");
@@ -64,14 +64,14 @@ public class Shooter extends SmartSubsystem {
     cache.errorR = (masterR.getControlMode() == ControlMode.Velocity) ? masterR.getClosedLoopError(0) : 0.0;
 
     stableCounts++;
-    if(Math.abs(targetVelocityRPM - getRPM()) > Constants.Shooter.RPM_ERROR_ALLOWED || !isShooting()) {
+    if(Math.abs(targetVelocityRPM - getRPM()) > Constants.SHOOTER.RPM_ERROR_ALLOWED || !isShooting()) {
       stableCounts = 0;
     }
   }
 
   @Override
   public void updateDashboard() {
-    if (Constants.Shooter.TUNING) {
+    if (Constants.SHOOTER.TUNING) {
       SmartDashboard.putNumber("Shooter: RPM", getRPM());
       SmartDashboard.putNumber("Shooter: IsStable", stableCounts);
       SmartDashboard.putNumber("Shooter: Demand", demand);
@@ -99,10 +99,10 @@ public class Shooter extends SmartSubsystem {
   public double getRPM() { return (cache.rpmL + cache.rpmR) / 2.0; }
 
   public boolean isShooting() { return !Util.epsilonEquals(demand, 0.0); }
-  public boolean isStable() { return stableCounts >= Constants.Shooter.STABLE_COUNTS; }
+  public boolean isStable() { return stableCounts >= Constants.SHOOTER.STABLE_COUNTS; }
 
-  private double nativeUnitsToRPM(double ticks_per_100_ms) { return ticks_per_100_ms * 10.0 * 60.0 / Constants.Shooter.TICKS_PER_REV; }
-  private double rpmToNativeUnits(double rpm) { return rpm / 60.0 / 10.0 * Constants.Shooter.TICKS_PER_REV; }
+  private double nativeUnitsToRPM(double ticks_per_100_ms) { return ticks_per_100_ms * 10.0 * 60.0 / Constants.SHOOTER.TICKS_PER_REV; }
+  private double rpmToNativeUnits(double rpm) { return rpm / 60.0 / 10.0 * Constants.SHOOTER.TICKS_PER_REV; }
 
   @Override
   public void runTests() {

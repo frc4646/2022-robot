@@ -30,18 +30,18 @@ public final class Constants {
       CANIFIER = 9, CANDLE = 15;
   }
 
-  public static final class Solenoid {
+  public static final class SOLENOID {
     public static final int
       INTAKE_OUT = 0, INTAKE_IN = 1,
       ARM_L_OUT = 5, ARM_L_IN = 4, ARM_R_OUT = 7, ARM_R_IN = 6;
   }
 
-  public static final class Digital {
+  public static final class DIGITAL {
     public static final int
       FEEDER_BREAK_BEAM = 0, HOOD = 1;
   }
 
-  public static final class Agitator {
+  public static final class AGITATOR {
     public static final double
       OPEN_LOOP_EXHAUST = 0.90,
       OPEN_LOOP_LOAD = 0.45,
@@ -50,17 +50,24 @@ public final class Constants {
       TIMEOUT_STOW = 0.5;  // TODO tune
   }
   
-  public static final class Climber {
+  public static final class CLIMBER {
     public static final boolean TUNING = false;
 
     public static final double
       OPEN_LOOP_ZERO = 0.1,
       DEADBAND = 0.2,
       TIMEOUT_ZERO = 5.0,
-      LIMIT_F = 999999.0;
+      GEAR_RATIO = 72.0 / 14.0,  // TODO correct values
+      TICKS_PER_UNIT_DISTANCE = 2048.0 * GEAR_RATIO,
+      LIMIT_F = 999999.0,
+      POSITION_DEADBAND = 0.1,  // Tune
+      P = 0.0,
+      I = 0.0,
+      D = 0.0,
+      F = 0.0;
   }  
 
-  public static final class ColorSensor {
+  public static final class COLORSENSOR {
     public static final boolean TUNING = false;
     
     public static final I2C.Port I2C_PORT = I2C.Port.kMXP;
@@ -71,7 +78,7 @@ public final class Constants {
       MATCH_RED = new Color(0.561, 0.232, 0.114); // TODO fill these out based on readings
   }
 
-  public static final class Diagnostic {
+  public static final class DIAGNOSTICS {
     public static final int LED_COUNT = 58;
     public static final CANdleConfiguration LED_CONFIG = new CANdleConfiguration();
     static {
@@ -91,7 +98,7 @@ public final class Constants {
       TURRET_AIMED = new DiagnosticState(Diagnostics.toColor(0, 255, 255, .1));
   }
 
-  public static final class Drivetrain {
+  public static final class DRIVETRAIN {
     public static final boolean TUNING = false;
 
     public static final double
@@ -145,7 +152,7 @@ public final class Constants {
       .addConstraint(AUTO_VOLTAGE_CONSTRAINT);
   }
 
-  public static final class Feeder {
+  public static final class FEEDER {
     public static final boolean TUNING = false;
     
     public static final double
@@ -162,19 +169,23 @@ public final class Constants {
       D = 0.0;
   }
 
-  public static final class Hood {
+  public static final class HOOD {
     public static final boolean TUNING = false;
 
     public static final double DEGREES_DEFAULT = 65.0;  // TODO tune
   }
 
-  public static final class Intake {
+  public static final class INFRASTRUCTURE {
+    public static boolean CAMERA_STREAM = true;
+  }
+
+  public static final class INTAKE {
     public static final double
       OPEN_LOOP = 0.32846,
       OPEN_LOOP_RAMP = 0.4;
   }
 
-  public static final class Shooter {
+  public static final class SHOOTER {
     public static final boolean TUNING = false;
 
     public static int STABLE_COUNTS = 2;
@@ -190,7 +201,7 @@ public final class Constants {
       F =  TICKS_PER_REV / RPM_MAX / 60.0 * 10.0;  // Equals 0.05029
   }
 
-  public static final class Turret {
+  public static final class TURRET {
     public static final boolean TUNING = false;
 
     public static final double
@@ -223,7 +234,7 @@ public final class Constants {
       SERVO.kPositionKf = 0.0;
       SERVO.kPositionIZone = 40.0;
       SERVO.kPositionMaxIntegralAccumulator = 20000.0;  // TODO
-      SERVO.kPositionDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks  // TODO try .1 again
+      SERVO.kPositionDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
 
       // SERVO.kMotionMagicKp = 0.0;
       // SERVO.kMotionMagicKi = 0.0;
@@ -238,7 +249,7 @@ public final class Constants {
     }
   }
 
-  public static final class Vision {
+  public static final class VISION {
     public static final boolean TUNING = false;
 
     public static int STABLE_COUNTS = 0;
@@ -276,7 +287,7 @@ public final class Constants {
     }
   }
 
-  public static final class Field {
+  public static final class FIELD {
     public static final double CLIMBER_TIME_REQUIRED_TO_HOLD = 5.0;
     public static final double VISION_TAPE_INCHES = 102.0;
   }

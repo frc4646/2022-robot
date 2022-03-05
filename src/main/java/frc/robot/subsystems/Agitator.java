@@ -18,7 +18,7 @@ public class Agitator extends SmartSubsystem {
     masterL.setNeutralMode(NeutralMode.Brake);
     masterL.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
     masterL.enableVoltageCompensation(true);
-    masterL.configOpenloopRamp(Constants.Agitator.OPEN_LOOP_RAMP);
+    masterL.configOpenloopRamp(Constants.AGITATOR.OPEN_LOOP_RAMP);
 
     slaveR = new VictorSPX(Constants.CAN.AGITATOR_R);
     slaveR.follow(masterL);
@@ -26,7 +26,7 @@ public class Agitator extends SmartSubsystem {
     slaveR.setNeutralMode(NeutralMode.Brake);
     slaveR.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
     slaveR.enableVoltageCompensation(true);
-    slaveR.configOpenloopRamp(Constants.Agitator.OPEN_LOOP_RAMP);
+    slaveR.configOpenloopRamp(Constants.AGITATOR.OPEN_LOOP_RAMP);
     slaveR.setControlFramePeriod(ControlFrame.Control_3_General, 100);    
     slaveR.setStatusFramePeriod(StatusFrame.Status_1_General, 1000);
   }

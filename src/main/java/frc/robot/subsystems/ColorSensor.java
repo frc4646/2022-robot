@@ -28,14 +28,14 @@ public class ColorSensor extends SmartSubsystem {
   private final ColorMatch colorMatcher;
   private DataCache cache = new DataCache();
 
-  private Color colorAlliance = Constants.ColorSensor.MATCH_RED;
-  private Color colorOpponent = Constants.ColorSensor.MATCH_RED;
+  private Color colorAlliance = Constants.COLORSENSOR.MATCH_RED;
+  private Color colorOpponent = Constants.COLORSENSOR.MATCH_RED;
 
   public ColorSensor() {
-    colorSensor = new ColorSensorV3(Constants.ColorSensor.I2C_PORT);
+    colorSensor = new ColorSensorV3(Constants.COLORSENSOR.I2C_PORT);
     colorMatcher = new ColorMatch();
-    colorMatcher.addColorMatch(Constants.ColorSensor.MATCH_BLUE);
-    colorMatcher.addColorMatch(Constants.ColorSensor.MATCH_RED);
+    colorMatcher.addColorMatch(Constants.COLORSENSOR.MATCH_BLUE);
+    colorMatcher.addColorMatch(Constants.COLORSENSOR.MATCH_RED);
   }
 
   @Override
@@ -52,7 +52,7 @@ public class ColorSensor extends SmartSubsystem {
       cache.distance = 0;  // TODO handle matcher returns null?
     }
 
-    if(cache.distance < Constants.ColorSensor.DISTANCE_MIN)
+    if(cache.distance < Constants.COLORSENSOR.DISTANCE_MIN)
       cache.state = STATE.NOT_PRESENT;
     else if(cache.match.color == colorAlliance)
       cache.state = STATE.CORRECT;
@@ -66,7 +66,7 @@ public class ColorSensor extends SmartSubsystem {
   public void updateDashboard() {
     SmartDashboard.putString("Color: State", getState().toString());
     SmartDashboard.putNumber("Color: Distance", cache.distance);
-    if (Constants.ColorSensor.TUNING) {
+    if (Constants.COLORSENSOR.TUNING) {
       SmartDashboard.putNumber("Color: Confidence", cache.match.confidence);
 
       SmartDashboard.putNumber("Color: Red", cache.colorRaw.red);
@@ -94,8 +94,8 @@ public class ColorSensor extends SmartSubsystem {
 
   private void updateAlliance() {
     Alliance alliance = DriverStation.getAlliance();
-    colorAlliance = alliance == Alliance.Red ? Constants.ColorSensor.MATCH_RED : Constants.ColorSensor.MATCH_BLUE;
-    colorOpponent = alliance == Alliance.Red ? Constants.ColorSensor.MATCH_BLUE : Constants.ColorSensor.MATCH_RED;
+    colorAlliance = alliance == Alliance.Red ? Constants.COLORSENSOR.MATCH_RED : Constants.COLORSENSOR.MATCH_BLUE;
+    colorOpponent = alliance == Alliance.Red ? Constants.COLORSENSOR.MATCH_BLUE : Constants.COLORSENSOR.MATCH_RED;
   }
 
   @Override

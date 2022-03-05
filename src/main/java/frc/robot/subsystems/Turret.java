@@ -18,7 +18,7 @@ public class Turret extends ServoMotorSubsystem {
   private final DataCache cache = new DataCache();
   
   public Turret() {
-    super(Constants.Turret.SERVO);
+    super(Constants.TURRET.SERVO);
     canifier = RobotContainer.CANIFIER;
     TalonUtil.checkError(mMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set forward limit switch: ");
     TalonUtil.checkError(mMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set reverse limit switch: ");
@@ -42,7 +42,7 @@ public class Turret extends ServoMotorSubsystem {
     super.updateDashboard();
     SmartDashboard.putBoolean("Turret: Limit F", cache.limitF);
     SmartDashboard.putBoolean("Turret: Limit R", cache.limitR);
-    if (Constants.Turret.TUNING) {
+    if (Constants.TURRET.TUNING) {
       SmartDashboard.putNumber("Turret: Error", mPeriodicIO.error_ticks);
     }
   }
@@ -51,6 +51,7 @@ public class Turret extends ServoMotorSubsystem {
   public void onEnable(boolean isAutonomous) {
     setBrakeMode(true);
     setSetpointPositionPID(getPosition(), 0.0);  // Handle if zeroed while disabled
+    // setOpenLoop(0.0);  // TODO try if better
   }
 
   @Override
@@ -71,6 +72,5 @@ public class Turret extends ServoMotorSubsystem {
   public void runTests() {
     Test.checkFirmware(this, mMaster);
     Test.checkStatusFrames(this, mMaster);
-    // TODO test turret home
   }
 }

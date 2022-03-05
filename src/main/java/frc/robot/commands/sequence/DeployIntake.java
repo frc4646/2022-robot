@@ -9,7 +9,7 @@ public class DeployIntake extends SequentialCommandGroup {
   public DeployIntake() {
     addCommands(
       new IntakeExtend(true),
-      new IntakeActivate(Constants.Intake.OPEN_LOOP)
+      new IntakeActivate(Constants.INTAKE.OPEN_LOOP)
     );
   }
 }

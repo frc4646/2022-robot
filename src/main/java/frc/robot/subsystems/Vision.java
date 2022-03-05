@@ -20,7 +20,7 @@ public class Vision extends SmartSubsystem {
   }
 
   private final double RPM_MAP_KEY_INVALID = -1.0;
-  private final double HEIGHT_VISION_TAPE_TO_CAMERA = Constants.Field.VISION_TAPE_INCHES - Constants.Vision.CAMERA_MOUNTING_HEIGHT;
+  private final double HEIGHT_VISION_TAPE_TO_CAMERA = Constants.FIELD.VISION_TAPE_INCHES - Constants.VISION.CAMERA_MOUNTING_HEIGHT;
 
   private final NetworkTable table;
   private final DataCache cache = new DataCache();
@@ -42,7 +42,7 @@ public class Vision extends SmartSubsystem {
     cache.distance = getGroundDistanceToHubInches();
 
     // TODO linear filter or median filter a goood idea? See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/index.html
-    if (cache.distance > Constants.Vision.DISTANCE_USABLE_MAX || cache.distance < Constants.Vision.DISTANCE_USABLE_MIN) {
+    if (cache.distance > Constants.VISION.DISTANCE_USABLE_MAX || cache.distance < Constants.VISION.DISTANCE_USABLE_MIN) {
       cache.xDegrees = 0.0;
       cache.yDegrees = 0.0;
       cache.area = 0.0;
@@ -60,7 +60,7 @@ public class Vision extends SmartSubsystem {
     SmartDashboard.putBoolean("Vision: Target", cache.seesTarget);
     SmartDashboard.putNumber("Vision: Distance", cache.distance);
     SmartDashboard.putNumber("Vision: X", cache.xDegrees);
-    if (Constants.Vision.TUNING) {
+    if (Constants.VISION.TUNING) {
       SmartDashboard.putNumber("Vision: Y", cache.yDegrees);
     }
   }
@@ -86,23 +86,23 @@ public class Vision extends SmartSubsystem {
   /** See https://docs.limelightvision.io/en/latest/cs_estimating_distance.html#. */
   public double getGroundDistanceToHubInches() {
     if (isTargetPresent()) {
-      return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians(cache.yDegrees + Constants.Vision.CAMERA_MOUNTING_ANGLE)) - Constants.Vision.CAMERA_MOUNTING_OFFSET;
+      return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians(cache.yDegrees + Constants.VISION.CAMERA_MOUNTING_ANGLE)) - Constants.VISION.CAMERA_MOUNTING_OFFSET;
     }
     return RPM_MAP_KEY_INVALID;
   }
 
   public double getHoodDegrees() {
     if (isTargetPresent()) {
-      return Constants.Vision.ANGLE_MAP.getInterpolated(new InterpolatingDouble(getGroundDistanceToHubInches())).value;
+      return Constants.VISION.ANGLE_MAP.getInterpolated(new InterpolatingDouble(getGroundDistanceToHubInches())).value;
     }
-    return Constants.Hood.DEGREES_DEFAULT;
+    return Constants.HOOD.DEGREES_DEFAULT;
   }
 
   public double getShooterRPM() {
     if (isTargetPresent()) {
-      return Constants.Vision.RPM_MAP.getInterpolated(new InterpolatingDouble(getGroundDistanceToHubInches())).value;
+      return Constants.VISION.RPM_MAP.getInterpolated(new InterpolatingDouble(getGroundDistanceToHubInches())).value;
     }
-    return Constants.Shooter.RPM_DEFAULT;
+    return Constants.SHOOTER.RPM_DEFAULT;
   }
 
   public double getDegreesX() {
@@ -110,7 +110,7 @@ public class Vision extends SmartSubsystem {
   }
 
   public boolean isTargetPresent() { return cache.seesTarget; }  
-  public boolean isStable() { return stableCounts >= Constants.Vision.STABLE_COUNTS; }
+  public boolean isStable() { return stableCounts >= Constants.VISION.STABLE_COUNTS; }
 
   @Override
   public void runTests() {

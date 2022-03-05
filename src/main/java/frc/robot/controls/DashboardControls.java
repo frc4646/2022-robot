@@ -13,19 +13,12 @@ import frc.robot.commands.turret.TurretOpenLoop;
 import frc.robot.commands.turret.TurretPosition;
 
 public class DashboardControls {
-  public DashboardControls() {
-    // TODO if not at event/competition
-
-    addCommands();
-    addLayouts();
-  }
-
-  public void addCommands() {
-    SmartDashboard.putNumber("Tune: Setpoint", Constants.Shooter.RPM_DEFAULT);
-    SmartDashboard.putData("Tune: Shooter RPM", new TuneInterpolation());
-    if (Constants.Turret.TUNING) {
-      SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.Turret.SERVO.kHomePosition + 20.0, 0.1));
-      SmartDashboard.putData("Tune: Turret B", new TurretPosition(Constants.Turret.SERVO.kHomePosition - 20.0, 0.1));
+  public void configureButtons() {
+    SmartDashboard.putNumber("Tune: Shoot RPM", Constants.SHOOTER.RPM_DEFAULT);
+    SmartDashboard.putData("Tune: Shoot", new TuneInterpolation());
+    if (Constants.TURRET.TUNING) {
+      SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.TURRET.SERVO.kHomePosition + 20.0, 0.1));
+      SmartDashboard.putData("Tune: Turret B", new TurretPosition(Constants.TURRET.SERVO.kHomePosition - 20.0, 0.1));
       SmartDashboard.putData("Tune: Turret Stop", new TurretOpenLoop(0.0));
       SmartDashboard.putData("Tune: Turret Zero", new InstantCommand(RobotContainer.TURRET::zeroSensors));
     }

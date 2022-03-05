@@ -11,9 +11,9 @@ import frc.team254.util.OpenLoopCheesyDriveHelper;
 
 public class DriveTeleop extends CommandBase {
   private final Drivetrain subsystem = RobotContainer.DRIVETRAIN;
-  private final DriverControls controls = RobotContainer.CONTROLS.driver;
+  private final DriverControls controls = RobotContainer.CONTROLS.getDriver();
   private final OpenLoopCheesyDriveHelper steeringController = OpenLoopCheesyDriveHelper.getInstance();
-  private final SlewRateLimiter throttleAccelLimiter = new SlewRateLimiter(Constants.Drivetrain.THROTTLE_SLEW_LIMIT);
+  private final SlewRateLimiter throttleAccelLimiter = new SlewRateLimiter(Constants.DRIVETRAIN.THROTTLE_SLEW_LIMIT);
 
   public DriveTeleop() {
     addRequirements(subsystem);

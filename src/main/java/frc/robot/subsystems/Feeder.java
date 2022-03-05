@@ -26,15 +26,15 @@ public class Feeder extends SmartSubsystem {
 
   public Feeder() {
     motor = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.FEEDER);
-    breakBeam = new DigitalInput(Constants.Digital.FEEDER_BREAK_BEAM);
+    breakBeam = new DigitalInput(Constants.DIGITAL.FEEDER_BREAK_BEAM);
 
     motor.setInverted(true);
     motor.setIdleMode(IdleMode.kBrake);
     motor.enableVoltageCompensation(12.0);
-    motor.setOpenLoopRampRate(Constants.Feeder.OPEN_LOOP_RAMP);
-    motor.getPIDController().setP(Constants.Feeder.P);
-    motor.getPIDController().setI(Constants.Feeder.I);
-    motor.getPIDController().setD(Constants.Feeder.D);
+    motor.setOpenLoopRampRate(Constants.FEEDER.OPEN_LOOP_RAMP);
+    motor.getPIDController().setP(Constants.FEEDER.P);
+    motor.getPIDController().setI(Constants.FEEDER.I);
+    motor.getPIDController().setD(Constants.FEEDER.D);
   }
 
   @Override
@@ -50,23 +50,24 @@ public class Feeder extends SmartSubsystem {
   @Override
   public void updateDashboard() {
     SmartDashboard.putBoolean("Feeder: Loaded", isShooterLoaded());
-    if (Constants.Feeder.TUNING) {
+    if (Constants.FEEDER.TUNING) {
       SmartDashboard.putNumber("Feeder: Position", getPosition());      
     }
   }
 
   public void setOpenLoop(double percent) {
     motor.set(percent);
+    demand = percent;
   }
 
   public void setClosedLoopPosition(double position) {
-    double setpoint = position * Constants.Feeder.GEAR_RATIO;
+    double setpoint = position * Constants.FEEDER.GEAR_RATIO;
     motor.getPIDController().setReference(setpoint, ControlType.kPosition);
     demand = setpoint;
   }
 
   public double getPosition() {
-    return cache.position / Constants.Feeder.GEAR_RATIO;
+    return cache.position / Constants.FEEDER.GEAR_RATIO;
   }
 
   public int getQueuedCargo() {
@@ -82,7 +83,7 @@ public class Feeder extends SmartSubsystem {
   }
 
   public boolean isOnTarget() {
-    return Math.abs(getPosition() - demand) < Constants.Feeder.POSITION_DEADBAND;
+    return Math.abs(getPosition() - demand) < Constants.FEEDER.POSITION_DEADBAND;
   }
 
   public boolean isShooterLoaded() {

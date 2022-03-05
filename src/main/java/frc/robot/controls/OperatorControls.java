@@ -3,7 +3,6 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotContainer;
@@ -24,6 +23,7 @@ public class OperatorControls {
   private final XboxController operator;
   private final JoystickButton buttonA, buttonB, buttonX, buttonY, bumperL, bumperR, Fn, start;
   private final Trigger aimLob, aimFar;
+  // private final Trigger climbMode;
 
   public OperatorControls() {
     operator = new XboxController(2);
@@ -32,15 +32,16 @@ public class OperatorControls {
     Fn = makeButton(Button.kBack); start = makeButton(Button.kStart);
     aimLob = new Trigger() { @Override public boolean get() { return getAimLob(); } };
     aimFar = new Trigger() { @Override public boolean get() { return getAimFar(); } };
+    // climbMode = new Trigger(RobotContainer.CLIMBER::isInClimbMode);
   }
 
   public void configureButtons() {
     // Climber
-    start.whenPressed(new ClimberArms(true));
+    start.whenPressed(new ClimberArms(true));  // TODO move to alt buttons when in climb mode?
     start.whenReleased(new ClimberArms(false));
     Fn.whenPressed(new ClimberEnableLimits(false));
     Fn.whenReleased(new ClimberEnableLimits(true));
-    buttonX.toggleWhenPressed(new ClimbMode());
+    buttonX.toggleWhenPressed(new ClimbMode());  // TODO move to start button?
 
     // Hood
     // aimLob.whenActive(new HoodExtend(false));  // TODO test these
@@ -68,6 +69,7 @@ public class OperatorControls {
   public boolean getAimLob() { return operator.getRawAxis(TRIGGER_L) > TRIGGER_DEADBAND; }
   public boolean getAimFar() { return operator.getRawAxis(TRIGGER_R) > TRIGGER_DEADBAND; }
   public double getClimberStick() { return -operator.getRawAxis(XboxController.Axis.kRightY.value); }
+  public double getShooterTrim() { return 0.0; }  // TODO
   public double getTurretStick() { return -operator.getRawAxis(XboxController.Axis.kLeftX.value); }
   public int getTurretSnap() { return operator.getPOV(); }
   public boolean getFn() { return operator.getBackButton(); }
