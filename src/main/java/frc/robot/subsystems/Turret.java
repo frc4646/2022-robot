@@ -25,6 +25,7 @@ public class Turret extends ServoMotorSubsystem {
     mMaster.overrideLimitSwitchesEnable(true);
     mMaster.overrideSoftLimitsEnable(true);
     forceZero();
+    setBrakeMode(false);
   }
 
   @Override
@@ -44,6 +45,7 @@ public class Turret extends ServoMotorSubsystem {
     SmartDashboard.putBoolean("Turret: Limit R", cache.limitR);
     if (Constants.TURRET.TUNING) {
       SmartDashboard.putNumber("Turret: Error", mPeriodicIO.error_ticks);
+      SmartDashboard.putNumber("Turret: Velocity", mPeriodicIO.velocity_ticks_per_100ms);
     }
   }
 

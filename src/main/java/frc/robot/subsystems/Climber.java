@@ -88,10 +88,10 @@ public class Climber extends SmartSubsystem {
     cache.positionR = masterR.getSelectedSensorPosition(0);
     cache.velocityR = masterR.getSelectedSensorVelocity(0);
     cache.currentR = masterR.getStatorCurrent();
-    if (IsAtHomingLocation(true)) {
+    if (isAtHomingLocation(true)) {
       zeroSensors(true);
     }
-    if (IsAtHomingLocation(false)) {
+    if (isAtHomingLocation(false)) {
       zeroSensors(false);
     }
   }
@@ -174,8 +174,8 @@ public class Climber extends SmartSubsystem {
 
   public boolean isArmsExtended() { return armsExtended; }
   public boolean isInClimbMode() { return inClimbMode; }
-  public boolean IsZeroed() { return hasBeenZeroedL && hasBeenZeroedR; }
-  public boolean IsAtHomingLocation(boolean left) { return (left) ? cache.limitL : cache.limitR; }
+  public boolean isZeroed() { return hasBeenZeroedL && hasBeenZeroedR; }
+  public boolean isAtHomingLocation(boolean left) { return (left) ? cache.limitL : cache.limitR; }
   public boolean isOnTarget(boolean left) { return Math.abs(getPosition(left) - demand) < Constants.CLIMBER.POSITION_DEADBAND; }
 
   protected double ticksToUnits(double ticks) { return ticks / Constants.CLIMBER.TICKS_PER_UNIT_DISTANCE; }

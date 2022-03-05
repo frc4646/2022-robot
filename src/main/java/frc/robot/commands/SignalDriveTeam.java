@@ -30,6 +30,8 @@ public class SignalDriveTeam extends CommandBase {
       diagnostics.setState(Constants.DIAGNOSTICS.FAULT_CARGO);
     } else if (isClimbing()) {
       diagnostics.setState(Constants.DIAGNOSTICS.CLIMBING);
+    } else if (isVisionOutOfRange()) {
+      diagnostics.setState(Constants.DIAGNOSTICS.FAULT_OUTSIDE_VISION_RANGE);
     } else if (isShooting()) {
       diagnostics.setState(Constants.DIAGNOSTICS.SHOOTING);
     } else if (isTurretAimed()) {
@@ -44,6 +46,7 @@ public class SignalDriveTeam extends CommandBase {
   private boolean isClimbing() { return climber.isInClimbMode(); }
   private boolean isShooting() { return shooter.isShooting(); }
   private boolean isTurretFaultPresent() { return !turret.hasBeenZeroed(); }
+  private boolean isVisionOutOfRange() { return !vision.isInShootRange(); };
 
   @Override
   public boolean runsWhenDisabled() {

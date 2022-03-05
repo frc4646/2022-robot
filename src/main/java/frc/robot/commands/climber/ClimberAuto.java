@@ -9,6 +9,6 @@ public class ClimberAuto extends ConditionalCommand {
   }
 
   private static boolean isClimberZeroed() {
-    return RobotContainer.CLIMBER.IsZeroed();
+    return RobotContainer.CLIMBER.isZeroed();
   }
 }

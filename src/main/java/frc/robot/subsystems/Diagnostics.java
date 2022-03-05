@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.controls.OperatorControls;
 import frc.robot.util.DiagnosticState;
 import frc.robot.util.Test;
 
@@ -42,6 +43,7 @@ public class Diagnostics extends SmartSubsystem {
     RED_SOLID = toColor(255, 0, 0, 0.5);
 
   private final CANdle candle;
+  private final OperatorControls operator = RobotContainer.CONTROLS.getOperator();
   private Animation modeDefault = OFF, robotState = OFF;
   private boolean isCriticalIssuePresent = false;
   
@@ -57,8 +59,8 @@ public class Diagnostics extends SmartSubsystem {
     // TODO reduce calls to CAN HAL?
     candle.animate(robotState);
     double rumble = (DriverStation.isDisabled() && isCriticalIssuePresent) ? Constants.DIAGNOSTICS.RUMBLE_PERCENT : 0.0;
-    RobotContainer.CONTROLS.getOperator().setRumble(true, rumble);  // tune which side is better
-    RobotContainer.CONTROLS.getOperator().setRumble(false, rumble);
+    operator.setRumble(true, rumble);  // tune which side is better
+    operator.setRumble(false, rumble);
   }
 
   @Override

@@ -33,6 +33,7 @@ public class Canifier extends SmartSubsystem {
   @Override
   public void updateDashboard() {
     SmartDashboard.putBoolean("Canifier: Turret Home", cache.isTurrentHome);
+    setLEDs(0.0, 0.1, 0.0);
   }
 
   public void setLEDs(double red, double green, double blue) {

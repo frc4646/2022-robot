@@ -17,17 +17,17 @@ public class Infrastructure extends SmartSubsystem {
 
   private final Compressor compressor;
   private final PneumaticsControlModule pcm;
-  private final UsbCamera camera;
   private final DataCache cache = new DataCache();
 
   public Infrastructure() {
     compressor = new Compressor(Constants.CAN.PNEUMATIC_CONTROL_MODULE, PneumaticsModuleType.CTREPCM);
     pcm = new PneumaticsControlModule(Constants.CAN.PNEUMATIC_CONTROL_MODULE);
     if (Constants.INFRASTRUCTURE.CAMERA_STREAM) {
-      camera = CameraServer.startAutomaticCapture();
-    }
-    else {
-      camera = null;
+      new Thread(() -> {
+        UsbCamera camera = CameraServer.startAutomaticCapture();
+        camera.setResolution(416, 240);
+        camera.setFPS(15);
+      }).start();
     }
   }
 
@@ -56,8 +56,8 @@ public class Infrastructure extends SmartSubsystem {
     Test.add(this, "Compressor - Current Low", !pcm.getCompressorCurrentTooHighStickyFault());  // Max continuous 12V / 17A
     Test.add(this, "Compressor - Not Shorted", !pcm.getCompressorShortedStickyFault());
     Test.add(this, "Battery - Voltage", RobotController.getBatteryVoltage() > 13.0);
-    if (Constants.INFRASTRUCTURE.CAMERA_STREAM) {
-      Test.add(this, "Camera - Enabled", camera.isEnabled());
-    }
+    // if (Constants.INFRASTRUCTURE.CAMERA_STREAM) {
+    //   Test.add(this, "Camera - Enabled", camera.isEnabled());
+    // }
   }
 }

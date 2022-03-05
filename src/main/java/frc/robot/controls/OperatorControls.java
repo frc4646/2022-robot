@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.RobotContainer;
 import frc.robot.commands.climber.ClimberArms;
 import frc.robot.commands.climber.ClimberEnableLimits;
+import frc.robot.commands.climber.ClimberZero;
 import frc.robot.commands.feeder.FeederPosition;
 import frc.robot.commands.sequence.ClimbMode;
 import frc.robot.commands.sequence.DeployIntake;
@@ -42,6 +42,7 @@ public class OperatorControls {
     Fn.whenPressed(new ClimberEnableLimits(false));
     Fn.whenReleased(new ClimberEnableLimits(true));
     buttonX.toggleWhenPressed(new ClimbMode());  // TODO move to start button?
+    // buttonX.whenPressed(new ClimberZero());
 
     // Hood
     // aimLob.whenActive(new HoodExtend(false));  // TODO test these
@@ -69,9 +70,23 @@ public class OperatorControls {
   public boolean getAimLob() { return operator.getRawAxis(TRIGGER_L) > TRIGGER_DEADBAND; }
   public boolean getAimFar() { return operator.getRawAxis(TRIGGER_R) > TRIGGER_DEADBAND; }
   public double getClimberStick() { return -operator.getRawAxis(XboxController.Axis.kRightY.value); }
-  public double getShooterTrim() { return 0.0; }  // TODO
+  public double getShooterTrim() { return 0.0; }; // TODO { return operator.getRawAxis(XboxController.Axis.kLeftY.value); }
   public double getTurretStick() { return -operator.getRawAxis(XboxController.Axis.kLeftX.value); }
-  public int getTurretSnap() { return operator.getPOV(); }
+  public int getTurretSnap() {
+    switch(operator.getPOV())
+    {
+      case 0:
+        return 0;
+      case 90:
+        return 270;
+      case 180:
+        return 180;
+      case 270:
+        return 90;
+      default:
+        return -1;
+    }
+  }
   public boolean getFn() { return operator.getBackButton(); }
 
   public void setRumble(boolean wantLeft, double percent) {

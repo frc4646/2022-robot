@@ -20,7 +20,8 @@ public class ClimberZero extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return subsystem.IsAtHomingLocation(true) && subsystem.IsAtHomingLocation(false);
+    boolean bothAtHome = subsystem.isAtHomingLocation(true) && subsystem.isAtHomingLocation(false); 
+    return subsystem.isZeroed() || bothAtHome;
   }
 
   @Override

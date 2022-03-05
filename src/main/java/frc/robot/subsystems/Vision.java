@@ -17,6 +17,7 @@ public class Vision extends SmartSubsystem {
     public boolean seesTarget;  // Whether the limelight has any valid targets (0 or 1)
     public int modeLED = LEDMode.PIPELINE.ordinal();
     public double distance;
+    public boolean inShootRange = false; 
   }
 
   private final double RPM_MAP_KEY_INVALID = -1.0;
@@ -40,9 +41,10 @@ public class Vision extends SmartSubsystem {
     cache.area = table.getEntry("ta").getDouble(0.0);
     cache.seesTarget = table.getEntry("tv").getDouble(0) == 1.0;
     cache.distance = getGroundDistanceToHubInches();
+    cache.inShootRange = cache.distance > Constants.VISION.DISTANCE_USABLE_MIN && cache.distance < Constants.VISION.DISTANCE_USABLE_MAX;
 
     // TODO linear filter or median filter a goood idea? See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/index.html
-    if (cache.distance > Constants.VISION.DISTANCE_USABLE_MAX || cache.distance < Constants.VISION.DISTANCE_USABLE_MIN) {
+    if (!cache.inShootRange) {
       cache.xDegrees = 0.0;
       cache.yDegrees = 0.0;
       cache.area = 0.0;
@@ -111,6 +113,7 @@ public class Vision extends SmartSubsystem {
 
   public boolean isTargetPresent() { return cache.seesTarget; }  
   public boolean isStable() { return stableCounts >= Constants.VISION.STABLE_COUNTS; }
+  public boolean isInShootRange() { return cache.inShootRange; };
 
   @Override
   public void runTests() {

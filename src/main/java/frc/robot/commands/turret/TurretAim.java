@@ -10,7 +10,7 @@ import frc.robot.subsystems.Vision;
 public class TurretAim extends CommandBase {
   private final Turret turret = RobotContainer.TURRET;
   private final Vision vision = RobotContainer.VISION;
-  private final OperatorControls controls = RobotContainer.CONTROLS.getOperator();
+  private final OperatorControls operator = RobotContainer.CONTROLS.getOperator();
 
   public TurretAim() {
     addRequirements(turret);
@@ -18,23 +18,30 @@ public class TurretAim extends CommandBase {
 
   @Override
   public void execute() {
-    double setpoint = turret.getPosition();
+    double position = turret.getPosition();
+    double setpoint = position;
     double feedforward = 0.0;
-    double stick = controls.getTurretStick();
-    int snap = controls.getTurretSnap();
+    double stick = operator.getTurretStick();
+    int snap = operator.getTurretSnap();
 
-    if (isVisionWanted()) {
+    if (isVisionWanted(position)) {
       setpoint -= vision.getDegreesX();
     } else if (snap != -1) {
       setpoint = snap;
     } else if (Math.abs(stick) >= Constants.TURRET.STICK_DEADBAND) {
       setpoint += stick * Constants.TURRET.STICK_GAIN;
+      // turret.setOpenLoop(stick);
     }
-    turret.setSetpointPositionPID(setpoint, feedforward);
+    turret.setSetpointMotionMagic(setpoint, feedforward);
   }
 
-  private boolean isVisionWanted() {
-    // TODO deadzones where climber is
-    return vision.isTargetPresent() && !controls.getFn();
+  private boolean isVisionWanted(double position) {
+    return vision.isTargetPresent() && !operator.getFn() && !isInDeadzone(position);
+  }
+
+  private boolean isInDeadzone(double position) {
+    boolean inDeadzoneR = position < 150.0 && position > 45.0;
+    boolean inDeadzoneL = position > 210.0 && position < 315.0;
+    return inDeadzoneR || inDeadzoneL;
   }
 }

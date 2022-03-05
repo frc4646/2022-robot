@@ -93,6 +93,7 @@ public final class Constants {
     public static final DiagnosticState
       FAULT_CARGO = new DiagnosticState(Diagnostics.toColor(255, 0, 255, 0.1)),
       FAULT_TURRET = new DiagnosticState(Diagnostics.toColor(255, 255, 0, 1.0), true),
+      FAULT_OUTSIDE_VISION_RANGE = new DiagnosticState(Diagnostics.toColor(0, 255, 128, 0.1)),
       CLIMBING = new DiagnosticState(Diagnostics.toColor(0, 255, 255, 0.5)),
       SHOOTING = new DiagnosticState(Diagnostics.toColor(255, 0, 0, .1)),
       TURRET_AIMED = new DiagnosticState(Diagnostics.toColor(0, 255, 255, .1));
@@ -176,7 +177,7 @@ public final class Constants {
   }
 
   public static final class INFRASTRUCTURE {
-    public static boolean CAMERA_STREAM = true;
+    public static boolean CAMERA_STREAM = false;
   }
 
   public static final class INTAKE {
@@ -202,7 +203,7 @@ public final class Constants {
   }
 
   public static final class TURRET {
-    public static final boolean TUNING = false;
+    public static final boolean TUNING = true;
 
     public static final double
       STICK_GAIN = 25.0,
@@ -210,40 +211,40 @@ public final class Constants {
 
       GEAR_RATIO = 72.0 / 14.0 * 154.0 / 16.0,  // Number > 1 means "geared down"
       GEAR_RATIO_WRONG = 24.0 / 8.0 * 240.0 / 14.0,
-      VELOCITY_MAX = 2200.0;  // TODO real value
+      VELOCITY_MAX = 21500.0;  // TODO real value
 
     public static final ServoMotorSubsystemConstants SERVO = new ServoMotorSubsystemConstants();
     static {
       SERVO.kMasterConstants.id = CAN.TURRET;
       SERVO.kMasterConstants.invert_motor = false;
       SERVO.kMasterConstants.invert_sensor_phase = false;
-      SERVO.kSupplyContinuousCurrentLimit = 20; // amps
-      SERVO.kSupplyPeakCurrentLimit = 40; // amps
+      SERVO.kSupplyContinuousCurrentLimit = 20;
+      SERVO.kSupplyPeakCurrentLimit = 40;
       SERVO.kSupplyPeakCurrentDuration = 10; // ms
 
-      SERVO.kMinUnitsLimit = 85.0;
-      SERVO.kMaxUnitsLimit = 415.0;
-      // SERVO.kMinUnitsLimit = 150.0;
-      // SERVO.kMaxUnitsLimit = 210.0;
+      SERVO.kMinUnitsLimit = 180.0 - 220.0;
+      SERVO.kMaxUnitsLimit = 180.0 + 80.0;
+      // SERVO.kMinUnitsLimit = 180.0 - 90.0;
+      // SERVO.kMaxUnitsLimit = 180.0 + 220.0;
       SERVO.kHomePosition = 180.0;
-      SERVO.kTicksPerUnitDistance = 2048.0 * GEAR_RATIO_WRONG / 360.0;
+      SERVO.kTicksPerUnitDistance = 2048.0 * GEAR_RATIO / 360.0;
 
-      SERVO.kPositionKp = 0.05;
-      SERVO.kPositionKi = 0.0;  // TODO
+      SERVO.kPositionKp = 0.02;
+      SERVO.kPositionKi = 0.0008;  // TODO
       SERVO.kPositionKd = 0.25;
       SERVO.kPositionKf = 0.0;
       SERVO.kPositionIZone = 40.0;
       SERVO.kPositionMaxIntegralAccumulator = 20000.0;  // TODO
       SERVO.kPositionDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
 
-      // SERVO.kMotionMagicKp = 0.0;
-      // SERVO.kMotionMagicKi = 0.0;
-      // SERVO.kMotionMagicKd = 0.0;
-      // SERVO.kMotionMagicKf = 1023.0 * VELOCITY_MAX;
-      // SERVO.kMotionMagicKa = 0.0;
-      // SERVO.kCruiseVelocity = 20000; // Ticks / 100ms
-      // SERVO.kAcceleration = 40000; // Ticks / 100ms / s
-      // SERVO.kMotionMagicDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
+      SERVO.kMotionMagicKp = 0.6;
+      SERVO.kMotionMagicKi = 0.0;
+      SERVO.kMotionMagicKd = 1.2;
+      SERVO.kMotionMagicKf = 1023.0 / VELOCITY_MAX;
+      SERVO.kMotionMagicKa = 0.0;
+      SERVO.kCruiseVelocity = VELOCITY_MAX * 0.95;
+      SERVO.kAcceleration = SERVO.kCruiseVelocity * 2.0;
+      SERVO.kMotionMagicDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
 
       // TODO SERVO.kRecoverPositionOnReset = true;
     }
