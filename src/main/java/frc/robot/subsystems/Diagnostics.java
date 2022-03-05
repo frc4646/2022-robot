@@ -115,10 +115,10 @@ public class Diagnostics extends SmartSubsystem {
     Animation TWINKLE_OFF = new TwinkleOffAnimation(255, 0, 0, 0, STATIC, Constants.Diagnostic.LED_COUNT, TwinkleOffPercent.Percent100);
     List<Animation> ALL_ANIMATIONS = Arrays.asList(COLOR_FLOW, FIRE, LARSON, RAINBOW, RGB_FADE, SINGLE_FADE, STROBE, TWINKLE, TWINKLE_OFF);
   
-    for(Animation animation : ALL_ANIMATIONS) {
-      Test.add(animation.getClass().getSimpleName(), true);
-      candle.animate(animation);
-      Timer.delay(5.0);
-    }
+    // for(Animation animation : ALL_ANIMATIONS) {
+    //   Test.add(animation.getClass().getSimpleName(), true);
+    //   candle.animate(animation);
+    //   Timer.delay(5.0);
+    // }
   }
 }

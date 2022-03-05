@@ -3,12 +3,14 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.CANifierStatusFrame;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.util.Test;
 
 public class Canifier extends SmartSubsystem {
   public static class DataCache {
     double red = 0.0, green = 0.0, blue = 0.0;
+    boolean isTurrentHome;
   }
 
   private final CANifier canifier;
@@ -17,6 +19,20 @@ public class Canifier extends SmartSubsystem {
   public Canifier() {
     canifier = new CANifier(Constants.CAN.CANIFIER);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_2_General, 10, Constants.CAN_TIMEOUT);
+    canifier.setStatusFramePeriod(CANifierStatusFrame.Status_3_PwmInputs0, 1000, Constants.CAN_TIMEOUT);
+    canifier.setStatusFramePeriod(CANifierStatusFrame.Status_4_PwmInputs1, 1000, Constants.CAN_TIMEOUT);
+    canifier.setStatusFramePeriod(CANifierStatusFrame.Status_5_PwmInputs2, 1000, Constants.CAN_TIMEOUT);
+    canifier.setStatusFramePeriod(CANifierStatusFrame.Status_6_PwmInputs3, 1000, Constants.CAN_TIMEOUT);
+  }
+
+  @Override
+  public void cacheSensors() {
+    cache.isTurrentHome = !canifier.getGeneralInput(CANifier.GeneralPin.LIMF);
+  }
+
+  @Override
+  public void updateDashboard() {
+    SmartDashboard.putBoolean("Canifier: Turret Home", cache.isTurrentHome);
   }
 
   public void setLEDs(double red, double green, double blue) {
@@ -31,8 +47,13 @@ public class Canifier extends SmartSubsystem {
     canifier.setLEDOutput(cache.blue, CANifier.LEDChannel.LEDChannelC);
   }
 
+  public boolean isTurretHome() {
+    return cache.isTurrentHome;
+  }
+
   @Override
   public void runTests() {
     Test.checkFirmware(this, canifier);
+    // TODO test turret home
   }
 }

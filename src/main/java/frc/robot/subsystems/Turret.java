@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.util.Test;
 import frc.team254.drivers.TalonUtil;
 
@@ -13,10 +14,12 @@ public class Turret extends ServoMotorSubsystem {
     public boolean limitF, limitR;
   }
 
+  private final Canifier canifier;
   private final DataCache cache = new DataCache();
   
   public Turret() {
     super(Constants.Turret.SERVO);
+    canifier = RobotContainer.CANIFIER;
     TalonUtil.checkError(mMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set forward limit switch: ");
     TalonUtil.checkError(mMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set reverse limit switch: ");
     mMaster.overrideLimitSwitchesEnable(true);
@@ -29,8 +32,8 @@ public class Turret extends ServoMotorSubsystem {
     super.cacheSensors();
     cache.limitF = mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1;
     cache.limitR = mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1;
-    if (hasBeenZeroed()) {
-      // TODO mLED.clearTurretFault();
+    if (atHomingLocation()) {
+      zeroSensors();
     }
   }
 
@@ -57,7 +60,7 @@ public class Turret extends ServoMotorSubsystem {
 
   @Override
   public boolean atHomingLocation() {
-    return false;  // TODO canifier.isTurretHomed();
+    return canifier.isTurretHome();
   }
 
   public boolean isOnTarget() {
@@ -67,5 +70,7 @@ public class Turret extends ServoMotorSubsystem {
   @Override
   public void runTests() {
     Test.checkFirmware(this, mMaster);
+    Test.checkStatusFrames(this, mMaster);
+    // TODO test turret home
   }
 }

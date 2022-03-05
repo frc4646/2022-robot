@@ -3,9 +3,12 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.RobotContainer;
 import frc.robot.commands.climber.ClimberArms;
+import frc.robot.commands.climber.ClimberEnableLimits;
 import frc.robot.commands.feeder.FeederPosition;
 import frc.robot.commands.sequence.ClimbMode;
 import frc.robot.commands.sequence.DeployIntake;
@@ -35,8 +38,9 @@ public class OperatorControls {
     // Climber
     start.whenPressed(new ClimberArms(true));
     start.whenReleased(new ClimberArms(false));
+    Fn.whenPressed(new ClimberEnableLimits(false));
+    Fn.whenReleased(new ClimberEnableLimits(true));
     buttonX.toggleWhenPressed(new ClimbMode());
-    // Fn.whenPressed(new ClimberZero() or new ClimberOverrideLimits());  // auto zero will do wrong thing if spool rolls over
 
     // Hood
     // aimLob.whenActive(new HoodExtend(false));  // TODO test these

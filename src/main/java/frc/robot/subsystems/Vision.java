@@ -28,12 +28,12 @@ public class Vision extends SmartSubsystem {
 
   public Vision() {
     table = NetworkTableInstance.getDefault().getTable("limelight");
+    setLED(LEDMode.OFF);
   }
 
   /** See https://docs.limelightvision.io/en/latest/networktables_api.html. */
   @Override
   public void cacheSensors() {
-    // TODO linear filter or median filter a goood idea? See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/index.html
     cache.modeLED = (int) table.getEntry("ledMode").getDouble(1.0);
     cache.xDegrees = table.getEntry("tx").getDouble(0.0);
     cache.yDegrees = table.getEntry("ty").getDouble(0.0);
@@ -41,6 +41,14 @@ public class Vision extends SmartSubsystem {
     cache.seesTarget = table.getEntry("tv").getDouble(0) == 1.0;
     cache.distance = getGroundDistanceToHubInches();
 
+    // TODO linear filter or median filter a goood idea? See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/index.html
+    if (cache.distance > Constants.Vision.DISTANCE_USABLE_MAX || cache.distance < Constants.Vision.DISTANCE_USABLE_MIN) {
+      cache.xDegrees = 0.0;
+      cache.yDegrees = 0.0;
+      cache.area = 0.0;
+      cache.seesTarget = false;
+      cache.distance = 0.0;
+    }
     stableCounts++;
     if (!isTargetPresent()) {
       stableCounts = 0;
@@ -78,7 +86,7 @@ public class Vision extends SmartSubsystem {
   /** See https://docs.limelightvision.io/en/latest/cs_estimating_distance.html#. */
   public double getGroundDistanceToHubInches() {
     if (isTargetPresent()) {
-      return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians(cache.yDegrees + Constants.Vision.CAMERA_MOUNTING_ANGLE));
+      return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians(cache.yDegrees + Constants.Vision.CAMERA_MOUNTING_ANGLE)) - Constants.Vision.CAMERA_MOUNTING_OFFSET;
     }
     return RPM_MAP_KEY_INVALID;
   }

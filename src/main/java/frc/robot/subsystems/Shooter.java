@@ -71,9 +71,9 @@ public class Shooter extends SmartSubsystem {
 
   @Override
   public void updateDashboard() {
-    SmartDashboard.putNumber("Shooter: RPM", getRPM());
-    SmartDashboard.putNumber("Shooter: IsStable", stableCounts);
     if (Constants.Shooter.TUNING) {
+      SmartDashboard.putNumber("Shooter: RPM", getRPM());
+      SmartDashboard.putNumber("Shooter: IsStable", stableCounts);
       SmartDashboard.putNumber("Shooter: Demand", demand);
       SmartDashboard.putNumber("Shooter: Amps Stator L", cache.ampsStatorL);
       SmartDashboard.putNumber("Shooter: Amps Stator R", cache.ampsStatorR);
@@ -108,5 +108,7 @@ public class Shooter extends SmartSubsystem {
   public void runTests() {
     Test.checkFirmware(this, masterL);
     Test.checkFirmware(this, masterR);
+    Test.checkStatusFrames(this, masterL);
+    Test.checkStatusFrames(this, masterR);
   }
 }

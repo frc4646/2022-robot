@@ -39,5 +39,7 @@ public class Agitator extends SmartSubsystem {
   public void runTests() {
     Test.checkFirmware(this, masterL);
     Test.checkFirmware(this, slaveR);
+    Test.checkStatusFrames(this, masterL);
+    Test.checkStatusFrames(this, slaveR);
   }
 }

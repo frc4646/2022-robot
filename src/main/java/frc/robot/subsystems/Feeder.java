@@ -50,8 +50,9 @@ public class Feeder extends SmartSubsystem {
   @Override
   public void updateDashboard() {
     SmartDashboard.putBoolean("Feeder: Loaded", isShooterLoaded());
-    SmartDashboard.putNumber("Feeder: Position", getPosition());
-    // SmartDashboard.putString("Feeder: Command", this.getCurrentCommand().getName());
+    if (Constants.Feeder.TUNING) {
+      SmartDashboard.putNumber("Feeder: Position", getPosition());      
+    }
   }
 
   public void setOpenLoop(double percent) {

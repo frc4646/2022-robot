@@ -36,10 +36,10 @@ public class Drivetrain extends SmartSubsystem {
   private Rotation2d gyroOffset = Rotation2d.fromDegrees(0.0);
 
   public Drivetrain() {
-    masterR = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL);
-    slaveR = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, masterR, false);
-    masterL = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FR, true);
-    slaveL = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BR, masterL, false);
+    masterL = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL, true);
+    slaveL = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, masterL, false);
+    masterR = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FR, false);
+    slaveR = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BR, masterR, false);
     gyro = new AHRS();
 
     configureMotor(masterL, true, true);
@@ -64,9 +64,10 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   public void configureMotor(CANSparkMax motor, boolean isLeft, boolean isMaster) {
-    motor.setInverted(!isLeft);
+    // motor.setInverted(!isLeft);
     motor.enableVoltageCompensation(Constants.Drivetrain.VOLTAGE_COMPENSATION);
     motor.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
+    // TODO faster status frames
   }
 
   @Override
@@ -161,10 +162,10 @@ public class Drivetrain extends SmartSubsystem {
 
     setBrakeMode(false);
     MotorTestSparkMax.checkMotors(this,
-      Arrays.asList(new MotorConfig<>("MasterL", masterL), new MotorConfig<>("SlaveL", slaveL)),
-      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, masterL.getEncoder()::getVelocity));
-    MotorTestSparkMax.checkMotors(this,
       Arrays.asList(new MotorConfig<>("MasterR", masterR), new MotorConfig<>("SlaveR", slaveR)),
       new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, masterR.getEncoder()::getVelocity));
+    MotorTestSparkMax.checkMotors(this,
+      Arrays.asList(new MotorConfig<>("MasterL", masterL), new MotorConfig<>("SlaveL", slaveL)),
+      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, masterL.getEncoder()::getVelocity));
   }
 }

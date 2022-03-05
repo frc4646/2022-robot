@@ -6,12 +6,15 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.commands.feeder.FeederOpenLoop;
+import frc.robot.commands.feeder.WaitForFeederState;
 
 public class FireCargo extends SequentialCommandGroup {
   public FireCargo() {
     addCommands(
       new FeederOpenLoop(Constants.Feeder.OPEN_LOOP_SHOOT),
       new WaitCommand(0.25),
+      //new WaitForFeederState(false),  // TODO try this
+      //new WaitForFeederState(true),  // TODO try this
       new FeederOpenLoop(0.0),  // pulse
       // new WaitUntilCommand(RobotContainer.SHOOTER::isStable),  // TODO try this
       new WaitCommand(0.25),

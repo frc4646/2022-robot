@@ -49,5 +49,6 @@ public class Intake extends SmartSubsystem {
   public void runTests() {
     Test.checkFirmware(this, motor);
     Test.checkSolenoid(this, solenoid);
+    Test.checkStatusFrames(this, motor);
   }
 }

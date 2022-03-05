@@ -66,7 +66,7 @@ public class Test {
     add(subsystem, String.format("Device %d Firmware 0x%X, Expected 0x%X", deviceID, actual, expected), actual == expected);
   }
 
-  public static void checkStatusFrames(BaseMotorController device) {
+  public static void checkStatusFrames(SubsystemBase subsystem, BaseMotorController device) {
     List<Pair<String, StatusFrameEnhanced>> frames = List.of(
       Pair.of("General", StatusFrameEnhanced.Status_1_General),
       Pair.of("Feedback", StatusFrameEnhanced.Status_2_Feedback0),

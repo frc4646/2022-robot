@@ -1,12 +1,12 @@
 package frc.robot.commands.feeder;
 
-import java.nio.file.StandardCopyOption;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.climber.ClimberAuto;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -14,6 +14,7 @@ import frc.robot.subsystems.Intake;
 public class FeederAuto extends CommandBase {
   private enum STATE {IDLE, LOADING, LOADED};
   private Feeder feeder = RobotContainer.FEEDER;
+  private Climber climber = RobotContainer.CLIMBER;
   private ColorSensor sensorLoading = RobotContainer.COLOR_SENSOR;
   private Intake intake = RobotContainer.INTAKE;
   private STATE stateCurrent = STATE.IDLE;
@@ -35,7 +36,9 @@ public class FeederAuto extends CommandBase {
   }
 
   protected void cacheSensors() {
-    if (feeder.isShooterLoaded()) {
+    if (climber.isInClimbMode()) {
+      setState(STATE.IDLE);
+    } if (feeder.isShooterLoaded()) {
       setState(STATE.LOADED);
     } else if (sensorLoading.isWrongCargo()) {
       setState(STATE.IDLE);

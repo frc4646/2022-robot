@@ -22,7 +22,7 @@ public final class Constants {
   public static final class CAN {
     public static final int
       PNEUMATIC_CONTROL_MODULE = 0, POWER_DISTRIBUTION_PANEL = 2,
-      DRIVETRAIN_FL = 21, DRIVETRAIN_BL = 22, DRIVETRAIN_BR = 23, DRIVETRAIN_FR = 24,
+      DRIVETRAIN_FL = 24, DRIVETRAIN_BL = 23, DRIVETRAIN_BR = 22, DRIVETRAIN_FR = 21,
       TALON_SHOOTER_L = 25, TALON_SHOOTER_R = 27,
       CLIMBER_L = 13, CLIMBER_R = 14,
       INTAKE = 5, TURRET = 26, HOOD = 11,
@@ -99,8 +99,8 @@ public final class Constants {
       THROTTLE_SLEW_LIMIT = 1.0,  // % output per second
       THROTTLE_DEADBAND = 0.04,
       TURNING_DEADBAND = 0.035;
-        
-    public static final double VOLTAGE_COMPENSATION = 10.0;  // TODO INCREASE BEFORE COMPETITION
+
+    public static final double VOLTAGE_COMPENSATION = 12.0;  // TODO INCREASE BEFORE COMPETITION
     public static final int CURRENT_LIMIT = 30;
 
     public static final double 
@@ -109,19 +109,17 @@ public final class Constants {
       WHEEL_TRACK_WIDTH_INCHES = 26.0,
       WHEEL_TRACK_WIDTH_METERS = 0.0254 * WHEEL_TRACK_WIDTH_INCHES,
 
-      FEED_FORWARD_GAIN_STATIC = 0.0,  // TODO
-      FEED_FORWARD_GAIN_VELOCITY = 0.0,  // TODO
-      FEED_FORWARD_GAIN_ACCEL = 0.0,  // TODO
-    
-      P_LEFT = 0.0,
+      FEED_FORWARD_GAIN_STATIC = 0.28651,  // Tuned 3/4
+      FEED_FORWARD_GAIN_VELOCITY = 2.8197,
+      FEED_FORWARD_GAIN_ACCEL = 0.28052,
+      P_LEFT = 4.7625e-7,  // Tuned 3/4
       I_LEFT = 0.0,
       D_LEFT = 0.0,
-      F_LEFT = 0.0,  // TODO
-
-      P_RIGHT = 0.0,
+      F_LEFT = 0.0,
+      P_RIGHT = 4.7165e-7,
       I_RIGHT = 0.0,
       D_RIGHT = 0.0,
-      F_RIGHT = 0.0;  // TODO
+      F_RIGHT = 0.0;
       //Left and right should be tuned via a step response to a velocity change - P = V, D = A, I = dist. Start
 
     public static final boolean IS_LEFT_ENCODER_INVERTED = false;
@@ -148,6 +146,8 @@ public final class Constants {
   }
 
   public static final class Feeder {
+    public static final boolean TUNING = false;
+    
     public static final double
       OPEN_LOOP_EXHAUST = 0.1,
       OPEN_LOOP_LOAD = 0.3,
@@ -210,10 +210,10 @@ public final class Constants {
       SERVO.kSupplyPeakCurrentLimit = 40; // amps
       SERVO.kSupplyPeakCurrentDuration = 10; // ms
 
-      //SERVO.kMinUnitsLimit = 85.0;
-      //SERVO.kMaxUnitsLimit = 415.0;
-      SERVO.kMinUnitsLimit = 150.0;
-      SERVO.kMaxUnitsLimit = 210.0;
+      SERVO.kMinUnitsLimit = 85.0;
+      SERVO.kMaxUnitsLimit = 415.0;
+      // SERVO.kMinUnitsLimit = 150.0;
+      // SERVO.kMaxUnitsLimit = 210.0;
       SERVO.kHomePosition = 180.0;
       SERVO.kTicksPerUnitDistance = 2048.0 * GEAR_RATIO_WRONG / 360.0;
 
@@ -246,8 +246,9 @@ public final class Constants {
     public static final double
       HORIZONTAL_FOV = 54.0,  // Degrees (LL1: 54.0, LL2: 59.6)
       VERTICAL_FOV = 41.0,  // Degrees (LL1: 41.0, LL2: 49.7)
-      CAMERA_MOUNTING_HEIGHT = 40.0,  // Inches
-      CAMERA_MOUNTING_ANGLE = 30.15;  // Degrees, tuned 2/27
+      CAMERA_MOUNTING_HEIGHT = 44.5,  // Inches
+      CAMERA_MOUNTING_ANGLE = 33.2, // Degrees, tuned 2/27
+      CAMERA_MOUNTING_OFFSET = 16.0;  // Tuned 3/4
 
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>
       LOB_RPMS = new InterpolatingTreeMap<>(),
@@ -262,10 +263,13 @@ public final class Constants {
       LOB_DEGREES.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
       LOB_DEGREES.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
     }
+    public static final double
+      DISTANCE_USABLE_MIN = 51.5,
+      DISTANCE_USABLE_MAX = 89.3;
     static {
-      RPM_MAP.put(new InterpolatingDouble(51.5), new InterpolatingDouble(2100.0));  // tuned 2/27
+      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MIN), new InterpolatingDouble(2100.0));  // tuned 2/27
       RPM_MAP.put(new InterpolatingDouble(71.6), new InterpolatingDouble(2200.0));
-      RPM_MAP.put(new InterpolatingDouble(89.3), new InterpolatingDouble(2325.0));
+      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MAX), new InterpolatingDouble(2325.0));
     }
     static {
       ANGLE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));

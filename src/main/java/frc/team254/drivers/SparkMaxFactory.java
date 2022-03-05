@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class SparkMaxFactory {
     public static class Configuration {
-        public boolean BURN_FACTORY_DEFAULT_FLASH = false;
+        public boolean BURN_FACTORY_DEFAULT_FLASH = true;
         public IdleMode NEUTRAL_MODE = IdleMode.kCoast;
         public boolean INVERTED = false;
 
@@ -64,10 +64,11 @@ public class SparkMaxFactory {
         // Delay for CAN bus bandwidth to clear up.
         Timer.delay(0.25);
         LazySparkMax sparkMax = new LazySparkMax(id);
+
+        // sparkMax.restoreFactoryDefaults(config.BURN_FACTORY_DEFAULT_FLASH);
+        sparkMax.restoreFactoryDefaults();
+
         handleCANError(id, sparkMax.setCANTimeout(200), "set timeout");
-
-        //sparkMax.restoreFactoryDefaults(config.BURN_FACTORY_DEFAULT_FLASH);
-
         sparkMax.set(0.0);
 
         handleCANError(id, sparkMax.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, config.STATUS_FRAME_0_RATE_MS), "set status0 rate");

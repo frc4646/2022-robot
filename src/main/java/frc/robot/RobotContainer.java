@@ -4,6 +4,8 @@ import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.SignalDriveTeam;
 import frc.robot.commands.agitator.AgitatorAuto;
 import frc.robot.commands.climber.ClimberAuto;
+import frc.robot.commands.climber.ClimberTeleop;
+import frc.robot.commands.climber.ClimberZero;
 import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.drivetrain.DriveDisabled;
 import frc.robot.commands.feeder.FeederAuto;
@@ -12,6 +14,7 @@ import frc.robot.commands.turret.TurretAim;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
 import frc.robot.subsystems.Agitator;
+import frc.robot.subsystems.Canifier;
 import frc.robot.subsystems.CargoHolder;
 import frc.robot.subsystems.Diagnostics;
 import frc.robot.subsystems.Climber;
@@ -36,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class RobotContainer {
   public static Agitator AGITATOR;
+  public static Canifier CANIFIER;
   public static Climber CLIMBER;
   public static CargoHolder CARGO_HOLDER;
   public static ColorSensor COLOR_SENSOR;
@@ -57,6 +61,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     AGITATOR = new Agitator();
+    CANIFIER = new Canifier();
     // CARGO_HOLDER = new CargoHolder();
     CLIMBER = new Climber();
     COLOR_SENSOR = new ColorSensor();
@@ -69,7 +74,7 @@ public class RobotContainer {
     SHOOTER = new Shooter();
     TURRET = new Turret();
     VISION = new Vision();
-    allSubsystems = Arrays.asList(AGITATOR, CLIMBER, COLOR_SENSOR, DRIVETRAIN, FEEDER, /*CARGO_HOLDER,*/ HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION, DIAGNOSTICS);
+    allSubsystems = Arrays.asList(AGITATOR, CANIFIER, CLIMBER, COLOR_SENSOR, DRIVETRAIN, FEEDER, /*CARGO_HOLDER,*/ HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION, DIAGNOSTICS);
 
     CONTROLS = new Controls();  // Create after subsystems
     // TODO split adding control buttons from constructor so that objects can save static references to controls
@@ -79,7 +84,7 @@ public class RobotContainer {
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
     AGITATOR.setDefaultCommand(new AgitatorAuto());
     // CLIMBER.setDefaultCommand(new ClimberAuto());
-    CLIMBER.setDefaultCommand(new ClimberAuto.ClimberTeleop());
+    CLIMBER.setDefaultCommand(new ClimberTeleop());
     FEEDER.setDefaultCommand(new FeederAuto());
     // HOOD.setDefaultCommand(new HoodAim());
     SHOOTER.setDefaultCommand(new ShooterAuto());
@@ -113,7 +118,10 @@ public class RobotContainer {
     }
     Test.reset();
     Timer.delay(3.0);
-    allSubsystems.forEach(SmartSubsystem::runTests);  // TODO try as lambda command so its cancellable
+    if (VISION != null) {
+      VISION.setLED(LEDMode.OFF);
+    }
+    allSubsystems.forEach(SmartSubsystem::runTests);
     Test.results();
   }
 
