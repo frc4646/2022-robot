@@ -5,6 +5,8 @@ import com.ctre.phoenix.CANifierStatusFrame;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.util.Test;
 
 public class Canifier extends SmartSubsystem {
@@ -33,7 +35,17 @@ public class Canifier extends SmartSubsystem {
   @Override
   public void updateDashboard() {
     SmartDashboard.putBoolean("Canifier: Turret Home", cache.isTurrentHome);
-    setLEDs(0.0, 0.1, 0.0);
+   
+    if(RobotContainer.VISION != null && RobotContainer.VISION.isTargetPresent())
+    {
+      if(RobotContainer.VISION.isInShootRange()) {
+        setLEDs(0.0, 0.3, 0.0);
+      } else {
+        setLEDs(0.1, 0.1, 0.1);
+      }
+    } else {
+      setLEDs(0.1, 0.0, 0.0);
+    }
   }
 
   public void setLEDs(double red, double green, double blue) {
