@@ -211,6 +211,7 @@ public final class Constants {
 
   public static final class TURRET {
     public static final boolean TUNING = true;
+    public static final boolean SOFT_LIMITS_AT_STARTUP = true;
 
     public static final double
       STICK_GAIN = 25.0,
