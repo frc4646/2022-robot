@@ -6,14 +6,19 @@ import frc.robot.subsystems.Drivetrain;
 
 public class WaitForDistanceDriven extends CommandBase {
   private final Drivetrain drive = RobotContainer.DRIVETRAIN;
-  private final double distance;
+  private final double distance, initial;
 
   public WaitForDistanceDriven(double distance) {
     this.distance = distance;
+    this.initial = 0;
+  }
+  public WaitForDistanceDriven(double distance, double initialDistance) {
+    this.distance = distance;
+    this.initial = initialDistance;
   }
 
   @Override
   public boolean isFinished() {
-    return drive.getDistance() >= distance;
+    return Math.abs(drive.getDistance() - initial) >= distance;
   }
 }

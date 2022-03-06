@@ -124,14 +124,14 @@ public final class Constants {
       WHEEL_TRACK_WIDTH_INCHES = 26.0,
       WHEEL_TRACK_WIDTH_METERS = 0.0254 * WHEEL_TRACK_WIDTH_INCHES,
 
-      FEED_FORWARD_GAIN_STATIC = 0.28651,  // Tuned 3/4
-      FEED_FORWARD_GAIN_VELOCITY = 2.8197,
-      FEED_FORWARD_GAIN_ACCEL = 0.28052,
-      P_LEFT = 4.7625e-7,  // Tuned 3/4
+      FEED_FORWARD_GAIN_STATIC = 0.17617,  // Tuned 3/6
+      FEED_FORWARD_GAIN_VELOCITY = 0.129129,
+      FEED_FORWARD_GAIN_ACCEL = 0.0036709,
+      P_LEFT = 0,//7.3672E-11,  // Tuned 3/6
       I_LEFT = 0.0,
       D_LEFT = 0.0,
       F_LEFT = 0.0,
-      P_RIGHT = 4.7165e-7,
+      P_RIGHT = 0,//9.484E-11,
       I_RIGHT = 0.0,
       D_RIGHT = 0.0,
       F_RIGHT = 0.0;
@@ -261,7 +261,7 @@ public final class Constants {
   public static final class VISION {
     public static final boolean TUNING = false;
 
-    public static int STABLE_COUNTS = 0;
+    public static int STABLE_COUNTS = 2;
 
     public static final double
       HORIZONTAL_FOV = 54.0,  // Degrees (LL1: 54.0, LL2: 59.6)
@@ -285,11 +285,12 @@ public final class Constants {
     }
     public static final double
       DISTANCE_USABLE_MIN = 51.5,
-      DISTANCE_USABLE_MAX = 89.3;
+      DISTANCE_USABLE_MAX = 100;
     static {
       RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MIN), new InterpolatingDouble(2100.0));  // tuned 2/27
       RPM_MAP.put(new InterpolatingDouble(71.6), new InterpolatingDouble(2200.0));
-      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MAX), new InterpolatingDouble(2325.0));
+      RPM_MAP.put(new InterpolatingDouble(89.3), new InterpolatingDouble(2325.0));
+      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MAX), new InterpolatingDouble(2400.0));
     }
     static {
       ANGLE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));

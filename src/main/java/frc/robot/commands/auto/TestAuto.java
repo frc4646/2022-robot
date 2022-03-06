@@ -25,6 +25,12 @@ public class TestAuto extends SequentialCommandGroup {
     new Pose2d(3.0, 0.0, new Rotation2d(0.0)),
     Constants.DRIVETRAIN.TRAJECTORY_CONFIG
   );
+  // private final Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+  //   new Pose2d(0.0, 0.0, new Rotation2d(0.0)),
+  //   List.of(),
+  //   new Pose2d(1.0, 0.0, new Rotation2d(0.0)),
+  //   Constants.DRIVETRAIN.TRAJECTORY_CONFIG
+  // );
   
   public TestAuto() {
     addCommands(

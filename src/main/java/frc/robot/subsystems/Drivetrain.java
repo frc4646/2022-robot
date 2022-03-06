@@ -90,6 +90,9 @@ public class Drivetrain extends SmartSubsystem {
       SmartDashboard.putNumber("Drive: Distance R", cache.distanceR);
       SmartDashboard.putNumber("Drive: RPM L", cache.rpmL);
       SmartDashboard.putNumber("Drive: RPM R", cache.rpmR);
+      SmartDashboard.putNumber("Drive: X", odometry.getPoseMeters().getX());
+      SmartDashboard.putNumber("Drive: Y", odometry.getPoseMeters().getY());
+
     }
   }
 
