@@ -61,7 +61,6 @@ public class RobotContainer {
     CANIFIER = new Canifier();
     CLIMBER = new Climber();
     COLOR_SENSOR = new ColorSensor();
-    DIAGNOSTICS = new Diagnostics();
     DRIVETRAIN = new Drivetrain();
     FEEDER = new Feeder();
     HOOD = new Hood();
@@ -70,6 +69,7 @@ public class RobotContainer {
     SHOOTER = new Shooter();
     TURRET = new Turret();
     VISION = new Vision();
+    DIAGNOSTICS = new Diagnostics();
     allSubsystems = Arrays.asList(AGITATOR, CANIFIER, CLIMBER, COLOR_SENSOR, DRIVETRAIN, FEEDER, HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION, DIAGNOSTICS);
 
     CONTROLS.configureButtons();  // Must create buttons AFTER subsystems

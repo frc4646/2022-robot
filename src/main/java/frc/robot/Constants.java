@@ -4,6 +4,7 @@ import com.ctre.phoenix.led.CANdleConfiguration;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 
+import frc.robot.subsystems.Canifier;
 import frc.robot.subsystems.Diagnostics;
 import frc.robot.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
 import frc.robot.util.DiagnosticState;
@@ -97,6 +98,12 @@ public final class Constants {
       CLIMBING = new DiagnosticState(Diagnostics.toColor(0, 255, 255, 0.5)),
       SHOOTING = new DiagnosticState(Diagnostics.toColor(255, 0, 0, .1)),
       TURRET_AIMED = new DiagnosticState(Diagnostics.toColor(0, 255, 255, .1));
+
+    public static final Canifier.COLOR
+      COLOR_OFF = new Canifier.COLOR(0, 0, 0),
+      COLOR_FAULT_OUTSIDE_VISION_RANGE = new Canifier.COLOR(0, .3, .15),
+      COLOR_SHOOTING = new Canifier.COLOR(.6, 0, 0),
+      COLOR_TURRET_AIMED = new Canifier.COLOR(0, .1, .1);
   }
 
   public static final class DRIVETRAIN {

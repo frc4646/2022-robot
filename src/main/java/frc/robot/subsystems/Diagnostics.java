@@ -22,15 +22,17 @@ import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.controls.OperatorControls;
+import frc.robot.subsystems.Canifier.COLOR;
 import frc.robot.util.DiagnosticState;
 import frc.robot.util.Test;
 
 public class Diagnostics extends SmartSubsystem {
+
+
   public static Animation toColor(int red, int green, int blue, double percentFade) { return new SingleFadeAnimation(red, green, blue, 0, percentFade, Constants.DIAGNOSTICS.LED_COUNT); }
   public static double BRIGHT = 1.0, DIM = 0.2;
   public static double FAST = 1.0, SLOW = 0.2, STATIC = 0.0;
@@ -42,14 +44,22 @@ public class Diagnostics extends SmartSubsystem {
     RED_FADE = toColor(255, 0, 0, 1.0),  // TODO tune
     RED_SOLID = toColor(255, 0, 0, 0.5);
 
+  public static final Canifier.COLOR 
+    COLOR_OFF = new Canifier.COLOR(0, 0, 0);
+
   private final CANdle candle;
+  private final Canifier canifier;
   private final OperatorControls operator = RobotContainer.CONTROLS.getOperator();
   private Animation modeDefault = OFF, robotState = OFF;
   private boolean isCriticalIssuePresent = false;
+  private COLOR shooterColor = COLOR_OFF;
   
   public Diagnostics() {
     candle = new CANdle(Constants.CAN.CANDLE);
     candle.configAllSettings(Constants.DIAGNOSTICS.LED_CONFIG, Constants.CAN_TIMEOUT);
+
+    canifier = RobotContainer.CANIFIER;
+
     // TODO configure status frames
     DriverStation.silenceJoystickConnectionWarning(true);
   }
@@ -58,6 +68,7 @@ public class Diagnostics extends SmartSubsystem {
   public void updateDashboard() {
     // TODO reduce calls to CAN HAL?
     candle.animate(robotState);
+    canifier.setLEDs(shooterColor);
     double rumble = (DriverStation.isDisabled() && isCriticalIssuePresent) ? Constants.DIAGNOSTICS.RUMBLE_PERCENT : 0.0;
     operator.setRumble(true, rumble);  // tune which side is better
     operator.setRumble(false, rumble);
@@ -81,14 +92,16 @@ public class Diagnostics extends SmartSubsystem {
   //   robotState = toColor(red, green, blue);  // setLEDs() would also work
   // }
 
-  public void setState(DiagnosticState animation) {
+  public void setState(DiagnosticState animation, Canifier.COLOR color) {
     robotState = animation.diagnostic;
     isCriticalIssuePresent = animation.critical;
+    shooterColor = color;
   }
 
   public void setStateOkay() {
     robotState = modeDefault;
     isCriticalIssuePresent = false;
+    shooterColor = Constants.DIAGNOSTICS.COLOR_OFF;
   }
 
   @Override

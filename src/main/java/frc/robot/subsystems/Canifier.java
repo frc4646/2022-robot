@@ -5,7 +5,6 @@ import com.ctre.phoenix.CANifierStatusFrame;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.util.Test;
 
@@ -13,6 +12,15 @@ public class Canifier extends SmartSubsystem {
   public static class DataCache {
     double red = 0.0, green = 0.0, blue = 0.0;
     boolean isTurrentHome;
+  }
+
+  public static class COLOR {
+    double red = 0.0, green = 0.0, blue = 0.0;
+    public COLOR(double red, double green, double blue) {
+      this.red = red;
+      this.green = green;
+      this.blue = blue;
+    }
   }
 
   private final CANifier canifier;
@@ -35,17 +43,6 @@ public class Canifier extends SmartSubsystem {
   @Override
   public void updateDashboard() {
     SmartDashboard.putBoolean("Canifier: Turret Home", cache.isTurrentHome);
-   
-    if(RobotContainer.VISION != null && RobotContainer.VISION.isTargetPresent())
-    {
-      if(RobotContainer.VISION.isInShootRange()) {
-        setLEDs(0.0, 0.3, 0.0);
-      } else {
-        setLEDs(0.1, 0.1, 0.1);
-      }
-    } else {
-      setLEDs(0.1, 0.0, 0.0);
-    }
   }
 
   public void setLEDs(double red, double green, double blue) {
@@ -58,6 +55,10 @@ public class Canifier extends SmartSubsystem {
     canifier.setLEDOutput(cache.red, CANifier.LEDChannel.LEDChannelA);
     canifier.setLEDOutput(cache.green, CANifier.LEDChannel.LEDChannelB);
     canifier.setLEDOutput(cache.blue, CANifier.LEDChannel.LEDChannelC);
+  }
+  
+  public void setLEDs(COLOR color) {
+    setLEDs(color.red, color.green, color.blue);
   }
 
   public boolean isTurretHome() {
