@@ -121,17 +121,18 @@ public final class Constants {
     public static final double 
       WHEEL_DIAMETER = 6.0,
       WHEEL_SCRUB_FACTOR = 1.02,
+      GEAR_RATIO = (10.71),
       WHEEL_TRACK_WIDTH_INCHES = 26.0,
       WHEEL_TRACK_WIDTH_METERS = 0.0254 * WHEEL_TRACK_WIDTH_INCHES,
 
       FEED_FORWARD_GAIN_STATIC = 0.17617,  // Tuned 3/6
       FEED_FORWARD_GAIN_VELOCITY = 0.129129,
       FEED_FORWARD_GAIN_ACCEL = 0.0036709,
-      P_LEFT = 0,//7.3672E-11,  // Tuned 3/6
+      P_LEFT = 7.3672E-11,  // Tuned 3/6
       I_LEFT = 0.0,
       D_LEFT = 0.0,
       F_LEFT = 0.0,
-      P_RIGHT = 0,//9.484E-11,
+      P_RIGHT = 9.484E-11,
       I_RIGHT = 0.0,
       D_RIGHT = 0.0,
       F_RIGHT = 0.0;

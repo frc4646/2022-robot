@@ -76,7 +76,10 @@ public class Drivetrain extends SmartSubsystem {
     cache.distanceR = masterR.getEncoder().getPosition();
     cache.rpmL = masterL.getEncoder().getVelocity();
     cache.rpmR = masterR.getEncoder().getVelocity();
-    cache.heading = Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(gyroOffset);
+
+    cache.heading = Rotation2d.fromDegrees(-gyro.getFusedHeading()).rotateBy(gyroOffset);
+    // cache.heading = Rotation2d.fromDegrees(-gyro.getAngle()).rotateBy(gyroOffset); // alternately use getAngle()
+
     cache.pitch = Rotation2d.fromDegrees(gyro.getPitch());
     odometry.update(getHeading(), rotationsToMeters(cache.distanceL), rotationsToMeters(cache.distanceR));
   }
@@ -152,7 +155,7 @@ public class Drivetrain extends SmartSubsystem {
   public Rotation2d getPitch() { return cache.pitch; }
 
   private double rotationsToMeters(double rotations) {
-    return rotations * Constants.DRIVETRAIN.WHEEL_DIAMETER * Math.PI * 0.0254;
+    return rotations / Constants.DRIVETRAIN.GEAR_RATIO * Constants.DRIVETRAIN.WHEEL_DIAMETER * Math.PI * 0.0254;
   }
 
   @Override
