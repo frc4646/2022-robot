@@ -26,8 +26,8 @@ public class DriveTeleop extends CommandBase {
   @Override
   public void execute() {
     // Using Slew Rate Limiter: See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/slew-rate-limiter.html#using-a-slewratelimiter-with-differentialdrive
-    // final double throttle = throttleAccelLimiter.calculate(controls.getThrottle());
-    final double throttle = controls.getThrottle();
+    final double throttle = throttleAccelLimiter.calculate(controls.getThrottle());
+    // final double throttle = controls.getThrottle();
     final DriveSignal output = steeringController.cheesyDrive(throttle, controls.getTurning(), controls.getQuickturn());
     subsystem.setOpenLoop(output.getLeft(), output.getRight());
   }

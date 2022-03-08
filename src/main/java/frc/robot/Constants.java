@@ -111,7 +111,7 @@ public final class Constants {
 
     public static final double
       TIMEOUT_DISABLED_COAST = 5.0,
-      THROTTLE_SLEW_LIMIT = 1.0,  // % output per second
+      THROTTLE_SLEW_LIMIT = .80,  // % output per second
       THROTTLE_DEADBAND = 0.04,
       TURNING_DEADBAND = 0.035;
 
