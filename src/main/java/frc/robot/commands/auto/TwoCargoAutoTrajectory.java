@@ -2,8 +2,6 @@ package frc.robot.commands.auto;
 
 import java.util.List;
 
-import com.pathplanner.lib.PathPlanner;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;

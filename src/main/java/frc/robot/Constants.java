@@ -107,7 +107,7 @@ public final class Constants {
   }
 
   public static final class DRIVETRAIN {
-    public static final boolean TUNING = false;
+    public static final boolean TUNING = true;
 
     public static final double
       TIMEOUT_DISABLED_COAST = 5.0,
@@ -120,18 +120,18 @@ public final class Constants {
 
     public static final double 
       WHEEL_DIAMETER = 6.0,
-      WHEEL_SCRUB_FACTOR = 1.02,
       WHEEL_TRACK_WIDTH_INCHES = 26.0,
-      WHEEL_TRACK_WIDTH_METERS = 0.0254 * WHEEL_TRACK_WIDTH_INCHES,
+      WHEEL_SCRUB_FACTOR = 1.02,
+      GEAR_RATIO = 10.71,
 
-      FEED_FORWARD_GAIN_STATIC = 0.17617,  // Tuned 3/6
-      FEED_FORWARD_GAIN_VELOCITY = 0.129129,
-      FEED_FORWARD_GAIN_ACCEL = 0.0036709,
-      P_LEFT = 0,//7.3672E-11,  // Tuned 3/6
+      FEED_FORWARD_GAIN_STATIC = 0.31492,  // Tuned 3/6
+      FEED_FORWARD_GAIN_VELOCITY = 2.87,
+      FEED_FORWARD_GAIN_ACCEL = 0.81851,
+      P_LEFT = 0.001,  // Tuned 3/6
       I_LEFT = 0.0,
       D_LEFT = 0.0,
       F_LEFT = 0.0,
-      P_RIGHT = 0,//9.484E-11,
+      P_RIGHT = 0.001,
       I_RIGHT = 0.0,
       D_RIGHT = 0.0,
       F_RIGHT = 0.0;
@@ -140,17 +140,17 @@ public final class Constants {
     public static final boolean IS_LEFT_ENCODER_INVERTED = false;
     public static final boolean IS_RIGHT_ENCODER_INVERTED = true;
 
-    public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(WHEEL_TRACK_WIDTH_METERS);
+    public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(WHEEL_TRACK_WIDTH_INCHES * 0.0254);
     public static final SimpleMotorFeedforward FEED_FORWARD = new SimpleMotorFeedforward(
       FEED_FORWARD_GAIN_STATIC, FEED_FORWARD_GAIN_VELOCITY, FEED_FORWARD_GAIN_ACCEL
     );
 
     public static final double
       AUTO_MAX_VOLTS = 10.0,
-      MAX_SPEED_METERS_PER_SECOND = 3.0,
-      MAX_ACCEL_METERS_PER_SECOND_SQUARED = 3.0,
-      RAMSETE_B = 2.0,     // FRC recommends 2.0
-      RAMSETE_ZETA = 0.7;  // FRC recommends 0.7
+      MAX_SPEED_METERS_PER_SECOND = 2.5,
+      MAX_ACCEL_METERS_PER_SECOND_SQUARED = 1.0,
+      RAMSETE_B = 1.0,     // FRC recommends 2.0
+      RAMSETE_ZETA = 0.5;  // FRC recommends 0.7
       
     public static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
       FEED_FORWARD, DRIVE_KINEMATICS, AUTO_MAX_VOLTS

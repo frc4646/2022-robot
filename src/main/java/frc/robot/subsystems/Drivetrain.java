@@ -2,10 +2,10 @@ package frc.robot.subsystems;
 
 import java.util.Arrays;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.util.Navx;
 import frc.robot.util.Test;
 import frc.robot.util.TestMotors.MotorConfig;
 import frc.robot.util.TestMotors.MotorTestSparkMax;
@@ -28,19 +29,18 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   private final CANSparkMax masterL, masterR, slaveL, slaveR;
-  private final AHRS gyro;
+  private final Navx gyro;
   private final DifferentialDriveOdometry odometry;
   private DataCache cache = new DataCache();
   
   private boolean isBrakeMode;
-  private Rotation2d gyroOffset = Rotation2d.fromDegrees(0.0);
 
   public Drivetrain() {
     masterL = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL, true);
     slaveL = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, masterL, false);
     masterR = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FR, false);
     slaveR = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BR, masterR, false);
-    gyro = new AHRS();
+    gyro = new Navx();
 
     configureMotor(masterL, true, true);
     configureMotor(slaveL, true, false);
@@ -67,7 +67,9 @@ public class Drivetrain extends SmartSubsystem {
     // motor.setInverted(!isLeft);
     motor.enableVoltageCompensation(Constants.DRIVETRAIN.VOLTAGE_COMPENSATION);
     motor.setSmartCurrentLimit(Constants.DRIVETRAIN.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
-    // TODO faster status frames
+    if (isMaster) {
+      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 5);
+    }
   }
 
   @Override
@@ -76,7 +78,7 @@ public class Drivetrain extends SmartSubsystem {
     cache.distanceR = masterR.getEncoder().getPosition();
     cache.rpmL = masterL.getEncoder().getVelocity();
     cache.rpmR = masterR.getEncoder().getVelocity();
-    cache.heading = Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(gyroOffset);
+    cache.heading = gyro.getHeading();
     cache.pitch = Rotation2d.fromDegrees(gyro.getPitch());
     odometry.update(getHeading(), rotationsToMeters(cache.distanceL), rotationsToMeters(cache.distanceR));
   }
@@ -92,19 +94,19 @@ public class Drivetrain extends SmartSubsystem {
       SmartDashboard.putNumber("Drive: RPM R", cache.rpmR);
       SmartDashboard.putNumber("Drive: X", odometry.getPoseMeters().getX());
       SmartDashboard.putNumber("Drive: Y", odometry.getPoseMeters().getY());
-
     }
   }
 
   public void resetEncoders() {
     masterL.getEncoder().setPosition(0.0);
     masterR.getEncoder().setPosition(0.0);
-    cache = new DataCache();
+    // cache = new DataCache();
   }
 
   public void resetPose(Pose2d pose) {
     resetEncoders();
-    odometry.resetPosition(pose, gyro.getRotation2d());
+    gyro.reset();
+    odometry.resetPosition(pose, gyro.getHeading());
   }
 
   public void setBrakeMode(boolean enable) {
@@ -125,8 +127,8 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   public void setVolts(double left, double right) {
-    masterL.getPIDController().setReference(left, ControlType.kVoltage);
-    masterR.getPIDController().setReference(right, ControlType.kVoltage);
+    masterL.set(left/12.0);
+    masterR.set(right/12.0);
   }
 
   public void setClosedLoopVelocity(DifferentialDriveWheelSpeeds speeds) {
@@ -134,11 +136,6 @@ public class Drivetrain extends SmartSubsystem {
     double feedforwardR = Constants.DRIVETRAIN.FEED_FORWARD.calculate(speeds.rightMetersPerSecond);
     masterL.getPIDController().setReference(feedforwardL, ControlType.kDutyCycle);
     masterR.getPIDController().setReference(feedforwardR, ControlType.kDutyCycle);
-  }
-
-  public void setHeading(Rotation2d heading) {
-    // gyroOffset = heading.rotateBy(Rotation2d.fromDegrees(gyro.getFusedHeading()).rotateBy(Rotation2d.fromDegrees(180.0)));
-    cache.heading = heading;
   }
   
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -152,7 +149,7 @@ public class Drivetrain extends SmartSubsystem {
   public Rotation2d getPitch() { return cache.pitch; }
 
   private double rotationsToMeters(double rotations) {
-    return rotations * Constants.DRIVETRAIN.WHEEL_DIAMETER * Math.PI * 0.0254;
+    return rotations / Constants.DRIVETRAIN.GEAR_RATIO * Constants.DRIVETRAIN.WHEEL_DIAMETER * Math.PI * 0.0254;
   }
 
   @Override
