@@ -19,6 +19,10 @@ public class Agitator extends SmartSubsystem {
     masterL.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
     masterL.enableVoltageCompensation(true);
     masterL.configOpenloopRamp(Constants.AGITATOR.OPEN_LOOP_RAMP);
+    masterL.setStatusFramePeriod(StatusFrame.Status_1_General, 10, Constants.CAN_TIMEOUT);
+    masterL.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 1000, Constants.CAN_TIMEOUT);
+    masterL.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 1000, Constants.CAN_TIMEOUT);
+    masterL.setControlFramePeriod(ControlFrame.Control_3_General, 10);
 
     slaveR = new VictorSPX(Constants.CAN.AGITATOR_R);
     slaveR.follow(masterL);
@@ -26,9 +30,11 @@ public class Agitator extends SmartSubsystem {
     slaveR.setNeutralMode(NeutralMode.Brake);
     slaveR.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
     slaveR.enableVoltageCompensation(true);
-    slaveR.configOpenloopRamp(Constants.AGITATOR.OPEN_LOOP_RAMP);
-    slaveR.setControlFramePeriod(ControlFrame.Control_3_General, 100);    
-    slaveR.setStatusFramePeriod(StatusFrame.Status_1_General, 1000);
+    slaveR.configOpenloopRamp(Constants.AGITATOR.OPEN_LOOP_RAMP);    
+    slaveR.setStatusFramePeriod(StatusFrame.Status_1_General, 1000, Constants.CAN_TIMEOUT);
+    slaveR.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 1000, Constants.CAN_TIMEOUT);
+    slaveR.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 1000, Constants.CAN_TIMEOUT);
+    slaveR.setControlFramePeriod(ControlFrame.Control_3_General, 100);
   }
 
   public void setOpenLoop(double percent) {

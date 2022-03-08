@@ -77,10 +77,7 @@ public class OperatorControls {
     if(pov == -1) {
       return -1;
     }
-    else
-    {
-      return  (-pov + 360 ) % 360; // flip the direction
-    }
+    return  (-pov + 360 ) % 360; // flip the direction
   }
   public boolean getFn() { return operator.getBackButton(); }
 

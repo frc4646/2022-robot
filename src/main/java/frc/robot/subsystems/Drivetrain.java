@@ -46,14 +46,6 @@ public class Drivetrain extends SmartSubsystem {
     configureMotor(slaveL, true, false);
     configureMotor(masterR, false, true);
     configureMotor(slaveR, false, false);
-    masterL.getPIDController().setP(Constants.DRIVETRAIN.P_LEFT);
-    masterL.getPIDController().setI(Constants.DRIVETRAIN.I_LEFT);
-    masterL.getPIDController().setD(Constants.DRIVETRAIN.D_LEFT);
-    masterL.getPIDController().setFF(Constants.DRIVETRAIN.F_LEFT);
-    masterR.getPIDController().setP(Constants.DRIVETRAIN.P_RIGHT);
-    masterR.getPIDController().setI(Constants.DRIVETRAIN.I_RIGHT);
-    masterR.getPIDController().setD(Constants.DRIVETRAIN.D_RIGHT);
-    masterR.getPIDController().setFF(Constants.DRIVETRAIN.F_RIGHT);
 
     isBrakeMode = true;
     setBrakeMode(false);
@@ -66,9 +58,13 @@ public class Drivetrain extends SmartSubsystem {
   public void configureMotor(CANSparkMax motor, boolean isLeft, boolean isMaster) {
     // motor.setInverted(!isLeft);
     motor.enableVoltageCompensation(Constants.DRIVETRAIN.VOLTAGE_COMPENSATION);
-    motor.setSmartCurrentLimit(Constants.DRIVETRAIN.CURRENT_LIMIT); // TODO find more examples to confirm what values are best
+    motor.setSmartCurrentLimit(Constants.DRIVETRAIN.CURRENT_LIMIT);
     if (isMaster) {
-      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 5);
+      motor.getPIDController().setP(isLeft ? Constants.DRIVETRAIN.P_LEFT : Constants.DRIVETRAIN.P_RIGHT);
+      motor.getPIDController().setI(isLeft ? Constants.DRIVETRAIN.I_LEFT : Constants.DRIVETRAIN.I_RIGHT);
+      motor.getPIDController().setD(isLeft ? Constants.DRIVETRAIN.D_LEFT : Constants.DRIVETRAIN.D_RIGHT);
+      motor.getPIDController().setFF(isLeft ? Constants.DRIVETRAIN.F_LEFT : Constants.DRIVETRAIN.F_RIGHT);
+      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 5);  // TODO try 10
     }
   }
 

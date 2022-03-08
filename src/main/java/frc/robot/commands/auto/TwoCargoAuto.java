@@ -12,7 +12,6 @@ import frc.robot.commands.drivetrain.DriveOpenLoop;
 import frc.robot.commands.drivetrain.WaitForDistanceDriven;
 import frc.robot.commands.feeder.WaitForColorState;
 import frc.robot.commands.sequence.DeployIntake;
-import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.sequence.StowIntake;
 import frc.robot.subsystems.ColorSensor.STATE;

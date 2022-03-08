@@ -25,17 +25,17 @@ public class SignalDriveTeam extends CommandBase {
   @Override
   public void execute() {
     if (isTurretFaultPresent()) {
-      diagnostics.setState(Constants.DIAGNOSTICS.FAULT_TURRET, Constants.DIAGNOSTICS.COLOR_OFF);
+      diagnostics.setState(Constants.DIAGNOSTICS.FAULT_TURRET);
     } else if (isWrongAllianceCargoPresent()) {
-      diagnostics.setState(Constants.DIAGNOSTICS.FAULT_CARGO, Constants.DIAGNOSTICS.COLOR_OFF);
+      diagnostics.setState(Constants.DIAGNOSTICS.FAULT_CARGO);
     } else if (isClimbing()) {
-      diagnostics.setState(Constants.DIAGNOSTICS.CLIMBING, Constants.DIAGNOSTICS.COLOR_OFF);
+      diagnostics.setState(Constants.DIAGNOSTICS.CLIMBING);
     } else if (isVisionOutOfRange()) {
-      diagnostics.setState(Constants.DIAGNOSTICS.FAULT_OUTSIDE_VISION_RANGE, Constants.DIAGNOSTICS.COLOR_FAULT_OUTSIDE_VISION_RANGE);
+      diagnostics.setState(Constants.DIAGNOSTICS.FAULT_OUTSIDE_VISION_RANGE);
     } else if (isShooting()) {
-      diagnostics.setState(Constants.DIAGNOSTICS.SHOOTING, Constants.DIAGNOSTICS.COLOR_SHOOTING);
+      diagnostics.setState(Constants.DIAGNOSTICS.SHOOTING);
     } else if (isTurretAimed()) {
-      diagnostics.setState(Constants.DIAGNOSTICS.TURRET_AIMED, Constants.DIAGNOSTICS.COLOR_TURRET_AIMED);
+      diagnostics.setState(Constants.DIAGNOSTICS.TURRET_AIMED);
     } else {
       diagnostics.setStateOkay();
     }

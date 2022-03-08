@@ -16,7 +16,6 @@ public class Turret extends ServoMotorSubsystem {
 
   private final Canifier canifier;
   private final DataCache cache = new DataCache();
-  private boolean hasZeroed = false;
   
   public Turret() {
     super(Constants.TURRET.SERVO);
@@ -24,11 +23,7 @@ public class Turret extends ServoMotorSubsystem {
     TalonUtil.checkError(mMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set forward limit switch: ");
     TalonUtil.checkError(mMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set reverse limit switch: ");
     mMaster.overrideLimitSwitchesEnable(true);
-    if (Constants.TURRET.SOFT_LIMITS_AT_STARTUP) {
-      mMaster.overrideSoftLimitsEnable(true);
-    } else {
-      mMaster.overrideSoftLimitsEnable(false);
-    }
+    mMaster.overrideSoftLimitsEnable(Constants.TURRET.SOFT_LIMITS_AT_STARTUP);
     forceZero();
     setBrakeMode(false);
   }
@@ -38,13 +33,7 @@ public class Turret extends ServoMotorSubsystem {
     super.cacheSensors();
     cache.limitF = mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1;
     cache.limitR = mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1;
-    if (atHomingLocation()) {
-      if (!hasZeroed) {
-        hasZeroed = true;
-        mMaster.overrideSoftLimitsEnable(true);
-      }
-      zeroSensors();
-    }
+    resetIfAtHome();
   }
 
   @Override
@@ -55,7 +44,7 @@ public class Turret extends ServoMotorSubsystem {
     if (Constants.TURRET.TUNING) {
       SmartDashboard.putNumber("Turret: Error", mPeriodicIO.error_ticks);
       SmartDashboard.putNumber("Turret: Velocity", mPeriodicIO.velocity_ticks_per_100ms);
-      SmartDashboard.putBoolean("Turret: HasZeroed", hasZeroed);
+      SmartDashboard.putBoolean("Turret: Zeroed", mHasBeenZeroed);
     }
   }
 
@@ -69,6 +58,16 @@ public class Turret extends ServoMotorSubsystem {
   @Override
   public void onDisable() {
     setBrakeMode(false);
+  }
+
+  @Override
+  public void resetIfAtHome() {
+    if (atHomingLocation()) {
+      if (!mHasBeenZeroed) {
+        mMaster.overrideSoftLimitsEnable(true);
+      }
+      zeroSensors();
+    }
   }
 
   @Override

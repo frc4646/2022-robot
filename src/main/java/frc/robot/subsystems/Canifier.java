@@ -5,7 +5,7 @@ import com.ctre.phoenix.CANifierStatusFrame;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
+import frc.robot.util.LEDColor;
 import frc.robot.util.Test;
 
 public class Canifier extends SmartSubsystem {
@@ -14,20 +14,12 @@ public class Canifier extends SmartSubsystem {
     boolean isTurrentHome;
   }
 
-  public static class COLOR {
-    double red = 0.0, green = 0.0, blue = 0.0;
-    public COLOR(double red, double green, double blue) {
-      this.red = red;
-      this.green = green;
-      this.blue = blue;
-    }
-  }
-
   private final CANifier canifier;
   private DataCache cache = new DataCache();
 
   public Canifier() {
     canifier = new CANifier(Constants.CAN.CANIFIER);
+    // canifier.setStatusFramePeriod(CANifierStatusFrame.Status_1_General, 255, Constants.CAN_TIMEOUT);  // TODO Test
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_2_General, 10, Constants.CAN_TIMEOUT);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_3_PwmInputs0, 1000, Constants.CAN_TIMEOUT);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_4_PwmInputs1, 1000, Constants.CAN_TIMEOUT);
@@ -44,21 +36,17 @@ public class Canifier extends SmartSubsystem {
   public void updateDashboard() {
     SmartDashboard.putBoolean("Canifier: Turret Home", cache.isTurrentHome);
   }
-
-  public void setLEDs(double red, double green, double blue) {
-    if (red == cache.red && green == cache.green && blue == cache.blue) {
+  
+  public void setLEDs(LEDColor color) {
+    if (color.red == cache.red && color.green == cache.green && color.blue == cache.blue) {
       return;
     }
-    cache.red = red;
-    cache.green = green;
-    cache.blue = blue;
+    cache.red = color.red;
+    cache.green = color.green;
+    cache.blue = color.blue;
     canifier.setLEDOutput(cache.red, CANifier.LEDChannel.LEDChannelA);
     canifier.setLEDOutput(cache.green, CANifier.LEDChannel.LEDChannelB);
     canifier.setLEDOutput(cache.blue, CANifier.LEDChannel.LEDChannelC);
-  }
-  
-  public void setLEDs(COLOR color) {
-    setLEDs(color.red, color.green, color.blue);
   }
 
   public boolean isTurretHome() {

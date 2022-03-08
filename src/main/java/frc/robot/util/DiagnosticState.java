@@ -1,17 +1,15 @@
 package frc.robot.util;
 
-import com.ctre.phoenix.led.Animation;
-
 public class DiagnosticState {
-  public final Animation diagnostic;
+  public final LEDColor color;
   public final boolean critical;
 
-  public DiagnosticState(Animation diagnostic) {
+  public DiagnosticState(LEDColor diagnostic) {
     this(diagnostic, false);
   }
   
-  public DiagnosticState(Animation diagnostic, boolean critical) {
-    this.diagnostic = diagnostic;
+  public DiagnosticState(LEDColor diagnostic, boolean critical) {
+    this.color = diagnostic;
     this.critical = critical;
   }
 }

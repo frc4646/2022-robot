@@ -4,10 +4,10 @@ import com.ctre.phoenix.led.CANdleConfiguration;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 
-import frc.robot.subsystems.Canifier;
 import frc.robot.subsystems.Diagnostics;
 import frc.robot.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
 import frc.robot.util.DiagnosticState;
+import frc.robot.util.LEDColor;
 import frc.team254.util.InterpolatingDouble;
 import frc.team254.util.InterpolatingTreeMap;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -80,30 +80,14 @@ public final class Constants {
   }
 
   public static final class DIAGNOSTICS {
-    public static final int LED_COUNT = 58;
-    public static final CANdleConfiguration LED_CONFIG = new CANdleConfiguration();
-    static {
-      LED_CONFIG.statusLedOffWhenActive = true;
-      LED_CONFIG.disableWhenLOS = false;
-      LED_CONFIG.stripType = LEDStripType.GRB;
-      LED_CONFIG.brightnessScalar = 1.0;
-      LED_CONFIG.vBatOutputMode = VBatOutputMode.Off;
-    }
-
     public static final double RUMBLE_PERCENT = 0.2;  // TODO tune
     public static final DiagnosticState
-      FAULT_CARGO = new DiagnosticState(Diagnostics.toColor(255, 0, 255, 0.1)),
-      FAULT_TURRET = new DiagnosticState(Diagnostics.toColor(255, 255, 0, 1.0), true),
-      FAULT_OUTSIDE_VISION_RANGE = new DiagnosticState(Diagnostics.toColor(0, 255, 128, 0.1)),
-      CLIMBING = new DiagnosticState(Diagnostics.toColor(0, 255, 255, 0.5)),
-      SHOOTING = new DiagnosticState(Diagnostics.toColor(255, 0, 0, .1)),
-      TURRET_AIMED = new DiagnosticState(Diagnostics.toColor(0, 255, 255, .1));
-
-    public static final Canifier.COLOR
-      COLOR_OFF = new Canifier.COLOR(0, 0, 0),
-      COLOR_FAULT_OUTSIDE_VISION_RANGE = new Canifier.COLOR(0, .3, .15),
-      COLOR_SHOOTING = new Canifier.COLOR(.6, 0, 0),
-      COLOR_TURRET_AIMED = new Canifier.COLOR(0, .1, .1);
+      FAULT_CARGO = new DiagnosticState(new LEDColor(1.0, 0.0, 1.0)),
+      FAULT_TURRET = new DiagnosticState(new LEDColor(1.0, 1.0, 0.0), true),
+      FAULT_OUTSIDE_VISION_RANGE = new DiagnosticState(new LEDColor(0.0, 0.3, 0.15)),
+      CLIMBING = new DiagnosticState(new LEDColor(0.0, 1.0, 1.0)),
+      SHOOTING = new DiagnosticState(new LEDColor(0.6, 0.0, 0.0)),
+      TURRET_AIMED = new DiagnosticState(new LEDColor(0.0, 0.1, 0.1));
   }
 
   public static final class DRIVETRAIN {

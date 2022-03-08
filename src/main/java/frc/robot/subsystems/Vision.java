@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,13 +18,15 @@ public class Vision extends SmartSubsystem {
     public boolean seesTarget;  // Whether the limelight has any valid targets (0 or 1)
     public int modeLED = LEDMode.PIPELINE.ordinal();
     public double distance;
-    public boolean inShootRange = false; 
+    public boolean inShootRange = false;
+    public double filteredDistance, filteredArea;
   }
 
   private final double RPM_MAP_KEY_INVALID = -1.0;
   private final double HEIGHT_VISION_TAPE_TO_CAMERA = Constants.FIELD.VISION_TAPE_INCHES - Constants.VISION.CAMERA_MOUNTING_HEIGHT;
 
   private final NetworkTable table;
+  private final LinearFilter filterDistance = LinearFilter.movingAverage(5), filterArea = LinearFilter.movingAverage(5);
   private final DataCache cache = new DataCache();
   private int stableCounts = 0;  // TODO use moving average of linear filter on vision data instead?
 
@@ -43,7 +46,15 @@ public class Vision extends SmartSubsystem {
     cache.distance = getGroundDistanceToHubInches();
     cache.inShootRange = cache.distance > Constants.VISION.DISTANCE_USABLE_MIN && cache.distance < Constants.VISION.DISTANCE_USABLE_MAX;
 
-    // TODO linear filter or median filter a goood idea? See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/index.html
+    if (cache.seesTarget) {
+      cache.filteredDistance = filterDistance.calculate(cache.distance);
+      cache.filteredArea = filterArea.calculate(cache.area);
+    } else {
+      filterDistance.reset();
+      filterArea.reset();
+      cache.filteredDistance = 0.0;
+      cache.filteredArea = 0.0;
+    }
     if (!cache.inShootRange) {
       cache.xDegrees = 0.0;
       cache.yDegrees = 0.0;
@@ -64,6 +75,9 @@ public class Vision extends SmartSubsystem {
     SmartDashboard.putNumber("Vision: X", cache.xDegrees);
     if (Constants.VISION.TUNING) {
       SmartDashboard.putNumber("Vision: Y", cache.yDegrees);
+      SmartDashboard.putNumber("Vision: Area", cache.area);
+      SmartDashboard.putNumber("Vision: Distance Filtered", cache.filteredDistance);
+      SmartDashboard.putNumber("Vision: Area Filtered", cache.filteredArea);
     }
   }
 

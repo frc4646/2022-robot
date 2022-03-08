@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,6 +36,7 @@ public class Feeder extends SmartSubsystem {
     motor.getPIDController().setP(Constants.FEEDER.P);
     motor.getPIDController().setI(Constants.FEEDER.I);
     motor.getPIDController().setD(Constants.FEEDER.D);
+    motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
   }
 
   @Override
