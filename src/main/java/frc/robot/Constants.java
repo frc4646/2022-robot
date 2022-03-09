@@ -33,7 +33,7 @@ public final class Constants {
 
   public static final class SOLENOID {
     public static final int
-      INTAKE_OUT = 0, INTAKE_IN = 1,
+      INTAKE_OUT = 1, INTAKE_IN = 0,
       ARM_L_OUT = 5, ARM_L_IN = 4, ARM_R_OUT = 7, ARM_R_IN = 6;
   }
 
@@ -186,6 +186,8 @@ public final class Constants {
       RPM_MAX = 6380.0 * 1.084,  //  Tuned 2/22
       RPM_DEFAULT = 2200.0,
       RPM_ERROR_ALLOWED = 30.0,  // Tuned 3/1, 25-50 seem to work well
+      RPM_TRIM = 150.0,
+      DEADBAND = 0.05,
       TICKS_PER_REV = 2048.0,
       P = 0.01,  // Probably between 0.0075 and 0.25
       I = 0.0,  // Use 0 if possible. But if we do use non-zero, make sure to use i zone
@@ -194,7 +196,7 @@ public final class Constants {
   }
 
   public static final class TURRET {
-    public static final boolean TUNING = true;
+    public static final boolean TUNING = false;
     public static final boolean SOFT_LIMITS_AT_STARTUP = true;
 
     public static final double
@@ -235,15 +237,15 @@ public final class Constants {
       SERVO.kMotionMagicKf = 1023.0 / VELOCITY_MAX;
       SERVO.kMotionMagicKa = 0.0;
       SERVO.kCruiseVelocity = VELOCITY_MAX * 0.95;
-      SERVO.kAcceleration = SERVO.kCruiseVelocity * 2.0;
-      SERVO.kMotionMagicDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
+      SERVO.kAcceleration = SERVO.kCruiseVelocity * 1.0;
+      SERVO.kMotionMagicDeadband = 1.0 * SERVO.kTicksPerUnitDistance; // Ticks
 
       // TODO SERVO.kRecoverPositionOnReset = true;
     }
   }
 
   public static final class VISION {
-    public static final boolean TUNING = false;
+    public static final boolean TUNING = true;
 
     public static int STABLE_COUNTS = 2;
 
@@ -269,7 +271,7 @@ public final class Constants {
     }
     public static final double
       DISTANCE_USABLE_MIN = 51.5,
-      DISTANCE_USABLE_MAX = 100;
+      DISTANCE_USABLE_MAX = 100.0;
     static {
       RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MIN), new InterpolatingDouble(2100.0));  // tuned 2/27
       RPM_MAP.put(new InterpolatingDouble(71.6), new InterpolatingDouble(2200.0));

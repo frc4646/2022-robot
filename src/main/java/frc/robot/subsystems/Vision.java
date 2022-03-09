@@ -26,7 +26,7 @@ public class Vision extends SmartSubsystem {
   private final double HEIGHT_VISION_TAPE_TO_CAMERA = Constants.FIELD.VISION_TAPE_INCHES - Constants.VISION.CAMERA_MOUNTING_HEIGHT;
 
   private final NetworkTable table;
-  private final LinearFilter filterDistance = LinearFilter.movingAverage(5), filterArea = LinearFilter.movingAverage(5);
+  private final LinearFilter filterDistance = LinearFilter.singlePoleIIR(.1, .2), filterArea = LinearFilter.singlePoleIIR(.1, .2);
   private final DataCache cache = new DataCache();
   private int stableCounts = 0;  // TODO use moving average of linear filter on vision data instead?
 
@@ -44,17 +44,12 @@ public class Vision extends SmartSubsystem {
     cache.area = table.getEntry("ta").getDouble(0.0);
     cache.seesTarget = table.getEntry("tv").getDouble(0) == 1.0;
     cache.distance = getGroundDistanceToHubInches();
-    cache.inShootRange = cache.distance > Constants.VISION.DISTANCE_USABLE_MIN && cache.distance < Constants.VISION.DISTANCE_USABLE_MAX;
-
     if (cache.seesTarget) {
       cache.filteredDistance = filterDistance.calculate(cache.distance);
       cache.filteredArea = filterArea.calculate(cache.area);
-    } else {
-      filterDistance.reset();
-      filterArea.reset();
-      cache.filteredDistance = 0.0;
-      cache.filteredArea = 0.0;
     }
+    cache.inShootRange = cache.distance > Constants.VISION.DISTANCE_USABLE_MIN && cache.distance < Constants.VISION.DISTANCE_USABLE_MAX;
+    
     if (!cache.inShootRange) {
       cache.xDegrees = 0.0;
       cache.yDegrees = 0.0;
@@ -125,7 +120,7 @@ public class Vision extends SmartSubsystem {
     return cache.xDegrees;
   }
 
-  public boolean isTargetPresent() { return cache.seesTarget; }  
+  public boolean isTargetPresent() { return cache.seesTarget; }
   public boolean isStable() { return stableCounts >= Constants.VISION.STABLE_COUNTS; }
   public boolean isInShootRange() { return cache.inShootRange; };
 

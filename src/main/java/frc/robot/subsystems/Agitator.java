@@ -1,51 +1,34 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import frc.robot.Constants;
 import frc.robot.util.Test;
-
-import com.ctre.phoenix.motorcontrol.ControlFrame;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrame;
+import frc.team254.drivers.SparkMaxFactory;
 
 public class Agitator extends SmartSubsystem {
-  private final VictorSPX masterL, slaveR;
+  private final CANSparkMax masterL, slaveR;
 
   public Agitator() {
-    masterL = new VictorSPX(Constants.CAN.AGITATOR_L);
-    masterL.setInverted(true);
-    masterL.setNeutralMode(NeutralMode.Brake);
-    masterL.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
-    masterL.enableVoltageCompensation(true);
-    masterL.configOpenloopRamp(Constants.AGITATOR.OPEN_LOOP_RAMP);
-    masterL.setStatusFramePeriod(StatusFrame.Status_1_General, 10, Constants.CAN_TIMEOUT);
-    masterL.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 1000, Constants.CAN_TIMEOUT);
-    masterL.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 1000, Constants.CAN_TIMEOUT);
-    masterL.setControlFramePeriod(ControlFrame.Control_3_General, 10);
+    masterL = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.AGITATOR_L, true);
+    masterL.setIdleMode(IdleMode.kBrake);
+    masterL.enableVoltageCompensation(12.0);
+    masterL.setOpenLoopRampRate(Constants.AGITATOR.OPEN_LOOP_RAMP);
 
-    slaveR = new VictorSPX(Constants.CAN.AGITATOR_R);
-    slaveR.follow(masterL);
-    slaveR.setInverted(false);
-    slaveR.setNeutralMode(NeutralMode.Brake);
-    slaveR.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
-    slaveR.enableVoltageCompensation(true);
-    slaveR.configOpenloopRamp(Constants.AGITATOR.OPEN_LOOP_RAMP);    
-    slaveR.setStatusFramePeriod(StatusFrame.Status_1_General, 1000, Constants.CAN_TIMEOUT);
-    slaveR.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 1000, Constants.CAN_TIMEOUT);
-    slaveR.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 1000, Constants.CAN_TIMEOUT);
-    slaveR.setControlFramePeriod(ControlFrame.Control_3_General, 100);
+    slaveR = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.AGITATOR_R, masterL, true);
+    slaveR.setIdleMode(IdleMode.kBrake);
+    slaveR.enableVoltageCompensation(12.0);
+    slaveR.setOpenLoopRampRate(Constants.AGITATOR.OPEN_LOOP_RAMP);    
   }
 
   public void setOpenLoop(double percent) {
-    masterL.set(ControlMode.PercentOutput, percent);
+    masterL.set(percent);
   }
 
   @Override
   public void runTests() {
     Test.checkFirmware(this, masterL);
-    Test.checkFirmware(this, slaveR);
-    Test.checkStatusFrames(this, masterL);
-    Test.checkStatusFrames(this, slaveR);
+    Test.checkFirmware(this, slaveR);    
   }
 }

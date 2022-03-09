@@ -70,7 +70,7 @@ public class OperatorControls {
   public boolean getAimLob() { return operator.getRawAxis(TRIGGER_L) > TRIGGER_DEADBAND; }
   public boolean getAimFar() { return operator.getRawAxis(TRIGGER_R) > TRIGGER_DEADBAND; }
   public double getClimberStick() { return -operator.getRawAxis(XboxController.Axis.kRightY.value); }
-  public double getShooterTrim() { return 0.0; }; // TODO { return operator.getRawAxis(XboxController.Axis.kLeftY.value); }
+  public double getShooterTrim() { return -operator.getRawAxis(XboxController.Axis.kLeftY.value); }
   public double getTurretStick() { return -operator.getRawAxis(XboxController.Axis.kLeftX.value); }
   public int getTurretSnap() {
     int pov = operator.getPOV();
