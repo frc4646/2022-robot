@@ -91,7 +91,7 @@ public final class Constants {
   }
 
   public static final class DRIVETRAIN {
-    public static final boolean TUNING = true;
+    public static final boolean TUNING = false;
 
     public static final double
       TIMEOUT_DISABLED_COAST = 5.0,

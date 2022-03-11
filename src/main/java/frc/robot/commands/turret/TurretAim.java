@@ -40,8 +40,8 @@ public class TurretAim extends CommandBase {
   }
 
   private boolean isInDeadzone(double position) {
-    boolean inDeadzoneR = position < 150.0 && position > 45.0;
-    boolean inDeadzoneL = position > 210.0 && position < 315.0;
+    boolean inDeadzoneR = position < 115.0 && position > 45.0;
+    boolean inDeadzoneL = position > 245.0 && position < 315.0;
     return inDeadzoneR || inDeadzoneL;
   }
 }
