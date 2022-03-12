@@ -70,7 +70,7 @@ public class Shooter extends SmartSubsystem {
   }
 
   @Override
-  public void updateDashboard() {
+  public void updateDashboard(boolean showDetails) {
     if (Constants.SHOOTER.TUNING) {
       SmartDashboard.putNumber("Shooter: RPM", getRPM());
       SmartDashboard.putNumber("Shooter: IsStable", stableCounts);

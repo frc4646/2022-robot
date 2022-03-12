@@ -23,7 +23,7 @@ public class Hood extends SmartSubsystem {
   }
 
   @Override
-  public void updateDashboard() {
+  public void updateDashboard(boolean showDetails) {
 
   }
 

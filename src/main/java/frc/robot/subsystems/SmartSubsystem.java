@@ -14,7 +14,7 @@ public class SmartSubsystem extends SubsystemBase {
    * Override to update SmartDashboard values.
    * <i>Improves consistency</i> of command execution by being called <i>after</i> all subsystems run commands.
    */
-  public void updateDashboard() {};
+  public void updateDashboard(boolean showDetails) {};
 
   /**
    * Override to do something whenever the <i>robot becomes enabled</i>.

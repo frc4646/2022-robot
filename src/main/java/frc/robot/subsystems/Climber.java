@@ -13,7 +13,10 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -97,16 +100,18 @@ public class Climber extends SmartSubsystem {
   }
 
   @Override
-  public void updateDashboard() {
-    SmartDashboard.putBoolean("Climber: Limit L", cache.limitL);
-    SmartDashboard.putBoolean("Climber: Limit R", cache.limitR);
-    if (Constants.CLIMBER.TUNING) {
-      SmartDashboard.putNumber("Climber: PositionL", cache.positionL);
-      SmartDashboard.putNumber("Climber: VelocityL", cache.velocityL);
-      SmartDashboard.putNumber("Climber: CurrentL", cache.currentL);
-      SmartDashboard.putNumber("Climber: PositionR", cache.positionR);
-      SmartDashboard.putNumber("Climber: VelocityR", cache.velocityR);
-      SmartDashboard.putNumber("Climber: CurrentR", cache.currentR);
+  public void updateDashboard(boolean showDetails) {
+    if (showDetails) {
+      SmartDashboard.putBoolean("Climber: Limit L", cache.limitL);
+      SmartDashboard.putBoolean("Climber: Limit R", cache.limitR);
+      if (Constants.CLIMBER.TUNING) {
+        SmartDashboard.putNumber("Climber: PositionL", cache.positionL);
+        SmartDashboard.putNumber("Climber: VelocityL", cache.velocityL);
+        SmartDashboard.putNumber("Climber: CurrentL", cache.currentL);
+        SmartDashboard.putNumber("Climber: PositionR", cache.positionR);
+        SmartDashboard.putNumber("Climber: VelocityR", cache.velocityR);
+        SmartDashboard.putNumber("Climber: CurrentR", cache.currentR);
+      }
     }
   }
 

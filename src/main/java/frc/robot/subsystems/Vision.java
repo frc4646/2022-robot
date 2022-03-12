@@ -71,7 +71,7 @@ public class Vision extends SmartSubsystem {
   }
 
   @Override
-  public void updateDashboard() {
+  public void updateDashboard(boolean showDetails) {
     SmartDashboard.putBoolean("Vision: Target", cache.seesTarget);
     SmartDashboard.putNumber("Vision: Distance", cache.distanceRaw);
     SmartDashboard.putNumber("Vision: X", cache.xDegrees);

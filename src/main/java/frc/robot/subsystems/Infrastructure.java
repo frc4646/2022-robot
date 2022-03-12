@@ -46,8 +46,10 @@ public class Infrastructure extends SmartSubsystem {
   }
   
   @Override
-  public void updateDashboard() {   
-    SmartDashboard.putNumber("Battery", cache.battery);
+  public void updateDashboard(boolean showDetails) {
+    if (showDetails) {
+      SmartDashboard.putNumber("Battery", cache.battery);
+    }
   }
 
   @Override

@@ -25,7 +25,7 @@ public class Diagnostics extends SmartSubsystem {
   }
 
   @Override
-  public void updateDashboard() {
+  public void updateDashboard(boolean showDetails) {
     canifier.setLEDs(robotState);
     double rumble = (DriverStation.isDisabled() && isCriticalIssuePresent) ? Constants.DIAGNOSTICS.RUMBLE_PERCENT : 0.0;
     operator.setRumble(true, rumble);  // tune which side is better

@@ -91,8 +91,8 @@ public class RobotContainer {
     allSubsystems.forEach(SmartSubsystem::cacheSensors);
   }
 
-  public void updateDashboard() {
-    allSubsystems.forEach(SmartSubsystem::updateDashboard);
+  public void updateDashboard(boolean showDetails) {
+    allSubsystems.forEach(s -> s.updateDashboard(showDetails));
   }
 
   public void onEnable(boolean isAutonomous) {

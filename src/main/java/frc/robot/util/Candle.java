@@ -58,7 +58,7 @@ public class Candle extends SmartSubsystem {
   }
 
   @Override
-  public void updateDashboard() {
+  public void updateDashboard(boolean showDetails) {
     // TODO reduce calls to CAN HAL?
     // candle.animate(robotState);
   }

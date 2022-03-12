@@ -80,9 +80,11 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   @Override
-  public void updateDashboard() {
-    SmartDashboard.putNumber("Drive: Heading", cache.heading.getDegrees());
-    SmartDashboard.putNumber("Drive: Pitch", cache.pitch.getDegrees());
+  public void updateDashboard(boolean showDetails) {
+    if (showDetails) {
+      SmartDashboard.putNumber("Drive: Heading", cache.heading.getDegrees());
+      SmartDashboard.putNumber("Drive: Pitch", cache.pitch.getDegrees());
+    }
     if (Constants.DRIVETRAIN.TUNING) {
       SmartDashboard.putNumber("Drive: Distance L", cache.distanceL);
       SmartDashboard.putNumber("Drive: Distance R", cache.distanceR);

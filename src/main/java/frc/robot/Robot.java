@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     robotContainer.cacheSensors();
     CommandScheduler.getInstance().run();  // Must be called from robotPeriodic(). Runs these steps: Polls buttons, adds newly-scheduled commands, runs already-scheduled commands, removes finished or interrupted commands, calls subsystem periodic() methods.
-    robotContainer.updateDashboard();
+    robotContainer.updateDashboard(Constants.DashboardDuringComp());
   }
 
   @Override

@@ -63,9 +63,12 @@ public class ColorSensor extends SmartSubsystem {
   }
 
   @Override
-  public void updateDashboard() {
-    SmartDashboard.putString("Color: State", getState().toString());
-    SmartDashboard.putNumber("Color: Distance", cache.distance);
+  public void updateDashboard(boolean showDetails) {
+    SmartDashboard.putBoolean("Color: Correct", getState() == STATE.CORRECT);
+    if (showDetails) {
+      SmartDashboard.putString("Color: State", getState().toString());
+      SmartDashboard.putNumber("Color: Distance", cache.distance);
+    }
     if (Constants.COLORSENSOR.TUNING) {
       SmartDashboard.putNumber("Color: Confidence", cache.match.confidence);
 

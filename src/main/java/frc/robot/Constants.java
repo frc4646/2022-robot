@@ -1,10 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix.led.CANdleConfiguration;
-import com.ctre.phoenix.led.CANdle.LEDStripType;
-import com.ctre.phoenix.led.CANdle.VBatOutputMode;
-
-import frc.robot.subsystems.Diagnostics;
 import frc.robot.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
 import frc.robot.util.DiagnosticState;
 import frc.robot.util.LEDColor;
@@ -14,11 +9,19 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
 public final class Constants {
   public static int CAN_TIMEOUT = 100;
+
+  private static final String SHOW_DETAILS = "Show Details";
+  
+  static {
+    SmartDashboard.putBoolean(SHOW_DETAILS, false);
+  }
 
   public static final class CAN {
     public static final int
@@ -286,5 +289,10 @@ public final class Constants {
   public static final class FIELD {
     public static final double CLIMBER_TIME_REQUIRED_TO_HOLD = 5.0;
     public static final double VISION_TAPE_INCHES = 102.0;
+  }
+
+  /** TRUE if not connected to the field at competition OR if the Smartdashboard button is pressed */
+  public static boolean DashboardDuringComp() {
+    return !DriverStation.isFMSAttached() || SmartDashboard.getBoolean(SHOW_DETAILS, false);
   }
 }
