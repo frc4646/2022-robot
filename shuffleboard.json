@@ -2,8 +2,8 @@
   "tabPane": [
     {
       "title": "Comp",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "SmartDashboard/",
       "widgetPane": {
         "gridSize": 128.0,
         "showGrid": true,
@@ -44,9 +44,9 @@
               "_title": "SmartDashboard/Show Details"
             }
           },
-          "4,2": {
+          "3,2": {
             "size": [
-              2,
+              3,
               2
             ],
             "content": {
@@ -57,9 +57,9 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "4,0": {
+          "3,0": {
             "size": [
-              2,
+              3,
               2
             ],
             "content": {
@@ -70,9 +70,9 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "7,0": {
+          "6,0": {
             "size": [
-              2,
+              4,
               4
             ],
             "content": {
@@ -83,9 +83,9 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "11,3": {
+          "10,1": {
             "size": [
-              2,
+              3,
               1
             ],
             "content": {
