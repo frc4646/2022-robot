@@ -6,7 +6,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.controls.OperatorControls;
 import frc.robot.util.DiagnosticState;
-import frc.robot.util.LEDColor;
+import frc.team4646.LEDColor;
 
 public class Diagnostics extends SmartSubsystem {
   public static final LEDColor

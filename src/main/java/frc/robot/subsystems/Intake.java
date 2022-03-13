@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.Constants;
-import frc.robot.util.Test;
 import frc.team254.drivers.TalonFXFactory;
+import frc.team4646.Test;
 
 public class Intake extends SmartSubsystem {
   private final TalonFX motor;

@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import frc.team4646.LEDColor;
+
 public class DiagnosticState {
   public final LEDColor color;
   public final boolean critical;

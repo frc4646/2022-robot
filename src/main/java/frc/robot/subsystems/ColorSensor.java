@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants;
-import frc.robot.util.Test;
+import frc.team4646.Test;
 
 public class ColorSensor extends SmartSubsystem {
   public static enum STATE {

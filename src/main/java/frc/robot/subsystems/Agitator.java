@@ -4,8 +4,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import frc.robot.Constants;
-import frc.robot.util.Test;
 import frc.team254.drivers.SparkMaxFactory;
+import frc.team4646.Test;
 
 public class Agitator extends SmartSubsystem {
   private final CANSparkMax masterL, slaveR;

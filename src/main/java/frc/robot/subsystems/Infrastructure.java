@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.util.Test;
+import frc.team4646.Test;
 
 public class Infrastructure extends SmartSubsystem {
   public static class DataCache {

@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.team4646;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -24,7 +24,5 @@ public class Navx {
   public void reset() {
     Rotation2d current = gyro.getRotation2d();
     offset = current.rotateBy(Rotation2d.fromDegrees(-current.getDegrees() * 2.0));
-    System.out.println("Current " + current.getDegrees());
-    System.out.println("Offest " + offset.getDegrees());
   }
 }

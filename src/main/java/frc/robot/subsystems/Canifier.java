@@ -5,8 +5,8 @@ import com.ctre.phoenix.CANifierStatusFrame;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.util.LEDColor;
-import frc.robot.util.Test;
+import frc.team4646.LEDColor;
+import frc.team4646.Test;
 
 public class Canifier extends SmartSubsystem {
   public static class DataCache {
