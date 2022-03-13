@@ -49,8 +49,8 @@ public class OperatorControls {
     // aimFar.whenActive(new HoodExtend(true));
 
     // Intake
-    buttonY.whenPressed(new DeployIntake());
-    buttonY.whenReleased(new StowIntake());
+    // buttonY.whenPressed(new DeployIntake());
+    // buttonY.whenReleased(new StowIntake());
     buttonY.and(Fn).whenActive(new ExhaustIntake());  // TODO just on regular button?
     buttonY.and(Fn).whenInactive(new StowIntake());
     buttonA.whenActive(new ExhaustIntake());
@@ -60,7 +60,7 @@ public class OperatorControls {
     bumperL.whenPressed(new ShootOpenLoop());
     bumperL.whenReleased(new ShooterOpenLoop(0.0));
     bumperR.whenPressed(new ShootVision());
-    bumperL.whenReleased(new ShooterOpenLoop(0.0));
+    bumperR.whenReleased(new ShooterOpenLoop(0.0));
 
     // Testing
     buttonB.whenActive(new FeederPosition(1.0));

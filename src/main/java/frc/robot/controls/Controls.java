@@ -12,6 +12,7 @@ public class Controls {
   }
 
   public void configureButtons() {
+    driver.configureButtons();
     operator.configureButtons();
     dashboard.configureButtons();
   }

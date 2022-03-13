@@ -21,25 +21,26 @@ public class TwoCargoAuto extends SequentialCommandGroup {
     addCommands(
       new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0))); }),
    
-      parallel(
-        new DeployIntake(),
-        new AgitateOpenLoop(Constants.AGITATOR.OPEN_LOOP_LOAD),
+      new DeployIntake(),
+      new WaitCommand(1.0),
+      // parallel(
+        // new AgitateOpenLoop(Constants.AGITATOR.OPEN_LOOP_LOAD),
         sequence(
           new DriveOpenLoop(.15),
-          new WaitCommand(1.2),
-          new WaitForDistanceDriven(1.5)
-        )
+          new WaitCommand(1.5),
+          new WaitForDistanceDriven(1.8)
+        // )
       ),
       new WaitCommand(.2),
 
       parallel(
         sequence(
           new DriveOpenLoop(-.15),
-          new WaitCommand(.75),
+          new WaitCommand(.65),
           new DriveOpenLoop(0.0)
         ),
         sequence(
-          new WaitForColorState(STATE.CORRECT),
+          new WaitForColorState(STATE.CORRECT).withTimeout(2.0),
           new AgitateOpenLoop(0.0),
           new StowIntake()
         )
@@ -49,5 +50,13 @@ public class TwoCargoAuto extends SequentialCommandGroup {
       
       new ShootVision()
     );
+  }
+
+  @Override
+  public void end(boolean isInterrupted) {
+    RobotContainer.FEEDER.setOpenLoop(0);
+    RobotContainer.AGITATOR.setOpenLoop(0);
+    RobotContainer.INTAKE.setExtend(false);
+    RobotContainer.INTAKE.setIntakeSpeed(0);
   }
 }

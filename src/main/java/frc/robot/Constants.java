@@ -87,10 +87,11 @@ public final class Constants {
     public static final DiagnosticState
       FAULT_CARGO = new DiagnosticState(new LEDColor(1.0, 0.0, 1.0)),
       FAULT_TURRET = new DiagnosticState(new LEDColor(1.0, 1.0, 0.0), true),
-      FAULT_OUTSIDE_VISION_RANGE = new DiagnosticState(new LEDColor(0.0, 0.3, 0.15)),
+      FAULT_OUTSIDE_VISION_RANGE = new DiagnosticState(new LEDColor(0.6, 0.0, 0.0)),
       CLIMBING = new DiagnosticState(new LEDColor(0.0, 1.0, 1.0)),
-      SHOOTING = new DiagnosticState(new LEDColor(0.6, 0.0, 0.0)),
-      TURRET_AIMED = new DiagnosticState(new LEDColor(0.0, 0.1, 0.1));
+      SHOOTING = new DiagnosticState(new LEDColor(0.0, 0.0, 1.0)),
+      TURRET_AIMED = new DiagnosticState(new LEDColor(0.0, 0.1, 0.1)),
+      CAN_PRESS_SHOOT = new DiagnosticState(new LEDColor(0.0, 1.0, 0.0));
   }
 
   public static final class DRIVETRAIN {
@@ -98,7 +99,7 @@ public final class Constants {
 
     public static final double
       TIMEOUT_DISABLED_COAST = 5.0,
-      THROTTLE_SLEW_LIMIT = .80,  // % output per second
+      THROTTLE_SLEW_LIMIT = 1.20,  // % output per second
       THROTTLE_DEADBAND = 0.04,
       TURNING_DEADBAND = 0.035;
 
@@ -145,6 +146,10 @@ public final class Constants {
     public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED)
       .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
       .addConstraint(AUTO_VOLTAGE_CONSTRAINT);
+      public static final TrajectoryConfig TRAJECTORY_CONFIG_REVERSED = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED)
+        .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
+        .addConstraint(AUTO_VOLTAGE_CONSTRAINT)
+        .setReversed(true);
   }
 
   public static final class FEEDER {
@@ -273,13 +278,16 @@ public final class Constants {
       LOB_DEGREES.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
     }
     public static final double
-      DISTANCE_USABLE_MIN = 51.5,
-      DISTANCE_USABLE_MAX = 100.0;
+      DISTANCE_USABLE_MIN = 45.0,
+      DISTANCE_USABLE_MAX = 160.0;
     static {
-      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MIN), new InterpolatingDouble(2100.0));  // tuned 2/27
+      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MIN), new InterpolatingDouble(2050.0));
+      RPM_MAP.put(new InterpolatingDouble(51.5), new InterpolatingDouble(2100.0));  // tuned 2/27
       RPM_MAP.put(new InterpolatingDouble(71.6), new InterpolatingDouble(2200.0));
       RPM_MAP.put(new InterpolatingDouble(89.3), new InterpolatingDouble(2325.0));
-      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MAX), new InterpolatingDouble(2400.0));
+      RPM_MAP.put(new InterpolatingDouble(100.0), new InterpolatingDouble(2400.0));
+      RPM_MAP.put(new InterpolatingDouble(140.0), new InterpolatingDouble(2750.0));
+      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MAX), new InterpolatingDouble(2900.0));
     }
     static {
       ANGLE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
