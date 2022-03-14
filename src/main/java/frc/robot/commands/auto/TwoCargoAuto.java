@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.drivetrain.DriveOpenLoop;
@@ -16,6 +15,10 @@ import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.sequence.StowIntake;
 import frc.robot.subsystems.ColorSensor.STATE;
 
+/**
+ * Time based grab a cargo and shoot it.
+ * Not flexible enough for all 3 positions
+ */
 public class TwoCargoAuto extends SequentialCommandGroup {
   public TwoCargoAuto() {
     addCommands(
@@ -23,16 +26,9 @@ public class TwoCargoAuto extends SequentialCommandGroup {
    
       new DeployIntake(),
       new WaitCommand(1.0),
-      // parallel(
-        // new AgitateOpenLoop(Constants.AGITATOR.OPEN_LOOP_LOAD),
-        sequence(
-          new DriveOpenLoop(.15),
-          new WaitCommand(1.5),
-          new WaitForDistanceDriven(1.8)
-        // )
-      ),
+      new DriveOpenLoop(.15),
+      new WaitForDistanceDriven(1.8).withTimeout(1.5),
       new WaitCommand(.2),
-
       parallel(
         sequence(
           new DriveOpenLoop(-.15),
@@ -45,9 +41,6 @@ public class TwoCargoAuto extends SequentialCommandGroup {
           new StowIntake()
         )
       ),
-     
-      // new WaitForDistanceDriven(1.3)
-      
       new ShootVision()
     );
   }

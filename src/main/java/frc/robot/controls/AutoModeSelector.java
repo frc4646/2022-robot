@@ -7,16 +7,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.auto.TestAuto;
+import frc.robot.commands.auto.TestAutoPathweaver;
 import frc.robot.commands.auto.TwoCargoAuto;
+import frc.robot.commands.auto.TwoCargoMidAndTerminal;
 
 public class AutoModeSelector {
   enum StartingPosition {
-    LEFT, RIGHT, CENTER
+    LEFT, MIDDLE, RIGHT
   }
   enum DesiredMode { 
     DO_NOTHING,
     TEST_AUTO,
-    TWO_CARGO_MODE,
+    TWO_CARGO,
+    TWO_CARGO_PLUS_TERMINAL,
+    TWO_CARGO_PLUS_TERMINAL_PATHWEAVER,
   }
 
   private SendableChooser<DesiredMode> modeSelector;
@@ -30,16 +34,53 @@ public class AutoModeSelector {
   public AutoModeSelector() {
     startingPositionSelector = new SendableChooser<>();
     startingPositionSelector.setDefaultOption("Left", StartingPosition.LEFT);
+    startingPositionSelector.addOption("Middle", StartingPosition.MIDDLE);
     startingPositionSelector.addOption("Right", StartingPosition.RIGHT);
-    startingPositionSelector.addOption("Center", StartingPosition.CENTER);
     SmartDashboard.putData("Auto: Position", startingPositionSelector);
 
     modeSelector = new SendableChooser<>();
     modeSelector.setDefaultOption("Do Nothing", DesiredMode.DO_NOTHING);
-    modeSelector.addOption("2 Cargo Mode", DesiredMode.TWO_CARGO_MODE);
+    modeSelector.addOption("2 Cargo", DesiredMode.TWO_CARGO);
+    modeSelector.addOption("2 Cargo + Terminal", DesiredMode.TWO_CARGO_PLUS_TERMINAL);
+    modeSelector.addOption("2 Cargo + Terminal Pathweaver", DesiredMode.TWO_CARGO_PLUS_TERMINAL_PATHWEAVER);
     modeSelector.addOption("Test Mode", DesiredMode.TEST_AUTO);
     SmartDashboard.putData("Auto: Mode", modeSelector);
   }
+
+  private Optional<Command> getAutoModeForParams(DesiredMode mode, StartingPosition position) {
+    switch (mode) {
+      case TWO_CARGO:
+        return Optional.of(new TwoCargoAuto());
+
+      case TWO_CARGO_PLUS_TERMINAL:
+        switch (position) {
+          case LEFT:
+            return Optional.of(new TwoCargoAuto());
+          case MIDDLE:
+            return Optional.of(new TwoCargoMidAndTerminal());
+          case RIGHT:
+            return Optional.of(new TwoCargoAuto());
+        }
+
+      case TWO_CARGO_PLUS_TERMINAL_PATHWEAVER:
+        switch (position) {
+          case LEFT:
+            return Optional.of(new TwoCargoAuto());
+          case MIDDLE:
+            return Optional.of(new TestAutoPathweaver());
+          case RIGHT:
+            return Optional.of(new TwoCargoAuto());
+        }
+
+      case TEST_AUTO:
+        return Optional.of(new TestAuto());
+
+      default:
+        System.err.println("No valid auto mode found for  " + mode);
+        return Optional.of(new WaitCommand(15.0));
+    }
+  }
+  
 
   public void update() {
     DesiredMode desiredMode = modeSelector.getSelected();
@@ -56,18 +97,6 @@ public class AutoModeSelector {
     }
     modeDesiredCached = desiredMode;
     startingPositionCached = startingPosition;
-  }
-
-  private Optional<Command> getAutoModeForParams(DesiredMode mode, StartingPosition position) {
-    switch (mode) {
-      case TWO_CARGO_MODE:
-        return Optional.of(new TwoCargoAuto());
-      case TEST_AUTO:
-        return Optional.of(new TestAuto());
-      default:
-        System.err.println("No valid auto mode found for  " + mode);
-        return Optional.of(new WaitCommand(15.0));
-    }
   }
 
   public void reset() {
