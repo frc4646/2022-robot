@@ -13,9 +13,11 @@ import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.shooter.ShooterOpenLoop;
 import frc.robot.subsystems.ColorSensor.STATE;
 
-public class TestAuto extends SequentialCommandGroup {
-
-  public TestAuto() {
+/**
+ * Saved copy of path testing from the scrimmage
+ */
+public class TwoCargoMidAndTerminal extends SequentialCommandGroup {
+  public TwoCargoMidAndTerminal() {
     addCommands(
       new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(AutoTrajectories.midGrabCargo.getInitialPose()); }),   
       new DeployIntake(),

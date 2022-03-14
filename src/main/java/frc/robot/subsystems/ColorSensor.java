@@ -19,7 +19,6 @@ public class ColorSensor extends SmartSubsystem {
     public STATE state;
 
     public Color colorRaw;
-    public int infraredRaw;  // TODO remove?
     public int distance;
     public ColorMatchResult match;
   }
@@ -43,7 +42,6 @@ public class ColorSensor extends SmartSubsystem {
     try {
       if(colorSensor.isConnected()) {
         cache.colorRaw = colorSensor.getColor();
-        cache.infraredRaw = colorSensor.getIR();
         cache.distance = colorSensor.getProximity();
         cache.match = colorMatcher.matchClosestColor(cache.colorRaw);
         // TODO switch to matchColor? Incorperates confidence level. Set confidence threshold?  
@@ -75,7 +73,6 @@ public class ColorSensor extends SmartSubsystem {
       SmartDashboard.putNumber("Color: Red", cache.colorRaw.red);
       SmartDashboard.putNumber("Color: Green", cache.colorRaw.green);
       SmartDashboard.putNumber("Color: Blue", cache.colorRaw.blue);
-      SmartDashboard.putNumber("Color: Infrared", cache.infraredRaw);
     }
   }
 

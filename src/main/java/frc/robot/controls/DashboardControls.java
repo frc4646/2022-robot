@@ -18,13 +18,14 @@ public class DashboardControls {
   public void configureButtons() {
     SmartDashboard.putNumber("Tune: Shoot RPM", Constants.SHOOTER.RPM_DEFAULT);
     SmartDashboard.putData("Tune: Shoot", new TuneInterpolation());
-    SmartDashboard.putData("Tune: Shoot 2600", new ShooterVelocity(2600));
-    SmartDashboard.putData("Tune: Shoot 2700", new ShooterVelocity(2700));
-    SmartDashboard.putData("Tune: Shoot 2800", new ShooterVelocity(2800));
-    SmartDashboard.putData("Tune: Shoot 2900", new ShooterVelocity(2900));
-    SmartDashboard.putData("Tune: Shoot 3000", new ShooterVelocity(3000));
-    SmartDashboard.putData("Tune: Fire Cargo", new FireCargo());
-    
+    if (Constants.SHOOTER.TUNING) {
+      SmartDashboard.putData("Tune: Shoot 2600", new ShooterVelocity(2600));
+      SmartDashboard.putData("Tune: Shoot 2700", new ShooterVelocity(2700));
+      SmartDashboard.putData("Tune: Shoot 2800", new ShooterVelocity(2800));
+      SmartDashboard.putData("Tune: Shoot 2900", new ShooterVelocity(2900));
+      SmartDashboard.putData("Tune: Shoot 3000", new ShooterVelocity(3000));
+      SmartDashboard.putData("Tune: Fire Cargo", new FireCargo());
+    }
     if (Constants.TURRET.TUNING) {
       SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.TURRET.SERVO.kHomePosition + 70.0, 0.1));
       SmartDashboard.putData("Tune: Turret Front", new TurretPosition(Constants.TURRET.SERVO.kHomePosition - 180, 0.1));

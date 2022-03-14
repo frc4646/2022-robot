@@ -13,31 +13,21 @@ import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.shooter.ShooterOpenLoop;
 import frc.robot.subsystems.ColorSensor.STATE;
 
-public class TestAuto extends SequentialCommandGroup {
+public class TestAutoPathweaver extends SequentialCommandGroup {
 
-  public TestAuto() {
+  public TestAutoPathweaver() {
     addCommands(
-      new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(AutoTrajectories.midGrabCargo.getInitialPose()); }),   
+      new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(GeneratedPaths.MidStart_MidCargo.getInitialPose()); }),   
       new DeployIntake(),
       new WaitCommand(1.0),
-        sequence(
-          new DriveTrajectory(AutoTrajectories.midGrabCargo)
-      ),
+      new DriveTrajectory(GeneratedPaths.MidStart_MidCargo),
       new WaitCommand(.2),
-      parallel(        
-        new DriveTrajectory(AutoTrajectories.midShoot),
-        sequence(
-          new WaitForColorState(STATE.CORRECT).withTimeout(2.0),
-          new AgitateOpenLoop(0.0)
-        )
-      ),      
+      new WaitForColorState(STATE.CORRECT).withTimeout(2.0),
       new ShootVision(),
-      parallel(
-        new FeederOpenLoop(0.0),
-        new ShooterOpenLoop(0.0)
-      ),
-      // new DriveTrajectory(AutoTrajectories.midCargoToAllianceWall)
-      new DriveTrajectory(AutoTrajectories.midCargoToHumanPlayer)
+      new AgitateOpenLoop(0.0),
+      new FeederOpenLoop(0.0),
+      new ShooterOpenLoop(0.0),
+      new DriveTrajectory(GeneratedPaths.MidCargo_Terminal)
     );
   }  
 
