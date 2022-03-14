@@ -9,7 +9,6 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class DriveTrajectory extends SequentialCommandGroup {
-  /** Add your docs here. */
   public DriveTrajectory(Trajectory trajectory) {
     addCommands(
       new RamseteCommand(

@@ -10,7 +10,6 @@ import frc.robot.commands.climber.ClimberEnableLimits;
 import frc.robot.commands.climber.ClimberZero;
 import frc.robot.commands.feeder.FeederPosition;
 import frc.robot.commands.sequence.ClimbMode;
-import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.ExhaustIntake;
 import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.ShootVision;
@@ -49,8 +48,6 @@ public class OperatorControls {
     // aimFar.whenActive(new HoodExtend(true));
 
     // Intake
-    // buttonY.whenPressed(new DeployIntake());
-    // buttonY.whenReleased(new StowIntake());
     buttonY.and(Fn).whenActive(new ExhaustIntake());  // TODO just on regular button?
     buttonY.and(Fn).whenInactive(new StowIntake());
     buttonA.whenActive(new ExhaustIntake());

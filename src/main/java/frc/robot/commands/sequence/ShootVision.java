@@ -17,9 +17,8 @@ public class ShootVision extends SequentialCommandGroup {
         ),
         new ShooterAim(),
         new AgitateOpenLoop(Constants.AGITATOR.OPEN_LOOP_SHOOT)
-        // TODO should drivetrain lock?
       ),
-      new ShooterLockRPM(),
+      new ShooterLockRPM(),  // Protect form obstructions, ex: first cargo in flight
       new FireCargo()
     );
   }

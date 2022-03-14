@@ -6,13 +6,11 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
 
 public class AgitatorAuto extends CommandBase {
   private Agitator subsystem = RobotContainer.AGITATOR;
   private Climber climber = RobotContainer.CLIMBER;
   private Intake intake = RobotContainer.INTAKE;
-  private Shooter shooter = RobotContainer.SHOOTER;
 
   public AgitatorAuto() {
     addRequirements(subsystem);

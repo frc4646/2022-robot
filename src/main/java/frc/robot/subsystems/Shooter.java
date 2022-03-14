@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.team254.drivers.TalonFXFactory;
 import frc.team254.drivers.TalonUtil;
-import frc.team254.util.Util;
 import frc.team4646.Test;
 
 public class Shooter extends SmartSubsystem {

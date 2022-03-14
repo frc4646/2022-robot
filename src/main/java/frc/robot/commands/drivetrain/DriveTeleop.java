@@ -31,9 +31,7 @@ public class DriveTeleop extends CommandBase {
     if (shooter.isShooting()) {
       stickThrottle = stickThrottle * 0.05;
     }
-    // Using Slew Rate Limiter: See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/slew-rate-limiter.html#using-a-slewratelimiter-with-differentialdrive
     final double throttle = throttleAccelLimiter.calculate(stickThrottle);
-    // final double throttle = controls.getThrottle();
     final DriveSignal output = steeringController.cheesyDrive(throttle, controls.getTurning(), controls.getQuickturn());
     subsystem.setOpenLoop(output.getLeft(), output.getRight());
   }

@@ -6,11 +6,9 @@ import frc.robot.subsystems.Intake;
 
 public class IntakeExtend extends InstantCommand {
   private final Intake subsystem = RobotContainer.INTAKE;
-
   public final boolean extend;
 
   public IntakeExtend(boolean isWantExtended) {
-    addRequirements(subsystem);
     this.extend = isWantExtended;
   }
 

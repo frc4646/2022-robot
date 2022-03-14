@@ -13,7 +13,7 @@ public class StowIntake extends SequentialCommandGroup {
   public StowIntake() {
     addCommands(
       new IntakeExtend(false),
-      new ScheduleCommand(new FeederLoadCargo().withTimeout(2.0)),  // Keep running without group
+      new ScheduleCommand(new FeederLoadCargo().withTimeout(2.0)),  // TODO might be causing outer gruops to pause
       new IntakeActivate(0.0),
       new WaitCommand(Constants.AGITATOR.TIMEOUT_STOW).andThen(new AgitateOpenLoop(0.0))  // Let agitators settle cargo
     );

@@ -5,8 +5,8 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 
 public class ClimberArms extends InstantCommand {
-  final Climber subsystem = RobotContainer.CLIMBER;
-  final boolean extend;
+  private final Climber subsystem = RobotContainer.CLIMBER;
+  private final boolean extend;
 
   public ClimberArms(boolean extend) {
     this.extend = extend;

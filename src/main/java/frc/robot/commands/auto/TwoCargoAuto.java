@@ -47,9 +47,9 @@ public class TwoCargoAuto extends SequentialCommandGroup {
 
   @Override
   public void end(boolean isInterrupted) {
-    RobotContainer.FEEDER.setOpenLoop(0);
-    RobotContainer.AGITATOR.setOpenLoop(0);
+    RobotContainer.FEEDER.setOpenLoop(0.0);
+    RobotContainer.AGITATOR.setOpenLoop(0.0);
     RobotContainer.INTAKE.setExtend(false);
-    RobotContainer.INTAKE.setOpenLoop(0);
+    RobotContainer.INTAKE.setOpenLoop(0.0);
   }
 }

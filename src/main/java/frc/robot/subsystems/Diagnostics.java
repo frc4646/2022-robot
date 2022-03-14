@@ -55,9 +55,4 @@ public class Diagnostics extends SmartSubsystem {
     robotState = modeDefault;
     isCriticalIssuePresent = false;
   }
-
-  @Override
-  public void runTests() {
-    // TODO rumble test?
-  }
 }
