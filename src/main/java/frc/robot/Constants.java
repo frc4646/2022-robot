@@ -114,14 +114,17 @@ public final class Constants {
       FEED_FORWARD_GAIN_STATIC = 0.31492,  // Tuned 3/6
       FEED_FORWARD_GAIN_VELOCITY = 2.87,
       FEED_FORWARD_GAIN_ACCEL = 0.81851,
-      P_LEFT = 0.001,  // Tuned 3/6
-      I_LEFT = 0.0,
-      D_LEFT = 0.0,
-      F_LEFT = 0.0,
-      P_RIGHT = 0.001,
-      I_RIGHT = 0.0,
-      D_RIGHT = 0.0,
-      F_RIGHT = 0.0;
+      VOLTAGE_P = 0.001,  // Tuned 3/6
+      VOLTAGE_I = 0.0,
+      VOLTAGE_D = 0.0,
+      VELOCITY_L_P = 0.0,
+      VELOCITY_L_I = 0.0,
+      VELOCITY_L_D = 0.0,
+      VELOCITY_L_F = 0.0,
+      VELOCITY_R_P = 0.0,
+      VELOCITY_R_I = 0.0,
+      VELOCITY_R_D = 0.0,
+      VELOCITY_R_F = 0.0;
       //Left and right should be tuned via a step response to a velocity change - P = V, D = A, I = dist. Start
 
     public static final boolean IS_LEFT_ENCODER_INVERTED = false;
@@ -139,16 +142,15 @@ public final class Constants {
       RAMSETE_B = 1.0,     // FRC recommends 2.0
       RAMSETE_ZETA = 0.5;  // FRC recommends 0.7
       
-    public static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
-      FEED_FORWARD, DRIVE_KINEMATICS, AUTO_MAX_VOLTS
-    );
+    public static final DifferentialDriveVoltageConstraint
+      AUTO_VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(FEED_FORWARD, DRIVE_KINEMATICS, AUTO_MAX_VOLTS);
     public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED)
       .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
       .addConstraint(AUTO_VOLTAGE_CONSTRAINT);
-      public static final TrajectoryConfig TRAJECTORY_CONFIG_REVERSED = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED)
-        .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
-        .addConstraint(AUTO_VOLTAGE_CONSTRAINT)
-        .setReversed(true);
+    public static final TrajectoryConfig TRAJECTORY_CONFIG_REVERSED = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED)
+      .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
+      .addConstraint(AUTO_VOLTAGE_CONSTRAINT)
+      .setReversed(true);
   }
 
   public static final class FEEDER {

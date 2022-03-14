@@ -60,11 +60,12 @@ public class Drivetrain extends SmartSubsystem {
     motor.enableVoltageCompensation(Constants.DRIVETRAIN.VOLTAGE_COMPENSATION);
     motor.setSmartCurrentLimit(Constants.DRIVETRAIN.CURRENT_LIMIT);
     if (isMaster) {
-      motor.getPIDController().setP(isLeft ? Constants.DRIVETRAIN.P_LEFT : Constants.DRIVETRAIN.P_RIGHT);
-      motor.getPIDController().setI(isLeft ? Constants.DRIVETRAIN.I_LEFT : Constants.DRIVETRAIN.I_RIGHT);
-      motor.getPIDController().setD(isLeft ? Constants.DRIVETRAIN.D_LEFT : Constants.DRIVETRAIN.D_RIGHT);
-      motor.getPIDController().setFF(isLeft ? Constants.DRIVETRAIN.F_LEFT : Constants.DRIVETRAIN.F_RIGHT);
-      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 5);  // TODO try 10
+      motor.getPIDController().setP(isLeft ? Constants.DRIVETRAIN.VELOCITY_L_P : Constants.DRIVETRAIN.VELOCITY_R_P);
+      motor.getPIDController().setI(isLeft ? Constants.DRIVETRAIN.VELOCITY_L_I : Constants.DRIVETRAIN.VELOCITY_R_I);
+      motor.getPIDController().setD(isLeft ? Constants.DRIVETRAIN.VELOCITY_L_D : Constants.DRIVETRAIN.VELOCITY_R_D);
+      motor.getPIDController().setFF(isLeft ? Constants.DRIVETRAIN.VELOCITY_L_F : Constants.DRIVETRAIN.VELOCITY_R_F);
+      // motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);  // Velocity
+      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 5);  // Position TODO try 10
     }
   }
 
@@ -86,8 +87,8 @@ public class Drivetrain extends SmartSubsystem {
       SmartDashboard.putNumber("Drive: Pitch", cache.pitch.getDegrees());
     }
     if (Constants.DRIVETRAIN.TUNING) {
-      SmartDashboard.putNumber("Drive: Distance L", cache.distanceL);
-      SmartDashboard.putNumber("Drive: Distance R", cache.distanceR);
+      // SmartDashboard.putNumber("Drive: Distance L", cache.distanceL);
+      // SmartDashboard.putNumber("Drive: Distance R", cache.distanceR);
       SmartDashboard.putNumber("Drive: RPM L", cache.rpmL);
       SmartDashboard.putNumber("Drive: RPM R", cache.rpmR);
       SmartDashboard.putNumber("Drive: X", odometry.getPoseMeters().getX());
@@ -129,13 +130,14 @@ public class Drivetrain extends SmartSubsystem {
     masterR.set(right/12.0);
   }
 
-  public void setClosedLoopVelocity(DifferentialDriveWheelSpeeds speeds) {
-    double feedforwardL = Constants.DRIVETRAIN.FEED_FORWARD.calculate(speeds.leftMetersPerSecond);
-    double feedforwardR = Constants.DRIVETRAIN.FEED_FORWARD.calculate(speeds.rightMetersPerSecond);
-    masterL.getPIDController().setReference(feedforwardL, ControlType.kDutyCycle);
-    masterR.getPIDController().setReference(feedforwardR, ControlType.kDutyCycle);
+  public void setClosedLoopVelocity(double wheelSpeedL, double wheelSpeedR) {
+    // double feedforwardL = Constants.DRIVETRAIN.FEED_FORWARD.calculate(speeds.leftMetersPerSecond);
+    // double feedforwardR = Constants.DRIVETRAIN.FEED_FORWARD.calculate(speeds.rightMetersPerSecond);
+    // TODO adjust feed forward using measured gains?
+    masterL.getPIDController().setReference(metersToRotations(wheelSpeedL), ControlType.kDutyCycle);
+    masterR.getPIDController().setReference(metersToRotations(wheelSpeedR), ControlType.kDutyCycle);
   }
-  
+
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(rotationsToMeters(cache.rpmL), rotationsToMeters(cache.rpmR));
   }
@@ -148,6 +150,9 @@ public class Drivetrain extends SmartSubsystem {
 
   private double rotationsToMeters(double rotations) {
     return rotations / Constants.DRIVETRAIN.GEAR_RATIO * Constants.DRIVETRAIN.WHEEL_DIAMETER * Math.PI * 0.0254;
+  }
+  private double metersToRotations(double meters) {
+    return meters * Constants.DRIVETRAIN.GEAR_RATIO / Constants.DRIVETRAIN.WHEEL_DIAMETER / Math.PI / 0.0254;
   }
 
   @Override

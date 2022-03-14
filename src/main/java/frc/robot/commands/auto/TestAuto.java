@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.commands.agitator.AgitateOpenLoop;
-import frc.robot.commands.drivetrain.DriveTrajectory;
+import frc.robot.commands.drivetrain.DrivePath;
 import frc.robot.commands.feeder.FeederOpenLoop;
 import frc.robot.commands.feeder.WaitForColorState;
 import frc.robot.commands.intake.IntakeActivate;
@@ -55,7 +55,7 @@ public class TestAuto extends SequentialCommandGroup {
       new WaitCommand(TIME_INTAKE_DEPLOY),
       deadline(
         race(
-          new DriveTrajectory(pathCargo2),
+          new DrivePath(pathCargo2),
           new WaitForColorState(STATE.CORRECT)
         ),
         new WaitCommand(0.25).andThen(new ShooterRev(115.0))
@@ -70,10 +70,10 @@ public class TestAuto extends SequentialCommandGroup {
         // new FeederOpenLoop(0.0)
       ),
       deadline(
-        new DriveTrajectory(pathHumanPlayer),
+        new DrivePath(pathHumanPlayer),
         new WaitCommand(0.25).andThen(new DeployIntake())
       ),
-      new DriveTrajectory(pathShoot3And4),
+      new DrivePath(pathShoot3And4),
       parallel(
         new WaitCommand(TIME_CANCEL_MOMENTUM),
         new IntakeExtend(false).andThen(new IntakeActivate(0.0))

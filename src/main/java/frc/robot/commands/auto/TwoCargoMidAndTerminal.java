@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.commands.agitator.AgitateOpenLoop;
-import frc.robot.commands.drivetrain.DriveTrajectory;
+import frc.robot.commands.drivetrain.DrivePath;
 import frc.robot.commands.feeder.FeederOpenLoop;
 import frc.robot.commands.feeder.WaitForColorState;
 import frc.robot.commands.sequence.DeployIntake;
@@ -23,11 +23,11 @@ public class TwoCargoMidAndTerminal extends SequentialCommandGroup {
       new DeployIntake(),
       new WaitCommand(1.0),
         sequence(
-          new DriveTrajectory(AutoTrajectories.midGrabCargo)
+          new DrivePath(AutoTrajectories.midGrabCargo)
       ),
       new WaitCommand(.2),
       parallel(        
-        new DriveTrajectory(AutoTrajectories.midShoot),
+        new DrivePath(AutoTrajectories.midShoot),
         sequence(
           new WaitForColorState(STATE.CORRECT).withTimeout(2.0),
           new AgitateOpenLoop(0.0)
@@ -39,7 +39,7 @@ public class TwoCargoMidAndTerminal extends SequentialCommandGroup {
         new ShooterOpenLoop(0.0)
       ),
       // new DriveTrajectory(AutoTrajectories.midCargoToAllianceWall)
-      new DriveTrajectory(AutoTrajectories.midCargoToHumanPlayer)
+      new DrivePath(AutoTrajectories.midCargoToHumanPlayer)
     );
   }  
 
