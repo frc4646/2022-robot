@@ -5,6 +5,7 @@ import frc.robot.Constants;
 import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.feeder.FeederLoadCargo;
 import frc.robot.commands.shooter.ShooterAim;
+import frc.robot.commands.shooter.ShooterLockRPM;
 
 public class ShootVision extends SequentialCommandGroup {
   public ShootVision() {
@@ -18,6 +19,7 @@ public class ShootVision extends SequentialCommandGroup {
         new AgitateOpenLoop(Constants.AGITATOR.OPEN_LOOP_SHOOT)
         // TODO should drivetrain lock?
       ),
+      new ShooterLockRPM(),
       new FireCargo()
     );
   }

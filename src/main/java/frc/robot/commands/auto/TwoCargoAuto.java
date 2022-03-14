@@ -57,6 +57,6 @@ public class TwoCargoAuto extends SequentialCommandGroup {
     RobotContainer.FEEDER.setOpenLoop(0);
     RobotContainer.AGITATOR.setOpenLoop(0);
     RobotContainer.INTAKE.setExtend(false);
-    RobotContainer.INTAKE.setIntakeSpeed(0);
+    RobotContainer.INTAKE.setOpenLoop(0);
   }
 }

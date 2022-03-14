@@ -40,10 +40,10 @@ public class Turret extends ServoMotorSubsystem {
   public void updateDashboard(boolean showDetails) {
     super.updateDashboard(showDetails);
     if(showDetails) {
-      SmartDashboard.putBoolean("Turret: Limit F", cache.limitF);
-      SmartDashboard.putBoolean("Turret: Limit R", cache.limitR);
     }
     if (Constants.TURRET.TUNING) {
+      SmartDashboard.putBoolean("Turret: Limit F", cache.limitF);
+      SmartDashboard.putBoolean("Turret: Limit R", cache.limitR);
       SmartDashboard.putNumber("Turret: Error", mPeriodicIO.error_ticks);
       SmartDashboard.putNumber("Turret: Velocity", mPeriodicIO.velocity_ticks_per_100ms);
       SmartDashboard.putBoolean("Turret: Zeroed", mHasBeenZeroed);
@@ -79,6 +79,13 @@ public class Turret extends ServoMotorSubsystem {
 
   public boolean isOnTarget() {
     return true; // TODO Math.abs(mPeriodicIO.error_ticks) < 1.0 * Constants.Turret.SERVO.kTicksPerUnitDistance;
+  }  
+
+  public boolean isInDeadzone() {
+    double position = getPosition();
+    boolean inDeadzoneR = position < 115.0 && position > 45.0;
+    boolean inDeadzoneL = position > 245.0 && position < 315.0;
+    return inDeadzoneR || inDeadzoneL;
   }
 
   @Override

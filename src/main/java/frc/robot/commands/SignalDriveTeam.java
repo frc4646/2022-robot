@@ -28,30 +28,21 @@ public class SignalDriveTeam extends CommandBase {
   public void execute() {
     if (isTurretFaultPresent()) {
       diagnostics.setState(Constants.DIAGNOSTICS.FAULT_TURRET);
-    // } else if (isWrongAllianceCargoPresent()) {
-    //   diagnostics.setState(Constants.DIAGNOSTICS.FAULT_CARGO);
     // } else if (isClimbing()) {
     //   diagnostics.setState(Constants.DIAGNOSTICS.CLIMBING);
-    // } else if (isVisionOutOfRange()) {
-    //   diagnostics.setState(Constants.DIAGNOSTICS.FAULT_OUTSIDE_VISION_RANGE);
-    // } else if (isShooting()) {
-    //   diagnostics.setState(Constants.DIAGNOSTICS.SHOOTING);
-    // } else if (isTurretAimed()) {
-    //   diagnostics.setState(Constants.DIAGNOSTICS.TURRET_AIMED);
     } else if (canPressShoot()) {
       diagnostics.setState(Constants.DIAGNOSTICS.CAN_PRESS_SHOOT);
+    } else if (isCargoLoaded()) {
+      diagnostics.setState(Constants.DIAGNOSTICS.CARGO_LOADED);
     } else {
       diagnostics.setStateOkay();
     }
   }
 
-  private boolean canPressShoot() { return vision.isInShootRange() && feeder.isShooterLoaded(); }
-  private boolean isTurretAimed() { return vision.isTargetPresent() && turret.isOnTarget(); }
-  private boolean isWrongAllianceCargoPresent() { return colorSensor.isWrongCargo(); }
+  private boolean canPressShoot() { return vision.isTargetPresent() && vision.isInShootRange() && feeder.isShooterLoaded() && !turret.isInDeadzone(); }
+  private boolean isCargoLoaded() { return feeder.isShooterLoaded(); }
   private boolean isClimbing() { return climber.isInClimbMode(); }
-  private boolean isShooting() { return shooter.isShooting(); }
   private boolean isTurretFaultPresent() { return !turret.hasBeenZeroed(); }
-  private boolean isVisionOutOfRange() { return !vision.isInShootRange(); };
 
   @Override
   public boolean runsWhenDisabled() {

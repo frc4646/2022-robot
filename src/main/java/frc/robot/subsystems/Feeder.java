@@ -20,10 +20,8 @@ public class Feeder extends SmartSubsystem {
 
   private final CANSparkMax motor;
   private final DigitalInput breakBeam;
-  private final ColorSensor colorSensor = RobotContainer.COLOR_SENSOR;
   private DataCache cache = new DataCache();
   private double demand = 0.0;
-  private int stableColorCounts = 0;
 
   public Feeder() {
     motor = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.FEEDER);
@@ -43,10 +41,6 @@ public class Feeder extends SmartSubsystem {
   public void cacheSensors () {
     cache.shooterLoaded = !breakBeam.get();
     cache.position = motor.getEncoder().getPosition();
-    // stableColorCounts++;
-    // if (true) {
-    //   stableColorCounts = 0;
-    // }
   }
 
   @Override

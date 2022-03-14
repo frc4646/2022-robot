@@ -11,7 +11,6 @@ public class DriverControls {
   DriverControls() {
     throttle = new Joystick(0);
     turn = new Joystick(1);
-
   }
   
   public void configureButtons() {
@@ -20,16 +19,7 @@ public class DriverControls {
     button.whenReleased(new StowIntake());
   }
 
-  public double getThrottle() {
-    return -throttle.getRawAxis(1);
-  }
-
-  public double getTurning() {
-    return turn.getRawAxis(0);
-  }
-
-  public boolean getQuickturn() {
-    return turn.getRawButton(1);
-  }
-  
+  public double getThrottle() { return -throttle.getRawAxis(1); }
+  public double getTurning() { return turn.getRawAxis(0); }
+  public boolean getQuickturn() { return turn.getRawButton(1); }  
 }

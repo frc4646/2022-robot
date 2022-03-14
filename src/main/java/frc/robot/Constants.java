@@ -89,8 +89,7 @@ public final class Constants {
       FAULT_TURRET = new DiagnosticState(new LEDColor(1.0, 1.0, 0.0), true),
       FAULT_OUTSIDE_VISION_RANGE = new DiagnosticState(new LEDColor(0.6, 0.0, 0.0)),
       CLIMBING = new DiagnosticState(new LEDColor(0.0, 1.0, 1.0)),
-      SHOOTING = new DiagnosticState(new LEDColor(0.0, 0.0, 1.0)),
-      TURRET_AIMED = new DiagnosticState(new LEDColor(0.0, 0.1, 0.1)),
+      CARGO_LOADED = new DiagnosticState(new LEDColor(0.3, 0.0, 0.3)),
       CAN_PRESS_SHOOT = new DiagnosticState(new LEDColor(0.0, 1.0, 0.0));
   }
 
@@ -253,7 +252,7 @@ public final class Constants {
   }
 
   public static final class VISION {
-    public static final boolean TUNING = true;
+    public static final boolean TUNING = false;
 
     public static int STABLE_COUNTS = 2;
 
@@ -279,9 +278,10 @@ public final class Constants {
     }
     public static final double
       DISTANCE_USABLE_MIN = 45.0,
-      DISTANCE_USABLE_MAX = 160.0;
+      DISTANCE_USABLE_MAX = 160.0,
+      RPM_USABLE_MIN = 2050.0;
     static {
-      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MIN), new InterpolatingDouble(2050.0));
+      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MIN), new InterpolatingDouble(RPM_USABLE_MIN));
       RPM_MAP.put(new InterpolatingDouble(51.5), new InterpolatingDouble(2100.0));  // tuned 2/27
       RPM_MAP.put(new InterpolatingDouble(71.6), new InterpolatingDouble(2200.0));
       RPM_MAP.put(new InterpolatingDouble(89.3), new InterpolatingDouble(2325.0));

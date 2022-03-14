@@ -31,7 +31,7 @@ public class Intake extends SmartSubsystem {
     setExtend(false);  // solenoid default is OFF, not IN
   }
 
-  public void setIntakeSpeed (double intakeSpeed) {
+  public void setOpenLoop (double intakeSpeed) {
     motor.set(ControlMode.PercentOutput, intakeSpeed);
   }
 

@@ -16,6 +16,6 @@ public class IntakeActivate extends InstantCommand {
 
   @Override
   public void initialize() {
-    subsystem.setIntakeSpeed(intakeSpeed);
+    subsystem.setOpenLoop(intakeSpeed);
   }
 }

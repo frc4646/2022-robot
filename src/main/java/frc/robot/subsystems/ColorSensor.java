@@ -30,6 +30,7 @@ public class ColorSensor extends SmartSubsystem {
 
   private Color colorAlliance = Constants.COLORSENSOR.MATCH_RED;
   private Color colorOpponent = Constants.COLORSENSOR.MATCH_RED;
+  private int countsCorrect = 0, countsWrong = 0;
 
   public ColorSensor() {
     colorSensor = new ColorSensorV3(Constants.COLORSENSOR.I2C_PORT);
@@ -60,14 +61,24 @@ public class ColorSensor extends SmartSubsystem {
       cache.state = STATE.WRONG;
     else
       cache.state = STATE.UNKNOWN_COLOR;
+    
+    countsCorrect++;
+    if (cache.state != STATE.CORRECT) {
+      countsCorrect = 0;
+    }
+    countsWrong++;
+    if (cache.state != STATE.WRONG) {
+      countsWrong = 0;
+    }
   }
 
   @Override
   public void updateDashboard(boolean showDetails) {
-    SmartDashboard.putBoolean("Color: Correct", getState() == STATE.CORRECT);
+    SmartDashboard.putString("Color: State", getState().toString());
     if (showDetails) {
-      SmartDashboard.putString("Color: State", getState().toString());
       SmartDashboard.putNumber("Color: Distance", cache.distance);
+      SmartDashboard.putNumber("Color: Counts Correct", countsCorrect);
+      SmartDashboard.putNumber("Color: Counts Wrong", countsWrong);
     }
     if (Constants.COLORSENSOR.TUNING) {
       SmartDashboard.putNumber("Color: Confidence", cache.match.confidence);

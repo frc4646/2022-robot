@@ -25,23 +25,16 @@ public class TurretAim extends CommandBase {
     int snap = operator.getTurretSnap();
 
     if (isVisionWanted(position)) {
-      setpoint -= vision.getDegreesX();
+      setpoint -= vision.getTurretSetpoint();
     } else if (snap != -1) {
       setpoint = snap;
     } else if (Math.abs(stick) >= Constants.TURRET.STICK_DEADBAND) {
       setpoint += stick * Constants.TURRET.STICK_GAIN;
-      // turret.setOpenLoop(stick);
     }
     turret.setSetpointMotionMagic(setpoint, feedforward);
   }
 
   private boolean isVisionWanted(double position) {
-    return vision.isTargetPresent() && !operator.getFn() && !isInDeadzone(position);
-  }
-
-  private boolean isInDeadzone(double position) {
-    boolean inDeadzoneR = position < 115.0 && position > 45.0;
-    boolean inDeadzoneL = position > 245.0 && position < 315.0;
-    return inDeadzoneR || inDeadzoneL;
+    return vision.isTargetPresent() && !operator.getFn() && !turret.isInDeadzone();
   }
 }

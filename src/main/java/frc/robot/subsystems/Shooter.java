@@ -97,8 +97,9 @@ public class Shooter extends SmartSubsystem {
 
   public double getAmpsStator() { return (cache.ampsStatorL + cache.ampsStatorR) / 2.0; }
   public double getRPM() { return (cache.rpmL + cache.rpmR) / 2.0; }
+  public double getSetpoint() { return demand; }
 
-  public boolean isShooting() { return !Util.epsilonEquals(demand, 0.0); }
+  public boolean isShooting() { return demand >= Constants.VISION.RPM_USABLE_MIN * 0.9; }
   public boolean isStable() { return stableCounts >= Constants.SHOOTER.STABLE_COUNTS; }
 
   private double nativeUnitsToRPM(double ticks_per_100_ms) { return ticks_per_100_ms * 10.0 * 60.0 / Constants.SHOOTER.TICKS_PER_REV; }
