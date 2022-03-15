@@ -8,7 +8,7 @@ import frc.team254.drivers.SparkMaxFactory;
 import frc.team4646.Test;
 
 public class Agitator extends SmartSubsystem {
-  private final CANSparkMax masterL, slaveR;
+  private final CANSparkMax masterL, masterR;
 
   public Agitator() {
     masterL = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.AGITATOR_L, true);
@@ -16,19 +16,20 @@ public class Agitator extends SmartSubsystem {
     masterL.enableVoltageCompensation(12.0);
     masterL.setOpenLoopRampRate(Constants.AGITATOR.OPEN_LOOP_RAMP);
 
-    slaveR = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.AGITATOR_R, masterL, true);
-    slaveR.setIdleMode(IdleMode.kBrake);
-    slaveR.enableVoltageCompensation(12.0);
-    slaveR.setOpenLoopRampRate(Constants.AGITATOR.OPEN_LOOP_RAMP);    
+    masterR = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.AGITATOR_R, false);
+    masterR.setIdleMode(IdleMode.kBrake);
+    masterR.enableVoltageCompensation(12.0);
+    masterR.setOpenLoopRampRate(Constants.AGITATOR.OPEN_LOOP_RAMP);    
   }
 
   public void setOpenLoop(double percent) {
-    masterL.set(percent);
+    masterL.set(percent);   // todo make these pulse
+    masterR.set(percent*.5);   // todo make these pulse
   }
 
   @Override
   public void runTests() {
     Test.checkFirmware(this, masterL);
-    Test.checkFirmware(this, slaveR);    
+    Test.checkFirmware(this, masterR);  
   }
 }

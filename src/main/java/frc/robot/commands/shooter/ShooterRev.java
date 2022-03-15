@@ -17,7 +17,7 @@ public class ShooterRev extends InstantCommand {
 
   @Override
   public void initialize() {
-        double rpm = Constants.VISION.RPM_MAP.getInterpolated(new InterpolatingDouble(distance)).value;
+        double rpm = Constants.VISION.RPM_BOTTOM.getInterpolated(new InterpolatingDouble(distance)).value;
     subsystem.setClosedLoop(rpm);
   }
 }

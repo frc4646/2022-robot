@@ -3,14 +3,14 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterTop;
 
-public class ShooterTune extends CommandBase {
-  public static final String DASHBOARD_KEY_SHOOTER_TUNE = "Tune: Shoot RPM";
+public class ShooterTopTune extends CommandBase {
+  public static final String DASHBOARD_KEY_SHOOTER_TUNE = "Tune: ShootTop RPM";
   
-  private Shooter subsystem = RobotContainer.SHOOTER;
+  private ShooterTop subsystem = RobotContainer.SHOOTER_TOP;
 
-  public ShooterTune() {
+  public ShooterTopTune() {
     addRequirements(subsystem);
     SmartDashboard.putNumber(DASHBOARD_KEY_SHOOTER_TUNE, 0.0);
   }

@@ -8,9 +8,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.climber.ClimberArms;
 import frc.robot.commands.climber.ClimberEnableLimits;
 import frc.robot.commands.climber.ClimberZero;
+import frc.robot.commands.feeder.FeederLoadCargo;
+import frc.robot.commands.feeder.FeederOpenLoop;
 import frc.robot.commands.feeder.FeederPosition;
 import frc.robot.commands.sequence.ClimbMode;
 import frc.robot.commands.sequence.ExhaustIntake;
+import frc.robot.commands.sequence.FireCargo;
 import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.sequence.StowIntake;
@@ -35,6 +38,9 @@ public class OperatorControls {
   }
 
   public void configureButtons() {
+    // TEMPORARY CODE
+    buttonY.whenActive(new FireCargo());
+
     // Climber
     start.whenPressed(new ClimberArms(true));  // TODO move to alt buttons when in climb mode?
     start.whenReleased(new ClimberArms(false));

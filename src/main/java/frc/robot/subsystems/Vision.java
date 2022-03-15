@@ -18,8 +18,8 @@ public class Vision extends SmartSubsystem {
     public boolean seesTarget;  // Whether the limelight has any valid targets (0 or 1)
     public int modeLED = LEDMode.PIPELINE.ordinal();
     public double distanceCalculated;
-    public double rpmCalculated;
-    public double hoodCalculated;
+    public double rpmCalculatedBottom;
+    public double rpmCalculatedTop;
     public boolean inShootRange = false;
     public double distanceFiltered;
   }
@@ -63,8 +63,8 @@ public class Vision extends SmartSubsystem {
       noTargetCounts = 0;
     }
     cache.distanceCalculated = calculateGroundDistanceToHubInches();
-    cache.rpmCalculated = calculateShooterSetpoint();
-    cache.hoodCalculated = calculateHoodDegrees();
+    cache.rpmCalculatedBottom = calculateShooterSetpointBottom();
+    cache.rpmCalculatedTop = calculateShooterSetpointTop();
   }
 
   public void cacheFilter() {
@@ -80,7 +80,7 @@ public class Vision extends SmartSubsystem {
   @Override
   public void updateDashboard(boolean showDetails) {
     SmartDashboard.putBoolean("Vision: Target", cache.seesTarget);
-    SmartDashboard.putNumber("Vision: Distance", cache.distanceFiltered);  
+    SmartDashboard.putNumber("Vision: Distance", cache.distanceFiltered);
     SmartDashboard.putNumber("Vision: X", cache.xDegrees);
     if (Constants.VISION.TUNING) {
       SmartDashboard.putNumber("Vision: Area", cache.areaRaw);
@@ -107,8 +107,8 @@ public class Vision extends SmartSubsystem {
     }
   }
 
-  public double getHoodDegrees() { return cache.hoodCalculated; }
-  public double getShooterRPM() { return cache.rpmCalculated; }
+  public double getShooterRPMTop() { return cache.rpmCalculatedTop; }
+  public double getShooterRPMBottom() { return cache.rpmCalculatedBottom; }
   public double getTurretSetpoint() { return cache.xDegrees; }
 
   public boolean isTargetPresent() { return cache.seesTarget; }
@@ -123,18 +123,18 @@ public class Vision extends SmartSubsystem {
     return cache.distanceFiltered;  // Last known
   }
 
-  private double calculateShooterSetpoint() {
+  private double calculateShooterSetpointBottom() {
     if (isTargetPresent()) {
-      return Constants.VISION.RPM_MAP.getInterpolated(new InterpolatingDouble(cache.distanceFiltered)).value;
+      return Constants.VISION.RPM_BOTTOM.getInterpolated(new InterpolatingDouble(cache.distanceFiltered)).value;
     }
-    return cache.rpmCalculated;
+    return cache.rpmCalculatedBottom;
   }
 
-  private double calculateHoodDegrees() {
+  private double calculateShooterSetpointTop() {
     if (isTargetPresent()) {
-      return Constants.VISION.ANGLE_MAP.getInterpolated(new InterpolatingDouble(cache.distanceFiltered)).value;
+      return Constants.VISION.RPM_TOP.getInterpolated(new InterpolatingDouble(cache.distanceFiltered)).value;
     }
-    return Constants.HOOD.DEGREES_DEFAULT;
+    return cache.rpmCalculatedBottom;
   }
 
   @Override

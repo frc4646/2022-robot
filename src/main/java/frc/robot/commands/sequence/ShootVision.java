@@ -6,6 +6,8 @@ import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.feeder.FeederLoadCargo;
 import frc.robot.commands.shooter.ShooterAim;
 import frc.robot.commands.shooter.ShooterLockRPM;
+import frc.robot.commands.shooter.ShooterTopAim;
+import frc.robot.commands.shooter.ShooterTopLockRPM;
 
 public class ShootVision extends SequentialCommandGroup {
   public ShootVision() {
@@ -15,10 +17,16 @@ public class ShootVision extends SequentialCommandGroup {
           new WaitForAim(),
           new FeederLoadCargo()
         ),
-        new ShooterAim(),
+        parallel(
+          new ShooterAim(),
+          new ShooterTopAim()
+        ),
         new AgitateOpenLoop(Constants.AGITATOR.OPEN_LOOP_SHOOT)
       ),
-      new ShooterLockRPM(),  // Protect form obstructions, ex: first cargo in flight
+      parallel(
+        new ShooterLockRPM(),  // Protect form obstructions, ex: first cargo in flight
+        new ShooterTopLockRPM()
+      ),
       new FireCargo()
     );
   }

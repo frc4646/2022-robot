@@ -8,6 +8,9 @@ import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.drivetrain.DriveDisabled;
 import frc.robot.commands.feeder.FeederAuto;
 import frc.robot.commands.shooter.ShooterAuto;
+import frc.robot.commands.shooter.ShooterTopAuto;
+import frc.robot.commands.shooter.ShooterTopOpenLoop;
+import frc.robot.commands.shooter.ShooterTopVelocity;
 import frc.robot.commands.turret.TurretAim;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
@@ -25,6 +28,7 @@ import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.LEDMode;
 import frc.team4646.Test;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterTop;
 import frc.robot.subsystems.SmartSubsystem;
 import frc.robot.subsystems.Turret;
 
@@ -46,6 +50,7 @@ public class RobotContainer {
   public static Intake INTAKE;
   public static Infrastructure INFRASTRUCTURE;
   public static Shooter SHOOTER;
+  public static ShooterTop SHOOTER_TOP;
   public static Turret TURRET;
   public static Vision VISION;
 
@@ -67,10 +72,11 @@ public class RobotContainer {
     INFRASTRUCTURE = new Infrastructure();
     INTAKE = new Intake();
     SHOOTER = new Shooter();
+    SHOOTER_TOP = new ShooterTop();
     TURRET = new Turret();
     VISION = new Vision();
     DIAGNOSTICS = new Diagnostics();
-    allSubsystems = Arrays.asList(AGITATOR, CANIFIER, CLIMBER, COLOR_SENSOR, DRIVETRAIN, FEEDER, HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, TURRET, VISION, DIAGNOSTICS);
+    allSubsystems = Arrays.asList(AGITATOR, CANIFIER, CLIMBER, COLOR_SENSOR, DRIVETRAIN, FEEDER, HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, SHOOTER_TOP, TURRET, VISION, DIAGNOSTICS);
 
     CONTROLS.configureButtons();  // Must create buttons AFTER subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
@@ -82,6 +88,7 @@ public class RobotContainer {
     FEEDER.setDefaultCommand(new FeederAuto());
     // HOOD.setDefaultCommand(new HoodAim());
     SHOOTER.setDefaultCommand(new ShooterAuto());
+    SHOOTER_TOP.setDefaultCommand(new ShooterTopAuto());
     TURRET.setDefaultCommand(new TurretAim());
 
     autoModeSelector = new AutoModeSelector();

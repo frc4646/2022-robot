@@ -4,15 +4,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.controls.OperatorControls;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterTop;
 import frc.robot.subsystems.Vision;
 
-public class ShooterAim extends CommandBase {
-  private final Shooter shooter = RobotContainer.SHOOTER;
+public class ShooterTopAim extends CommandBase {
+  private final ShooterTop shooter = RobotContainer.SHOOTER_TOP;
   private final Vision vision = RobotContainer.VISION;
   private final OperatorControls operator = RobotContainer.CONTROLS.getOperator();
 
-  public ShooterAim() {
+  public ShooterTopAim() {
     addRequirements(shooter);
   }
 
@@ -24,7 +24,7 @@ public class ShooterAim extends CommandBase {
     boolean override = operator.getFn();
 
     if (vision.isTargetPresent() && !override) {
-      setpoint = vision.getShooterRPMBottom();
+      setpoint = vision.getShooterRPMTop();
     }
     shooter.setClosedLoop(setpoint + trim);
   }

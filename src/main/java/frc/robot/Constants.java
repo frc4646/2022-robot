@@ -27,7 +27,7 @@ public final class Constants {
     public static final int
       PNEUMATIC_CONTROL_MODULE = 0, POWER_DISTRIBUTION_PANEL = 2,
       DRIVETRAIN_FL = 24, DRIVETRAIN_BL = 23, DRIVETRAIN_BR = 22, DRIVETRAIN_FR = 21,
-      TALON_SHOOTER_L = 25, TALON_SHOOTER_R = 27,
+      TALON_SHOOTER_L = 25, TALON_SHOOTER_R = 27, TALON_SHOOTER_TOP = 28,
       CLIMBER_L = 13, CLIMBER_R = 14,
       INTAKE = 5, TURRET = 26, HOOD = 11,
       FEEDER = 8, AGITATOR_R = 31, AGITATOR_L = 32,
@@ -187,18 +187,36 @@ public final class Constants {
   }
 
   public static final class SHOOTER {
-    public static final boolean TUNING = false;
+    public static final boolean TUNING = true;
 
     public static int STABLE_COUNTS = 2;
     public static final double
       OPEN_LOOP_REV_SECONDS = 1.0,
-      RPM_MAX = 6380.0 * 1.084,  //  Tuned 2/22
+      RPM_MAX = 6380.0 * 1.105,  //  Tuned 2/22
       RPM_DEFAULT = 2200.0,
-      RPM_ERROR_ALLOWED = 30.0,  // Tuned 3/1, 25-50 seem to work well
+      RPM_ERROR_ALLOWED = 80.0,  // Tuned 3/1, 25-50 seem to work well
       RPM_TRIM = 150.0,
       DEADBAND = 0.05,
       TICKS_PER_REV = 2048.0,
       P = 0.01,  // Probably between 0.0075 and 0.25
+      I = 0.0,  // Use 0 if possible. But if we do use non-zero, make sure to use i zone
+      D = 0.0,  // Stay 0
+      F =  TICKS_PER_REV / RPM_MAX / 60.0 * 10.0;  // Equals 0.05029
+  }
+
+  public static final class SHOOTER_TOP {
+    public static final boolean TUNING = true;
+
+    public static int STABLE_COUNTS = 2;
+    public static final double
+      OPEN_LOOP_REV_SECONDS = 1.0,
+      RPM_MAX = 6380.0 * 1.25,  //  Tuned 2/22
+      RPM_DEFAULT = 2200.0,
+      RPM_ERROR_ALLOWED = 60.0,  // Tuned 3/1, 25-50 seem to work well
+      RPM_TRIM = 150.0,
+      DEADBAND = 0.05,
+      TICKS_PER_REV = 2048.0,
+      P = 0.02,  // Probably between 0.0075 and 0.25
       I = 0.0,  // Use 0 if possible. But if we do use non-zero, make sure to use i zone
       D = 0.0,  // Stay 0
       F =  TICKS_PER_REV / RPM_MAX / 60.0 * 10.0;  // Equals 0.05029
@@ -266,33 +284,25 @@ public final class Constants {
       CAMERA_MOUNTING_OFFSET = 16.0;  // Tuned 3/4
 
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>
-      LOB_RPMS = new InterpolatingTreeMap<>(),
-      LOB_DEGREES = new InterpolatingTreeMap<>(),
-      RPM_MAP = new InterpolatingTreeMap<>(),
-      ANGLE_MAP = new InterpolatingTreeMap<>();
-    static {
-      LOB_RPMS.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
-      LOB_RPMS.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
-    }
-    static {
-      LOB_DEGREES.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
-      LOB_DEGREES.put(new InterpolatingDouble(127.0), new InterpolatingDouble(2495.0));
-    }
+      RPM_BOTTOM = new InterpolatingTreeMap<>(),
+      RPM_TOP = new InterpolatingTreeMap<>();
     public static final double
-      DISTANCE_USABLE_MIN = 45.0,
-      DISTANCE_USABLE_MAX = 160.0,
-      RPM_USABLE_MIN = 2050.0;
+      DISTANCE_USABLE_MIN = 70.0,
+      DISTANCE_USABLE_MAX = 175.0,
+      RPM_USABLE_MIN = 1000.0;
     static {
-      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MIN), new InterpolatingDouble(RPM_USABLE_MIN));
-      RPM_MAP.put(new InterpolatingDouble(51.5), new InterpolatingDouble(2100.0));  // tuned 2/27
-      RPM_MAP.put(new InterpolatingDouble(71.6), new InterpolatingDouble(2200.0));
-      RPM_MAP.put(new InterpolatingDouble(89.3), new InterpolatingDouble(2325.0));
-      RPM_MAP.put(new InterpolatingDouble(100.0), new InterpolatingDouble(2400.0));
-      RPM_MAP.put(new InterpolatingDouble(140.0), new InterpolatingDouble(2750.0));
-      RPM_MAP.put(new InterpolatingDouble(DISTANCE_USABLE_MAX), new InterpolatingDouble(2900.0));
+      RPM_BOTTOM.put(new InterpolatingDouble(75.0), new InterpolatingDouble(1450.0));
+      RPM_BOTTOM.put(new InterpolatingDouble(90.0), new InterpolatingDouble(1500.0));
+      RPM_BOTTOM.put(new InterpolatingDouble(120.0), new InterpolatingDouble(1600.0));
+      RPM_BOTTOM.put(new InterpolatingDouble(150.0), new InterpolatingDouble(1700.0));
+      RPM_BOTTOM.put(new InterpolatingDouble(170.0), new InterpolatingDouble(1850.0));
     }
     static {
-      ANGLE_MAP.put(new InterpolatingDouble(114.0), new InterpolatingDouble(2320.0));
+      RPM_TOP.put(new InterpolatingDouble(75.0), new InterpolatingDouble(2800.0));
+      RPM_TOP.put(new InterpolatingDouble(90.0), new InterpolatingDouble(3000.0));
+      RPM_TOP.put(new InterpolatingDouble(120.0), new InterpolatingDouble(3200.0));
+      RPM_TOP.put(new InterpolatingDouble(150.0), new InterpolatingDouble(3400.0));
+      RPM_TOP.put(new InterpolatingDouble(170.0), new InterpolatingDouble(3700.0));
     }
   }
 

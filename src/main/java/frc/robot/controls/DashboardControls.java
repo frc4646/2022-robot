@@ -8,15 +8,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.feeder.FeederLoadCargo;
+import frc.robot.commands.sequence.FireCargo;
 import frc.robot.commands.sequence.TuneInterpolation;
+import frc.robot.commands.shooter.ShooterPairTune;
+import frc.robot.commands.shooter.ShooterTopTune;
+import frc.robot.commands.shooter.ShooterTopVelocity;
 import frc.robot.commands.shooter.ShooterTune;
 import frc.robot.commands.turret.TurretOpenLoop;
 import frc.robot.commands.turret.TurretPosition;
 
 public class DashboardControls {
   public void configureButtons() {
-    SmartDashboard.putNumber(ShooterTune.DASHBOARD_KEY_SHOOTER_TUNE, Constants.SHOOTER.RPM_DEFAULT);
-    SmartDashboard.putData("Tune: Shoot", new TuneInterpolation());
+    SmartDashboard.putData("FireCargo", new FireCargo());
+    SmartDashboard.putData("Tune: ShooterPair", new ShooterPairTune());
+
+    // SmartDashboard.putNumber(ShooterTune.DASHBOARD_KEY_SHOOTER_TUNE, Constants.SHOOTER.RPM_DEFAULT);
+    SmartDashboard.putData("Tune: ShootInterpolation", new TuneInterpolation());
+    SmartDashboard.putData("Tune: Shoot", new ShooterTune());
+
+    // SmartDashboard.putData("ShootTop 2500", new ShooterTopVelocity(2500.0));
+    SmartDashboard.putData("Tune: ShootTop", new ShooterTopTune());
     
     if (Constants.TURRET.TUNING) {
       SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.TURRET.SERVO.kHomePosition + 70.0, 0.1));
