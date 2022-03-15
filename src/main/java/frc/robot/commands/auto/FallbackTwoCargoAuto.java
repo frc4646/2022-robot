@@ -19,8 +19,8 @@ import frc.robot.subsystems.ColorSensor.STATE;
  * Time based grab a cargo and shoot it.
  * Not flexible enough for all 3 positions
  */
-public class TwoCargoAuto extends SequentialCommandGroup {
-  public TwoCargoAuto() {
+public class FallbackTwoCargoAuto extends SequentialCommandGroup {
+  public FallbackTwoCargoAuto() {
     addCommands(
       new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0))); }),
    
@@ -48,7 +48,7 @@ public class TwoCargoAuto extends SequentialCommandGroup {
   @Override
   public void end(boolean isInterrupted) {
     RobotContainer.FEEDER.setOpenLoop(0.0);
-    RobotContainer.AGITATOR.setOpenLoop(0.0);
+    RobotContainer.AGITATOR.setOpenLoop(0.0, 0.0);
     RobotContainer.INTAKE.setExtend(false);
     RobotContainer.INTAKE.setOpenLoop(0.0);
   }

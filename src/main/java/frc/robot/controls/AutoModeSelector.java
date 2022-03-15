@@ -6,10 +6,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.auto.TestAuto;
+import frc.robot.commands.auto.ModeMiddle;
 import frc.robot.commands.auto.TestAutoPathweaver;
-import frc.robot.commands.auto.TwoCargoAuto;
-import frc.robot.commands.auto.TwoCargoMidAndTerminal;
+import frc.robot.commands.auto.FallbackTwoCargoAuto;
+import frc.robot.commands.auto.ModeBase.STRATEGY_PHASE_2;
 
 public class AutoModeSelector {
   enum StartingPosition {
@@ -50,37 +50,36 @@ public class AutoModeSelector {
   private Optional<Command> getAutoModeForParams(DesiredMode mode, StartingPosition position) {
     switch (mode) {
       case TWO_CARGO:
-        return Optional.of(new TwoCargoAuto());
+        return Optional.of(new FallbackTwoCargoAuto());
 
       case TWO_CARGO_PLUS_TERMINAL:
         switch (position) {
           case LEFT:
-            return Optional.of(new TwoCargoAuto());
+            return Optional.of(new FallbackTwoCargoAuto());
           case MIDDLE:
-            return Optional.of(new TwoCargoMidAndTerminal());
+            return Optional.of(new ModeMiddle(STRATEGY_PHASE_2.HUMAN_PLAYER));
           case RIGHT:
-            return Optional.of(new TwoCargoAuto());
+            return Optional.of(new FallbackTwoCargoAuto());
         }
 
       case TWO_CARGO_PLUS_TERMINAL_PATHWEAVER:
         switch (position) {
           case LEFT:
-            return Optional.of(new TwoCargoAuto());
+            return Optional.of(new FallbackTwoCargoAuto());
           case MIDDLE:
             return Optional.of(new TestAutoPathweaver());
           case RIGHT:
-            return Optional.of(new TwoCargoAuto());
+            return Optional.of(new FallbackTwoCargoAuto());
         }
 
       case TEST_AUTO:
-        return Optional.of(new TestAuto());
+        return Optional.of(new ModeMiddle(STRATEGY_PHASE_2.HUMAN_PLAYER));
 
       default:
         System.err.println("No valid auto mode found for  " + mode);
         return Optional.of(new WaitCommand(15.0));
     }
-  }
-  
+  }  
 
   public void update() {
     DesiredMode desiredMode = modeSelector.getSelected();

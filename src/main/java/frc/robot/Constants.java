@@ -9,16 +9,13 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
 public final class Constants {
   public static int CAN_TIMEOUT = 100;
-
-  private static final String SHOW_DETAILS = "Show Details";
-  
+  public static final String SHOW_DETAILS = "Show Details";  
   static {
     SmartDashboard.putBoolean(SHOW_DETAILS, false);
   }
@@ -50,8 +47,8 @@ public final class Constants {
       OPEN_LOOP_EXHAUST = 0.90,
       OPEN_LOOP_LOAD = 0.45,
       OPEN_LOOP_SHOOT = 0.45,
-      OPEN_LOOP_RAMP = 0.125,  // TODO tune
-      TIMEOUT_STOW = 0.5;  // TODO tune
+      OPEN_LOOP_RAMP = 0.125,
+      TIMEOUT_STOW = 0.5;
   }
   
   public static final class CLIMBER {
@@ -64,7 +61,7 @@ public final class Constants {
       GEAR_RATIO = 72.0 / 14.0,  // TODO correct values
       TICKS_PER_UNIT_DISTANCE = 2048.0 * GEAR_RATIO,
       LIMIT_F = 999999.0,
-      POSITION_DEADBAND = 0.1,  // Tune
+      POSITION_DEADBAND = 0.1,
       P = 0.0,
       I = 0.0,
       D = 0.0,
@@ -75,7 +72,6 @@ public final class Constants {
     public static final boolean TUNING = false;
     
     public static final I2C.Port I2C_PORT = I2C.Port.kMXP;
-
     public static final int DISTANCE_MIN = 80;
     public static final Color 
       MATCH_BLUE = new Color(0.143, 0.427, 0.429), // TODO fill these out based on readings
@@ -83,11 +79,10 @@ public final class Constants {
   }
 
   public static final class DIAGNOSTICS {
-    public static final double RUMBLE_PERCENT = 0.2;  // TODO tune
+    public static final double RUMBLE_PERCENT = 0.2;
     public static final DiagnosticState
       FAULT_CARGO = new DiagnosticState(new LEDColor(1.0, 0.0, 1.0)),
       FAULT_TURRET = new DiagnosticState(new LEDColor(1.0, 1.0, 0.0), true),
-      FAULT_OUTSIDE_VISION_RANGE = new DiagnosticState(new LEDColor(0.6, 0.0, 0.0)),
       CLIMBING = new DiagnosticState(new LEDColor(0.0, 1.0, 1.0)),
       CARGO_LOADED = new DiagnosticState(new LEDColor(0.3, 0.0, 0.3)),
       CAN_PRESS_SHOOT = new DiagnosticState(new LEDColor(0.0, 1.0, 0.0));
@@ -160,7 +155,7 @@ public final class Constants {
       OPEN_LOOP_EXHAUST = 0.1,
       OPEN_LOOP_LOAD = 0.3,
       OPEN_LOOP_SHOOT = 0.5,
-      OPEN_LOOP_RAMP = 0.25,  // TODO tune
+      OPEN_LOOP_RAMP = 0.25,
       TIMEOUT_EXHAUST = 0.5,
       TIMEOUT_LOAD = 3.0,
       GEAR_RATIO = 72.0 / 14.0,
@@ -192,34 +187,28 @@ public final class Constants {
     public static int STABLE_COUNTS = 2;
     public static final double
       OPEN_LOOP_REV_SECONDS = 1.0,
-      RPM_MAX = 6380.0 * 1.105,  //  Tuned 2/22
+      RPM_MAX = 6380.0 * 1.105,  //  Tuned 3/15
       RPM_DEFAULT = 2200.0,
-      RPM_ERROR_ALLOWED = 80.0,  // Tuned 3/1, 25-50 seem to work well
+      RPM_ERROR_ALLOWED = 80.0,  // Tuned 3/1, 25-50 seem to work well TODO try 30 again
       RPM_TRIM = 150.0,
       DEADBAND = 0.05,
       TICKS_PER_REV = 2048.0,
       P = 0.01,  // Probably between 0.0075 and 0.25
-      I = 0.0,  // Use 0 if possible. But if we do use non-zero, make sure to use i zone
-      D = 0.0,  // Stay 0
-      F =  TICKS_PER_REV / RPM_MAX / 60.0 * 10.0;  // Equals 0.05029
+      F =  TICKS_PER_REV / RPM_MAX / 60.0 * 10.0;
   }
 
   public static final class SHOOTER_TOP {
     public static final boolean TUNING = true;
 
-    public static int STABLE_COUNTS = 2;
+    public static int STABLE_COUNTS = SHOOTER.STABLE_COUNTS;
     public static final double
-      OPEN_LOOP_REV_SECONDS = 1.0,
-      RPM_MAX = 6380.0 * 1.25,  //  Tuned 2/22
+      RPM_MAX = 6380.0 * 1.25,  //  Tuned 3/15
       RPM_DEFAULT = 2200.0,
-      RPM_ERROR_ALLOWED = 60.0,  // Tuned 3/1, 25-50 seem to work well
-      RPM_TRIM = 150.0,
-      DEADBAND = 0.05,
+      RPM_ERROR_ALLOWED = 60.0,  // Tuned 3/1, 25-50 seem to work well TODO try 30 again
+      RPM_TRIM = SHOOTER.RPM_TRIM * 2.0,
       TICKS_PER_REV = 2048.0,
       P = 0.02,  // Probably between 0.0075 and 0.25
-      I = 0.0,  // Use 0 if possible. But if we do use non-zero, make sure to use i zone
-      D = 0.0,  // Stay 0
-      F =  TICKS_PER_REV / RPM_MAX / 60.0 * 10.0;  // Equals 0.05029
+      F =  TICKS_PER_REV / RPM_MAX / 60.0 * 10.0;
   }
 
   public static final class TURRET {
@@ -228,11 +217,9 @@ public final class Constants {
 
     public static final double
       STICK_GAIN = 25.0,
-      STICK_DEADBAND = 0.4,  // Reduce when switch to new controller
-
+      STICK_DEADBAND = 0.4,  // TODO Reduce when switch to new controller
       GEAR_RATIO = 72.0 / 14.0 * 154.0 / 16.0,  // Number > 1 means "geared down"
-      GEAR_RATIO_WRONG = 24.0 / 8.0 * 240.0 / 14.0,
-      VELOCITY_MAX = 21500.0;  // TODO real value
+      VELOCITY_MAX = 21500.0;
 
     public static final ServoMotorSubsystemConstants SERVO = new ServoMotorSubsystemConstants();
     static {
@@ -245,17 +232,15 @@ public final class Constants {
 
       SERVO.kMinUnitsLimit = 180.0 - 220.0;
       SERVO.kMaxUnitsLimit = 180.0 + 80.0;
-      // SERVO.kMinUnitsLimit = 180.0 - 90.0;
-      // SERVO.kMaxUnitsLimit = 180.0 + 220.0;
       SERVO.kHomePosition = 180.0;
       SERVO.kTicksPerUnitDistance = 2048.0 * GEAR_RATIO / 360.0;
 
       SERVO.kPositionKp = 0.02;
-      SERVO.kPositionKi = 0.0008;  // TODO
+      SERVO.kPositionKi = 0.0008;
       SERVO.kPositionKd = 0.25;
       SERVO.kPositionKf = 0.0;
       SERVO.kPositionIZone = 40.0;
-      SERVO.kPositionMaxIntegralAccumulator = 20000.0;  // TODO
+      SERVO.kPositionMaxIntegralAccumulator = 20000.0;
       SERVO.kPositionDeadband = 0.1 * SERVO.kTicksPerUnitDistance; // Ticks
 
       SERVO.kMotionMagicKp = 0.6;
@@ -287,32 +272,28 @@ public final class Constants {
       RPM_BOTTOM = new InterpolatingTreeMap<>(),
       RPM_TOP = new InterpolatingTreeMap<>();
     public static final double
-      DISTANCE_USABLE_MIN = 70.0,
-      DISTANCE_USABLE_MAX = 175.0,
-      RPM_USABLE_MIN = 1000.0;
+      DISTANCE_USABLE_MIN = 75.0,
+      DISTANCE_USABLE_MAX = 170.0,
+      RPM_USABLE_MIN = 1450.0,
+      RPM_TOP_USABLE_MIN = 2800.0;
     static {
-      RPM_BOTTOM.put(new InterpolatingDouble(75.0), new InterpolatingDouble(1450.0));
+      RPM_BOTTOM.put(new InterpolatingDouble(DISTANCE_USABLE_MIN), new InterpolatingDouble(RPM_USABLE_MIN));
       RPM_BOTTOM.put(new InterpolatingDouble(90.0), new InterpolatingDouble(1500.0));
       RPM_BOTTOM.put(new InterpolatingDouble(120.0), new InterpolatingDouble(1600.0));
       RPM_BOTTOM.put(new InterpolatingDouble(150.0), new InterpolatingDouble(1700.0));
-      RPM_BOTTOM.put(new InterpolatingDouble(170.0), new InterpolatingDouble(1850.0));
+      RPM_BOTTOM.put(new InterpolatingDouble(DISTANCE_USABLE_MAX), new InterpolatingDouble(1850.0));
     }
     static {
-      RPM_TOP.put(new InterpolatingDouble(75.0), new InterpolatingDouble(2800.0));
+      RPM_TOP.put(new InterpolatingDouble(DISTANCE_USABLE_MIN), new InterpolatingDouble(RPM_TOP_USABLE_MIN));
       RPM_TOP.put(new InterpolatingDouble(90.0), new InterpolatingDouble(3000.0));
       RPM_TOP.put(new InterpolatingDouble(120.0), new InterpolatingDouble(3200.0));
       RPM_TOP.put(new InterpolatingDouble(150.0), new InterpolatingDouble(3400.0));
-      RPM_TOP.put(new InterpolatingDouble(170.0), new InterpolatingDouble(3700.0));
+      RPM_TOP.put(new InterpolatingDouble(DISTANCE_USABLE_MAX), new InterpolatingDouble(3700.0));
     }
   }
 
   public static final class FIELD {
     public static final double CLIMBER_TIME_REQUIRED_TO_HOLD = 5.0;
     public static final double VISION_TAPE_INCHES = 102.0;
-  }
-
-  /** TRUE if not connected to the field at competition OR if the Smartdashboard button is pressed */
-  public static boolean DashboardDuringComp() {
-    return !DriverStation.isFMSAttached() || SmartDashboard.getBoolean(SHOW_DETAILS, false);
   }
 }

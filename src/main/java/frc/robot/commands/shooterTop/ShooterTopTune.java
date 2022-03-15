@@ -1,4 +1,4 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.shooterTop;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -20,9 +20,4 @@ public class ShooterTopTune extends CommandBase {
     double setpoint = SmartDashboard.getNumber(DASHBOARD_KEY_SHOOTER_TUNE, 0.0);
     subsystem.setClosedLoop(setpoint);
   }
-
-  // @Override
-  // public boolean isFinished() {
-  //   return subsystem.isStable();
-  // }
 }

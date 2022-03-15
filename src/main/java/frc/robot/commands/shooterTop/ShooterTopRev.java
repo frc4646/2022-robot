@@ -1,23 +1,23 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.shooterTop;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterTop;
 import frc.team254.util.InterpolatingDouble;
 
-public class ShooterRev extends InstantCommand {
-  private Shooter subsystem = RobotContainer.SHOOTER;
+public class ShooterTopRev extends InstantCommand{
+  private ShooterTop subsystem = RobotContainer.SHOOTER_TOP;
   private final double distance;
 
-  public ShooterRev(double distance) {
+  public ShooterTopRev(double distance) {
     addRequirements(subsystem);
     this.distance = distance;
   }
 
   @Override
   public void initialize() {
-    double rpm = Constants.VISION.RPM_BOTTOM.getInterpolated(new InterpolatingDouble(distance)).value;
+    double rpm = Constants.VISION.RPM_TOP.getInterpolated(new InterpolatingDouble(distance)).value;
     subsystem.setClosedLoop(rpm);
   }
 }

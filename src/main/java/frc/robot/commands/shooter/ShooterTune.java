@@ -20,9 +20,4 @@ public class ShooterTune extends CommandBase {
     double setpoint = SmartDashboard.getNumber(DASHBOARD_KEY_SHOOTER_TUNE, 0.0);
     subsystem.setClosedLoop(setpoint);
   }
-
-  // @Override
-  // public boolean isFinished() {
-  //   return subsystem.isStable();
-  // }
 }

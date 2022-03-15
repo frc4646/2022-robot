@@ -15,6 +15,6 @@ public class AgitateOpenLoop extends InstantCommand {
 
   @Override
   public void initialize() {
-    subsystem.setOpenLoop(output);
+    subsystem.setOpenLoop(output, output);
   }
 }

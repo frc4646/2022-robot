@@ -6,8 +6,8 @@ import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.feeder.FeederLoadCargo;
 import frc.robot.commands.shooter.ShooterAim;
 import frc.robot.commands.shooter.ShooterLockRPM;
-import frc.robot.commands.shooter.ShooterTopAim;
-import frc.robot.commands.shooter.ShooterTopLockRPM;
+import frc.robot.commands.shooterTop.ShooterTopAim;
+import frc.robot.commands.shooterTop.ShooterTopLockRPM;
 
 public class ShootVision extends SequentialCommandGroup {
   public ShootVision() {

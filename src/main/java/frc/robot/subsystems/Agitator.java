@@ -22,9 +22,9 @@ public class Agitator extends SmartSubsystem {
     masterR.setOpenLoopRampRate(Constants.AGITATOR.OPEN_LOOP_RAMP);    
   }
 
-  public void setOpenLoop(double percent) {
-    masterL.set(percent);   // todo make these pulse
-    masterR.set(percent*.5);   // todo make these pulse
+  public void setOpenLoop(double left, double right) {
+    masterL.set(left);
+    masterR.set(right);
   }
 
   @Override

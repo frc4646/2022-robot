@@ -31,6 +31,6 @@ public class SmartSubsystem extends SubsystemBase {
    */
   public void runTests() {}
 
-  @Override
-  public void initSendable(SendableBuilder builder) { /* Do Nothing */ }
+  // @Override
+  // public void initSendable(SendableBuilder builder) { /* Do Nothing */ }
 }

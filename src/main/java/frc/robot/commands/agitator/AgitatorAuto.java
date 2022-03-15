@@ -25,6 +25,6 @@ public class AgitatorAuto extends CommandBase {
     } else if (intake.isExtended()) {
       demand = Constants.AGITATOR.OPEN_LOOP_LOAD;
     }
-    subsystem.setOpenLoop(demand);
+    subsystem.setOpenLoop(demand, demand);
   }
 }

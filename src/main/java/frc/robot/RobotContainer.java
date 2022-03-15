@@ -8,9 +8,7 @@ import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.drivetrain.DriveDisabled;
 import frc.robot.commands.feeder.FeederAuto;
 import frc.robot.commands.shooter.ShooterAuto;
-import frc.robot.commands.shooter.ShooterTopAuto;
-import frc.robot.commands.shooter.ShooterTopOpenLoop;
-import frc.robot.commands.shooter.ShooterTopVelocity;
+import frc.robot.commands.shooterTop.ShooterTopAuto;
 import frc.robot.commands.turret.TurretAim;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
@@ -35,7 +33,9 @@ import frc.robot.subsystems.Turret;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RobotContainer {
@@ -98,7 +98,10 @@ public class RobotContainer {
     allSubsystems.forEach(SmartSubsystem::cacheSensors);
   }
 
-  public void updateDashboard(boolean showDetails) {
+  public void updateDashboard() {
+    boolean isCompetition =  DriverStation.isFMSAttached();
+    boolean isForceButtonPressed = SmartDashboard.getBoolean(Constants.SHOW_DETAILS, false);
+    boolean showDetails = !isCompetition || isForceButtonPressed;
     allSubsystems.forEach(s -> s.updateDashboard(showDetails));
   }
 

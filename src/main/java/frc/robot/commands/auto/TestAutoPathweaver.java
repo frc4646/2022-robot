@@ -1,7 +1,6 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.commands.agitator.AgitateOpenLoop;
@@ -13,7 +12,7 @@ import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.shooter.ShooterOpenLoop;
 import frc.robot.subsystems.ColorSensor.STATE;
 
-public class TestAutoPathweaver extends SequentialCommandGroup {
+public class TestAutoPathweaver extends ModeBase {
 
   public TestAutoPathweaver() {
     addCommands(
@@ -29,13 +28,5 @@ public class TestAutoPathweaver extends SequentialCommandGroup {
       new ShooterOpenLoop(0.0),
       new DrivePath(GeneratedPaths.MidCargo_Terminal)
     );
-  }  
-
-  @Override
-  public void end(boolean isInterrupted) {
-    RobotContainer.FEEDER.setOpenLoop(0.0);
-    RobotContainer.AGITATOR.setOpenLoop(0.0);
-    RobotContainer.INTAKE.setExtend(false);
-    RobotContainer.INTAKE.setOpenLoop(0.0);
   }
 }

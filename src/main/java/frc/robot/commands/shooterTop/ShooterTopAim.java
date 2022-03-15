@@ -1,4 +1,4 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.shooterTop;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -20,7 +20,7 @@ public class ShooterTopAim extends CommandBase {
   public void execute() {
     double setpoint = Constants.SHOOTER.RPM_DEFAULT;
     double stickTrim = operator.getShooterTrim();
-    double trim = Math.abs(stickTrim) >= Constants.SHOOTER.DEADBAND ? stickTrim * Constants.SHOOTER.RPM_TRIM : 0.0;
+    double trim = Math.abs(stickTrim) >= Constants.SHOOTER.DEADBAND ? stickTrim * Constants.SHOOTER_TOP.RPM_TRIM : 0.0;
     boolean override = operator.getFn();
 
     if (vision.isTargetPresent() && !override) {

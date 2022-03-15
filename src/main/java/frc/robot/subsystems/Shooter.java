@@ -43,8 +43,6 @@ public class Shooter extends SmartSubsystem {
 
     TalonUtil.checkError(motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), "Shooter: Could not detect encoder: ");
     TalonUtil.checkError(motor.config_kP(0, Constants.SHOOTER.P, Constants.CAN_TIMEOUT), "Shooter: could not set P: ");
-    TalonUtil.checkError(motor.config_kI(0, Constants.SHOOTER.I, Constants.CAN_TIMEOUT), "Shooter: could not set I: ");
-    TalonUtil.checkError(motor.config_kD(0, Constants.SHOOTER.D, Constants.CAN_TIMEOUT), "Shooter: could not set D: ");
     TalonUtil.checkError(motor.config_kF(0, Constants.SHOOTER.F, Constants.CAN_TIMEOUT), "Shooter: could not set F: ");
 
     SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40.0, 100.0, 0.02);

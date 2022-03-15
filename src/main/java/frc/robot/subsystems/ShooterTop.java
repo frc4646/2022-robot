@@ -39,8 +39,6 @@ public class ShooterTop extends SmartSubsystem {
 
     TalonUtil.checkError(motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), "ShooterTop: Could not detect encoder: ");
     TalonUtil.checkError(motor.config_kP(0, Constants.SHOOTER.P, Constants.CAN_TIMEOUT), "ShooterTop: could not set P: ");
-    TalonUtil.checkError(motor.config_kI(0, Constants.SHOOTER.I, Constants.CAN_TIMEOUT), "ShooterTop: could not set I: ");
-    TalonUtil.checkError(motor.config_kD(0, Constants.SHOOTER.D, Constants.CAN_TIMEOUT), "ShooterTop: could not set D: ");
     TalonUtil.checkError(motor.config_kF(0, Constants.SHOOTER.F, Constants.CAN_TIMEOUT), "ShooterTop: could not set F: ");
 
     SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 30.0, 100.0, 0.02);
@@ -55,14 +53,13 @@ public class ShooterTop extends SmartSubsystem {
     cache.errorL = (masterTop.getControlMode() == ControlMode.Velocity) ? masterTop.getClosedLoopError(0) : 0.0;
 
     stableCounts++;
-    if(Math.abs(targetVelocityRPM - getRPM()) > Constants.SHOOTER.RPM_ERROR_ALLOWED || !isShooting()) {
+    if(Math.abs(targetVelocityRPM - getRPM()) > Constants.SHOOTER_TOP.RPM_ERROR_ALLOWED || !isShooting()) {
       stableCounts = 0;
     }
   }
 
   @Override
-  public void updateDashboard(boolean showDetails) {
-    
+  public void updateDashboard(boolean showDetails) {    
     if (Constants.SHOOTER.TUNING) {
       SmartDashboard.putNumber("ShooterTop: RPM", getRPM());
       SmartDashboard.putNumber("ShooterTop: IsStable", stableCounts);
@@ -87,11 +84,11 @@ public class ShooterTop extends SmartSubsystem {
   public double getRPM() { return (cache.rpmL); }
   public double getSetpoint() { return demand; }
 
-  public boolean isShooting() { return demand >= Constants.VISION.RPM_USABLE_MIN * 0.9; }
-  public boolean isStable() { return stableCounts >= Constants.SHOOTER.STABLE_COUNTS; }
+  public boolean isShooting() { return demand >= Constants.VISION.RPM_TOP_USABLE_MIN * 0.9; }
+  public boolean isStable() { return stableCounts >= Constants.SHOOTER_TOP.STABLE_COUNTS; }
 
-  private double nativeUnitsToRPM(double ticks_per_100_ms) { return ticks_per_100_ms * 10.0 * 60.0 / Constants.SHOOTER.TICKS_PER_REV; }
-  private double rpmToNativeUnits(double rpm) { return rpm / 60.0 / 10.0 * Constants.SHOOTER.TICKS_PER_REV; }
+  private double nativeUnitsToRPM(double ticks_per_100_ms) { return ticks_per_100_ms * 10.0 * 60.0 / Constants.SHOOTER_TOP.TICKS_PER_REV; }
+  private double rpmToNativeUnits(double rpm) { return rpm / 60.0 / 10.0 * Constants.SHOOTER_TOP.TICKS_PER_REV; }
 
   @Override
   public void runTests() {
