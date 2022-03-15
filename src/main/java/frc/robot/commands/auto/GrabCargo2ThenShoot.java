@@ -13,7 +13,6 @@ import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.shooter.ShooterOpenLoop;
 import frc.robot.commands.shooter.ShooterRev;
-import frc.robot.commands.shooterTop.ShooterTopRev;
 import frc.robot.subsystems.ColorSensor.STATE;
 
 public class GrabCargo2ThenShoot extends SequentialCommandGroup {
@@ -29,7 +28,7 @@ public class GrabCargo2ThenShoot extends SequentialCommandGroup {
           new DrivePath(pathCargo2),
           new WaitForColorState(STATE.CORRECT)
         ),
-        new WaitCommand(0.25).andThen(parallel(new ShooterRev(distanceShoot), new ShooterTopRev(distanceShoot)))  // TODO refactor out const
+        new WaitCommand(0.25).andThen(new ShooterRev(distanceShoot))  // TODO refactor out const
       ),
       parallel(
         new WaitCommand(ModeBase.TIME_CANCEL_MOMENTUM),

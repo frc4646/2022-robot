@@ -8,7 +8,6 @@ import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.drivetrain.DriveDisabled;
 import frc.robot.commands.feeder.FeederAuto;
 import frc.robot.commands.shooter.ShooterAuto;
-import frc.robot.commands.shooterTop.ShooterTopAuto;
 import frc.robot.commands.turret.TurretAim;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
@@ -88,7 +87,6 @@ public class RobotContainer {
     FEEDER.setDefaultCommand(new FeederAuto());
     // HOOD.setDefaultCommand(new HoodAim());
     SHOOTER.setDefaultCommand(new ShooterAuto());
-    SHOOTER_TOP.setDefaultCommand(new ShooterTopAuto());
     TURRET.setDefaultCommand(new TurretAim());
 
     autoModeSelector = new AutoModeSelector();

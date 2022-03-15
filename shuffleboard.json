@@ -33,7 +33,7 @@
               "_title": "SmartDashboard/Auto: Position"
             }
           },
-          "0,2": {
+          "0,4": {
             "size": [
               3,
               1
@@ -102,15 +102,18 @@
               "imageHeight": -1
             }
           },
-          "1,3": {
+          "0,2": {
             "size": [
-              2,
-              1
+              3,
+              2
             ],
             "content": {
-              "_type": "Text View",
+              "_type": "Simple Dial",
               "_source0": "network_table:///SmartDashboard/Vision: Distance",
-              "_title": "SmartDashboard/Vision: Distance"
+              "_title": "SmartDashboard/Vision: Distance",
+              "Range/Min": 0.0,
+              "Range/Max": 200.0,
+              "Visuals/Show value": true
             }
           }
         }
@@ -707,6 +710,94 @@
               "_source0": "network_table:///SmartDashboard/Vision: Distance",
               "_title": "SmartDashboard/Vision: Distance"
             }
+          },
+          "11,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/IntakeJiggle",
+              "_title": "/IntakeJiggle"
+            }
+          },
+          "12,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Tune: ShooterPair",
+              "_title": "/Tune: ShooterPair"
+            }
+          },
+          "13,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ShooterTop: Error L",
+              "_title": "/ShooterTop: Error L"
+            }
+          },
+          "11,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/FireCargo",
+              "_title": "/FireCargo"
+            }
+          },
+          "12,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Shooter: Error L",
+              "_title": "/Shooter: Error L"
+            }
+          },
+          "13,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ShooterTop: Amps Stator L",
+              "_title": "/ShooterTop: Amps Stator L"
+            }
+          },
+          "11,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ShooterPairTune Bottom",
+              "_title": "/ShooterPairTune Bottom"
+            }
+          },
+          "12,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ShooterTop: Demand",
+              "_title": "/ShooterTop: Demand"
+            }
           }
         }
       }
@@ -722,18 +813,7 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "2,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/Tune: ShootTop",
-              "_title": "SmartDashboard/Tune: ShootTop"
-            }
-          },
-          "4,0": {
+          "3,0": {
             "size": [
               2,
               1
@@ -744,40 +824,7 @@
               "_title": "SmartDashboard/Tune: Shoot"
             }
           },
-          "3,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Tune: ShootTop RPM",
-              "_title": "/SmartDashboard/Tune: ShootTop RPM"
-            }
-          },
           "5,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Tune: Shoot RPM",
-              "_title": "SmartDashboard/Tune: Shoot RPM"
-            }
-          },
-          "7,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter: IsStable",
-              "_title": "SmartDashboard/Shooter: IsStable"
-            }
-          },
-          "4,2": {
             "size": [
               3,
               3
@@ -795,7 +842,7 @@
               "Visible data/SmartDashboard/Shooter: RPM": true
             }
           },
-          "0,2": {
+          "0,1": {
             "size": [
               3,
               3
@@ -813,40 +860,7 @@
               "Visible data/SmartDashboard/ShooterTop: RPM": true
             }
           },
-          "3,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ShooterTop: IsStable",
-              "_title": "SmartDashboard/ShooterTop: IsStable"
-            }
-          },
-          "7,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter: Demand",
-              "_title": "SmartDashboard/Shooter: Demand"
-            }
-          },
-          "3,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ShooterTop: Demand",
-              "_title": "SmartDashboard/ShooterTop: Demand"
-            }
-          },
-          "8,1": {
+          "8,2": {
             "size": [
               2,
               1
@@ -857,7 +871,7 @@
               "_title": "SmartDashboard/Tune: ShooterPair"
             }
           },
-          "8,2": {
+          "8,3": {
             "size": [
               2,
               1
@@ -866,17 +880,6 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ShooterPairTune Bottom",
               "_title": "/SmartDashboard/ShooterPairTune Bottom"
-            }
-          },
-          "8,3": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ShooterPairTune Top",
-              "_title": "/SmartDashboard/ShooterPairTune Top"
             }
           },
           "8,0": {
@@ -890,40 +893,72 @@
               "_title": "SmartDashboard/FireCargo"
             }
           },
-          "8,4": {
+          "3,1": {
+            "size": [
+              2,
+              3
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "List Layout",
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/ShooterTop: RPM",
+                  "_title": "SmartDashboard/ShooterTop: RPM"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Shooter: RPM",
+                  "_title": "SmartDashboard/Shooter: RPM"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/ShooterTop: IsStable",
+                  "_title": "SmartDashboard/ShooterTop: IsStable"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Shooter: IsStable",
+                  "_title": "SmartDashboard/Shooter: IsStable"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/ShooterTop: Demand",
+                  "_title": "SmartDashboard/ShooterTop: Demand"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Shooter: Demand",
+                  "_title": "SmartDashboard/Shooter: Demand"
+                }
+              ]
+            }
+          },
+          "1,0": {
             "size": [
               2,
               1
             ],
             "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/Tune: ShootInterpolation",
-              "_title": "SmartDashboard/Tune: ShootInterpolation"
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Tune: ShootTop RPM",
+              "_title": "/SmartDashboard/Tune: ShootTop RPM"
             }
           },
-          "7,4": {
+          "5,0": {
             "size": [
-              1,
+              2,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter: RPM",
-              "_title": "SmartDashboard/Shooter: RPM"
+              "_source0": "network_table:///SmartDashboard/Tune: Shoot RPM",
+              "_title": "SmartDashboard/Tune: Shoot RPM"
             }
           },
-          "3,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ShooterTop: RPM",
-              "_title": "SmartDashboard/ShooterTop: RPM"
-            }
-          },
-          "2,1": {
+          "0,0": {
             "size": [
               1,
               1
@@ -933,27 +968,65 @@
               "_source0": "network_table:///SmartDashboard/Vision: Distance",
               "_title": "SmartDashboard/Vision: Distance"
             }
-          },
-          "6,1": {
+          }
+        }
+      }
+    },
+    {
+      "title": "LimeLightTune",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "9,0": {
             "size": [
-              1,
-              1
+              2,
+              2
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter: IsStable",
-              "_title": "SmartDashboard/Shooter: IsStable"
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Vision: Target",
+              "_title": "SmartDashboard/Vision: Target",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           },
-          "7,1": {
+          "9,2": {
             "size": [
-              1,
+              2,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ShooterTop: IsStable",
-              "_title": "SmartDashboard/ShooterTop: IsStable"
+              "_source0": "network_table:///limelight/ledMode",
+              "_title": "limelight/ledMode"
+            }
+          },
+          "1,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Vision: X",
+              "_title": "SmartDashboard/Vision: X"
+            }
+          },
+          "4,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Vision: Distance",
+              "_title": "SmartDashboard/Vision: Distance"
             }
           }
         }
@@ -961,8 +1034,8 @@
     }
   ],
   "windowGeometry": {
-    "x": -8.0,
-    "y": -8.0,
+    "x": 3.0,
+    "y": 332.0,
     "width": 1936.0,
     "height": 1056.0
   }

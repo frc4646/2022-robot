@@ -9,10 +9,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.commands.sequence.FireCargo;
-import frc.robot.commands.sequence.TuneInterpolation;
 import frc.robot.commands.shooter.ShooterPairTune;
 import frc.robot.commands.shooter.ShooterTune;
-import frc.robot.commands.shooterTop.ShooterTopTune;
 import frc.robot.commands.turret.TurretOpenLoop;
 import frc.robot.commands.turret.TurretPosition;
 
@@ -20,9 +18,7 @@ public class DashboardControls {
   public void configureButtons() {
     SmartDashboard.putData("FireCargo", new FireCargo());
     SmartDashboard.putData("Tune: ShooterPair", new ShooterPairTune());
-    SmartDashboard.putData("Tune: Shoot Interpolation", new TuneInterpolation());
-    SmartDashboard.putData("Tune: Shooter", new ShooterTune());
-    SmartDashboard.putData("Tune: ShooterTop", new ShooterTopTune());
+    SmartDashboard.putData("Tune: Shoot", new ShooterTune());
     
     if (Constants.TURRET.TUNING) {
       SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.TURRET.SERVO.kHomePosition + 70.0, 0.1));

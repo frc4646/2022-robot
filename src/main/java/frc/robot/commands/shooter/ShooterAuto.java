@@ -5,16 +5,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterTop;
 import frc.robot.subsystems.Vision;
 
 public class ShooterAuto extends CommandBase {
-  private final Shooter subsystem = RobotContainer.SHOOTER;
+  private final Shooter shooter = RobotContainer.SHOOTER;
+  private final ShooterTop shooterTop = RobotContainer.SHOOTER_TOP;
   private final Feeder feeder = RobotContainer.FEEDER;
   private final Vision vision = RobotContainer.VISION;
   private SlewRateLimiter limiter = new SlewRateLimiter(1.0);
 
   public ShooterAuto() {
-    addRequirements(subsystem);
+    addRequirements(shooter, shooterTop);
   }
 
   @Override
@@ -33,6 +35,7 @@ public class ShooterAuto extends CommandBase {
     // TODO if both cargo correct, prepare using minimum viable rpm?
 
     // setpoint = limiter.calculate(setpoint);
-    subsystem.setClosedLoop(setpoint);
+    shooter.setClosedLoop(setpoint);
+    shooterTop.setClosedLoop(setpoint);
   }
 }

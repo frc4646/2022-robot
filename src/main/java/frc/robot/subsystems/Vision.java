@@ -134,7 +134,7 @@ public class Vision extends SmartSubsystem {
     if (isTargetPresent()) {
       return Constants.VISION.RPM_TOP.getInterpolated(new InterpolatingDouble(cache.distanceFiltered)).value;
     }
-    return cache.rpmCalculatedBottom;
+    return cache.rpmCalculatedTop;
   }
 
   @Override
