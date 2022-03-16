@@ -20,14 +20,17 @@ public class ShooterAim extends CommandBase {
 
   @Override
   public void execute() {
-    double setpoint = Constants.SHOOTER.RPM_DEFAULT;
+    double setpointBottom = Constants.SHOOTER.RPM_DEFAULT;
+    double setpointTop = Constants.SHOOTER_TOP.RPM_DEFAULT;
     double stickTrim = operator.getShooterTrim();
     double trim = Math.abs(stickTrim) >= Constants.SHOOTER.DEADBAND ? stickTrim * Constants.SHOOTER.RPM_TRIM : 0.0;
     boolean override = operator.getFn();
 
     if (vision.isTargetPresent() && !override) {
-      setpoint = vision.getShooterRPMBottom();
+      setpointBottom = vision.getShooterRPMBottom();
+      setpointTop = vision.getShooterRPMTop();
     }
-    shooter.setClosedLoop(setpoint + trim);
+    shooter.setClosedLoop(setpointBottom + trim);
+    shooterTop.setClosedLoop(setpointTop + trim);
   }
 }

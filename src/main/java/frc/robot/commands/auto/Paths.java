@@ -16,24 +16,34 @@ public class Paths {
     BACKWARDS = Constants.DRIVETRAIN.TRAJECTORY_CONFIG_REVERSED;
 
   public static class LEFT {
-  
+    private static final Pose2d
+      POSE_START = new Pose2d(0.0, 0.0, new Rotation2d(0.0)),
+      POSE_CARGO_2 = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
+
+    public static final Trajectory
+      CARGO_2 = TrajectoryGenerator.generateTrajectory(POSE_START, List.of(), POSE_CARGO_2, FORWARDS); 
   }
 
   public static class MIDDLE {
     private static final Pose2d
       POSE_START = new Pose2d(0.0, 0.0, new Rotation2d(0.0)),
       POSE_CARGO_2 = new Pose2d(1.5, 0.0, new Rotation2d(0.0)),
-      POSE_HUMAN_PLAYER = new Pose2d(5.0, 0.8, Rotation2d.fromDegrees(-12.0)),
+      POSE_HUMAN_PLAYER = new Pose2d(5.125, 0.8, Rotation2d.fromDegrees(-12.0)),
       POSE_ALLIANCE_WALL = new Pose2d(5.15, 2.5, Rotation2d.fromDegrees(20.0));
 
     public static final Trajectory
       CARGO_2 = TrajectoryGenerator.generateTrajectory(POSE_START, List.of(), POSE_CARGO_2, FORWARDS),
-      pathHumanPlayer = TrajectoryGenerator.generateTrajectory(POSE_CARGO_2, List.of(), POSE_HUMAN_PLAYER, FORWARDS),
-      pathShoot3And4 = TrajectoryGenerator.generateTrajectory(POSE_HUMAN_PLAYER, List.of(), POSE_CARGO_2, BACKWARDS),
-      pathAllianceWall = TrajectoryGenerator.generateTrajectory(POSE_CARGO_2, List.of(), POSE_ALLIANCE_WALL, FORWARDS);
+      HUMAN_PLAYER = TrajectoryGenerator.generateTrajectory(POSE_CARGO_2, List.of(), POSE_HUMAN_PLAYER, FORWARDS),
+      SHOOT_3And4 = TrajectoryGenerator.generateTrajectory(POSE_HUMAN_PLAYER, List.of(), POSE_CARGO_2, BACKWARDS),
+      ALLIANCE_WALL = TrajectoryGenerator.generateTrajectory(POSE_CARGO_2, List.of(), POSE_ALLIANCE_WALL, FORWARDS);
   }
 
   public static class RIGHT {
-    
+    private static final Pose2d
+      POSE_START = new Pose2d(0.0, 0.0, new Rotation2d(0.0)),
+      POSE_CARGO_2 = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
+
+    public static final Trajectory
+      CARGO_2 = TrajectoryGenerator.generateTrajectory(POSE_START, List.of(), POSE_CARGO_2, FORWARDS);
   }
 }

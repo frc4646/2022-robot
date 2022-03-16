@@ -7,8 +7,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.auto.ModeMiddle;
+import frc.robot.commands.auto.ModeRight;
 import frc.robot.commands.auto.TestAutoPathweaver;
 import frc.robot.commands.auto.FallbackTwoCargoAuto;
+import frc.robot.commands.auto.ModeLeft;
 import frc.robot.commands.auto.ModeBase.STRATEGY_PHASE_2;
 
 public class AutoModeSelector {
@@ -17,6 +19,9 @@ public class AutoModeSelector {
   }
   enum DesiredMode { 
     DO_NOTHING,
+    MIDDLE_4_CARGO,
+    LEFT_2_CARGO,
+    RIGHT_2_CARGO,
     TEST_AUTO,
     TWO_CARGO,
     TWO_CARGO_PLUS_TERMINAL,
@@ -40,6 +45,9 @@ public class AutoModeSelector {
 
     modeSelector = new SendableChooser<>();
     modeSelector.setDefaultOption("Do Nothing", DesiredMode.DO_NOTHING);
+    modeSelector.addOption("Middle 4 Cargo", DesiredMode.MIDDLE_4_CARGO);
+    modeSelector.addOption("Left 2 Cargo", DesiredMode.LEFT_2_CARGO);
+    modeSelector.addOption("Right 2 Cargo", DesiredMode.RIGHT_2_CARGO);
     modeSelector.addOption("2 Cargo", DesiredMode.TWO_CARGO);
     modeSelector.addOption("2 Cargo + Terminal", DesiredMode.TWO_CARGO_PLUS_TERMINAL);
     modeSelector.addOption("2 Cargo + Terminal Pathweaver", DesiredMode.TWO_CARGO_PLUS_TERMINAL_PATHWEAVER);
@@ -49,6 +57,13 @@ public class AutoModeSelector {
 
   private Optional<Command> getAutoModeForParams(DesiredMode mode, StartingPosition position) {
     switch (mode) {
+      case MIDDLE_4_CARGO:
+        return Optional.of(new ModeMiddle(STRATEGY_PHASE_2.HUMAN_PLAYER));
+      case LEFT_2_CARGO:
+      return Optional.of(new ModeLeft(STRATEGY_PHASE_2.NONE));
+      case RIGHT_2_CARGO:
+      return Optional.of(new ModeRight(STRATEGY_PHASE_2.NONE));
+
       case TWO_CARGO:
         return Optional.of(new FallbackTwoCargoAuto());
 

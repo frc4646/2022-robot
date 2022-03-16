@@ -19,7 +19,7 @@ public class ShooterRev extends InstantCommand {
 
   @Override
   public void initialize() {
-    shooter.setClosedLoop(Constants.VISION.RPM_BOTTOM.getInterpolated(new InterpolatingDouble(distance)).value);
-    shooterTop.setClosedLoop(Constants.VISION.RPM_TOP.getInterpolated(new InterpolatingDouble(distance)).value);
+    shooter.setClosedLoop(Constants.VISION.shootTree.getRPMBottom(distance));
+    shooterTop.setClosedLoop(Constants.VISION.shootTree.getRPMTop(distance));
   }
 }

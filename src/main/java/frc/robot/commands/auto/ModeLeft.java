@@ -3,10 +3,10 @@ package frc.robot.commands.auto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class ModeMiddle extends ModeBase {
-  public ModeMiddle(STRATEGY_PHASE_2 strategy) {
+public class ModeLeft extends ModeBase {
+  public ModeLeft (STRATEGY_PHASE_2 strategy) {
     addCommands(
-      new GrabCargo2ThenShoot(Paths.MIDDLE.CARGO_2, 115.0),
+      new GrabCargo2ThenShoot(Paths.LEFT.CARGO_2, 115.0),
       selectPhase2(strategy)
     );
   }
@@ -14,9 +14,6 @@ public class ModeMiddle extends ModeBase {
   private Command selectPhase2(STRATEGY_PHASE_2 strategy) {
     Command phase2 = new WaitCommand(15.0);
 
-    if (strategy == STRATEGY_PHASE_2.HUMAN_PLAYER)
-      phase2 = new HumanPlayerThenShoot(Paths.MIDDLE.HUMAN_PLAYER, Paths.MIDDLE.SHOOT_3And4);
-
     return phase2;
-  }
+  } 
 }

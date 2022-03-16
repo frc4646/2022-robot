@@ -53,14 +53,14 @@ public class Turret extends ServoMotorSubsystem {
   @Override
   public void onEnable(boolean isAutonomous) {
     setBrakeMode(true);
-    setSetpointPositionPID(getPosition(), 0.0);  // Handle if zeroed while disabled
-    // setOpenLoop(0.0);  // TODO try if better
+    setOpenLoop(0.0);  // Handle if zeroed while disabled
   }
 
   @Override
   public void onDisable() {
     setBrakeMode(false);
   }
+
 
   @Override
   public void resetIfAtHome() {

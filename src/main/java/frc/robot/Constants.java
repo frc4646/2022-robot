@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
 import frc.robot.util.DiagnosticState;
+import frc.robot.util.ShootTree;
 import frc.team254.util.InterpolatingDouble;
 import frc.team254.util.InterpolatingTreeMap;
 import frc.team4646.LEDColor;
@@ -138,8 +139,8 @@ public final class Constants {
 
     public static final double
       AUTO_MAX_VOLTS = 10.0,
-      MAX_SPEED_METERS_PER_SECOND = 2.5,
-      MAX_ACCEL_METERS_PER_SECOND_SQUARED = 1.0,
+      MAX_SPEED_METERS_PER_SECOND = 3.6,
+      MAX_ACCEL_METERS_PER_SECOND_SQUARED = 1.5,
       RAMSETE_B = 1.0,     // FRC recommends 2.0
       RAMSETE_ZETA = 0.5;  // FRC recommends 0.7
       
@@ -158,11 +159,11 @@ public final class Constants {
     public static final boolean TUNING = false;
     
     public static final double
-      OPEN_LOOP_EXHAUST = 0.1,
+      OPEN_LOOP_EXHAUST = 0.2,
       OPEN_LOOP_LOAD = 0.3,
       OPEN_LOOP_SHOOT = 0.5,
       OPEN_LOOP_RAMP = 0.25,  // TODO tune
-      TIMEOUT_EXHAUST = 0.5,
+      TIMEOUT_EXHAUST = 1.0,
       TIMEOUT_LOAD = 3.0,
       GEAR_RATIO = 72.0 / 14.0,
       POSITION_DEADBAND = 0.1,
@@ -278,29 +279,13 @@ public final class Constants {
       CAMERA_MOUNTING_ANGLE = 33.2, // Degrees, tuned 2/27
       CAMERA_MOUNTING_OFFSET = 16.0;  // Tuned 3/4
 
-    public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>
-      RPM_BOTTOM = new InterpolatingTreeMap<>(),
-      RPM_TOP = new InterpolatingTreeMap<>();
-    public static final double
-      DISTANCE_USABLE_MIN = 75.0,
-      DISTANCE_USABLE_MAX = 170.0,
-      RPM_USABLE_MIN = 1450.0,
-      RPM_TOP_USABLE_MIN = 2800.0;
+    public static ShootTree shootTree = new ShootTree();
     static {
-      // don't use constants here, makes tuning miserable
-      RPM_BOTTOM.put(new InterpolatingDouble(75.0), new InterpolatingDouble(1450.0));
-      RPM_BOTTOM.put(new InterpolatingDouble(90.0), new InterpolatingDouble(1500.0));
-      RPM_BOTTOM.put(new InterpolatingDouble(120.0), new InterpolatingDouble(1600.0));
-      RPM_BOTTOM.put(new InterpolatingDouble(150.0), new InterpolatingDouble(1700.0));
-      RPM_BOTTOM.put(new InterpolatingDouble(170.0), new InterpolatingDouble(1850.0));
-    }
-    static {
-      // don't use constants here, makes tuning miserable
-      RPM_TOP.put(new InterpolatingDouble(75.0), new InterpolatingDouble(2800.0));
-      RPM_TOP.put(new InterpolatingDouble(90.0), new InterpolatingDouble(3000.0));
-      RPM_TOP.put(new InterpolatingDouble(120.0), new InterpolatingDouble(3200.0));
-      RPM_TOP.put(new InterpolatingDouble(150.0), new InterpolatingDouble(3400.0));
-      RPM_TOP.put(new InterpolatingDouble(170.0), new InterpolatingDouble(3700.0));
+      shootTree.add(75.0, 1450.0, 2800.0);
+      shootTree.add(90.0, 1500.0, 3000.0);
+      shootTree.add(120.0, 1600.0, 3200.0);
+      shootTree.add(150.0, 1700.0, 3400.0);
+      shootTree.add(170.0, 1850.0, 3700.0);
     }
   }
 

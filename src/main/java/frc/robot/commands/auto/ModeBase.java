@@ -5,7 +5,7 @@ import frc.robot.RobotContainer;
 
 public abstract class ModeBase extends SequentialCommandGroup {
   public static enum STRATEGY_PHASE_2 {
-    HUMAN_PLAYER
+    HUMAN_PLAYER, NONE
   }
   
   public static final double TIME_CANCEL_MOMENTUM = 0.2;

@@ -28,8 +28,8 @@ public class AgitatorPulse extends CommandBase {
       isLeft = !isLeft;
       switchTimer.reset();
     }
-    double setpointL = isLeft ? strength : 0.0;
-    double setpointR = isLeft ? 0.0 : strength;
+    double setpointL = isLeft ? strength : strength * 0.25;
+    double setpointR = isLeft ? strength * 0.25 : strength;
     subsystem.setOpenLoop(setpointL, setpointR);
   }
 }

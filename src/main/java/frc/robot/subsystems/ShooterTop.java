@@ -84,7 +84,7 @@ public class ShooterTop extends SmartSubsystem {
   public double getRPM() { return (cache.rpmL); }
   public double getSetpoint() { return demand; }
 
-  public boolean isShooting() { return demand >= Constants.VISION.RPM_TOP_USABLE_MIN * 0.9; }
+  public boolean isShooting() { return demand >= Constants.VISION.shootTree.getRPMTopMin() * 0.9; }
   public boolean isStable() { return stableCounts >= Constants.SHOOTER_TOP.STABLE_COUNTS; }
 
   private double nativeUnitsToRPM(double ticks_per_100_ms) { return ticks_per_100_ms * 10.0 * 60.0 / Constants.SHOOTER_TOP.TICKS_PER_REV; }
