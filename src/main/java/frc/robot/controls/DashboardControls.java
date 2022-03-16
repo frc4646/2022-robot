@@ -2,8 +2,15 @@ package frc.robot.controls;
 
 import java.util.Map;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
@@ -20,6 +27,10 @@ public class DashboardControls {
     SmartDashboard.putData("Tune: ShooterPair", new ShooterPairTune());
     SmartDashboard.putData("Tune: Shoot", new ShooterTune());
     
+    if (Constants.DRIVETRAIN.TUNING) {
+      SmartDashboard.putData("Reset Odometry", new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));}));
+    }
+
     if (Constants.TURRET.TUNING) {
       SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.TURRET.SERVO.kHomePosition + 70.0, 0.1));
       SmartDashboard.putData("Tune: Turret Front", new TurretPosition(Constants.TURRET.SERVO.kHomePosition - 180, 0.1));

@@ -26,7 +26,7 @@ public class Paths {
 
   public static class MIDDLE {
     private static final Pose2d
-      POSE_START = new Pose2d(0.0, 0.0, new Rotation2d(0.0)),
+      POSE_START = new Pose2d(0.0, 0.0, new Rotation2d(0.0)), // 24 deg
       POSE_CARGO_2 = new Pose2d(1.5, 0.0, new Rotation2d(0.0)),
       POSE_HUMAN_PLAYER = new Pose2d(5.125, 0.8, Rotation2d.fromDegrees(-12.0)),
       POSE_ALLIANCE_WALL = new Pose2d(5.15, 2.5, Rotation2d.fromDegrees(20.0));
@@ -41,7 +41,7 @@ public class Paths {
   public static class RIGHT {
     private static final Pose2d
       POSE_START = new Pose2d(0.0, 0.0, new Rotation2d(0.0)),
-      POSE_CARGO_2 = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
+      POSE_CARGO_2 = new Pose2d(0.0, 0.0, new Rotation2d(0.0)); 
 
     public static final Trajectory
       CARGO_2 = TrajectoryGenerator.generateTrajectory(POSE_START, List.of(), POSE_CARGO_2, FORWARDS);

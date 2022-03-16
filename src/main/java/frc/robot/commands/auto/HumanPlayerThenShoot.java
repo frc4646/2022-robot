@@ -24,14 +24,14 @@ public class HumanPlayerThenShoot extends SequentialCommandGroup {
       ),
       new DriveOpenLoop(0.0),
       new WaitCommand(ModeBase.TIME_CANCEL_MOMENTUM),
-      parallel(
+      // parallel(
         new ShootVision(),
-        new ClimberOpenLoop(1).beforeStarting(new WaitCommand(0.75))
-      ),
-      new DriveOpenLoop(0.1),
-      new WaitCommand(0.5),
-      new ClimberOpenLoop(-1),
-      new WaitCommand(0.5)
+        // new ClimberOpenLoop(1).beforeStarting(new WaitCommand(0.75))
+      // ),
+      new DriveOpenLoop(0.1)
+      // new WaitCommand(0.5),
+      // new ClimberOpenLoop(-1),
+      // new WaitCommand(0.5)
     );
   }
 }

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.auto.ModeMiddle;
 import frc.robot.commands.auto.ModeRight;
-import frc.robot.commands.auto.TestAutoPathweaver;
+import frc.robot.commands.auto.RightFiveCargo;
 import frc.robot.commands.auto.FallbackTwoCargoAuto;
 import frc.robot.commands.auto.ModeLeft;
 import frc.robot.commands.auto.ModeBase.STRATEGY_PHASE_2;
@@ -25,7 +25,7 @@ public class AutoModeSelector {
     TEST_AUTO,
     TWO_CARGO,
     TWO_CARGO_PLUS_TERMINAL,
-    TWO_CARGO_PLUS_TERMINAL_PATHWEAVER,
+    FIVE_CARGO,
   }
 
   private SendableChooser<DesiredMode> modeSelector;
@@ -50,7 +50,7 @@ public class AutoModeSelector {
     modeSelector.addOption("Right 2 Cargo", DesiredMode.RIGHT_2_CARGO);
     modeSelector.addOption("2 Cargo", DesiredMode.TWO_CARGO);
     modeSelector.addOption("2 Cargo + Terminal", DesiredMode.TWO_CARGO_PLUS_TERMINAL);
-    modeSelector.addOption("2 Cargo + Terminal Pathweaver", DesiredMode.TWO_CARGO_PLUS_TERMINAL_PATHWEAVER);
+    modeSelector.addOption("5 Cargo", DesiredMode.FIVE_CARGO);
     modeSelector.addOption("Test Mode", DesiredMode.TEST_AUTO);
     SmartDashboard.putData("Auto: Mode", modeSelector);
   }
@@ -77,14 +77,14 @@ public class AutoModeSelector {
             return Optional.of(new FallbackTwoCargoAuto());
         }
 
-      case TWO_CARGO_PLUS_TERMINAL_PATHWEAVER:
+      case FIVE_CARGO:
         switch (position) {
           case LEFT:
             return Optional.of(new FallbackTwoCargoAuto());
           case MIDDLE:
-            return Optional.of(new TestAutoPathweaver());
-          case RIGHT:
             return Optional.of(new FallbackTwoCargoAuto());
+          case RIGHT:
+            return Optional.of(new RightFiveCargo());
         }
 
       case TEST_AUTO:

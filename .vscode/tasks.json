@@ -7,11 +7,7 @@
       "label": "Create Paths Files",
       "type": "shell",
       "command": "./createPathFiles.bat",
-      "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "problemMatcher": []
     }
   ]
-}
+} 
