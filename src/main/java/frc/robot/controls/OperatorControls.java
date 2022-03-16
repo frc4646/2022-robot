@@ -1,7 +1,7 @@
 package frc.robot.controls;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -21,7 +21,6 @@ public class OperatorControls {
   private final double TRIGGER_DEADBAND = 0.2;
   private final XboxController operator;
   private final JoystickButton buttonA, buttonB, buttonX, buttonY, bumperL, bumperR, Fn, start;
-  private final Trigger aimLob, aimFar;
   // private final Trigger climbMode;
 
   public OperatorControls() {
@@ -29,14 +28,14 @@ public class OperatorControls {
     buttonA = makeButton(Button.kA); buttonB = makeButton(Button.kB); buttonX = makeButton(Button.kX); buttonY = makeButton(Button.kY);
     bumperL = makeButton(Button.kLeftBumper); bumperR = makeButton(Button.kRightBumper);
     Fn = makeButton(Button.kBack); start = makeButton(Button.kStart);
-    aimLob = new Trigger() { @Override public boolean get() { return getAimLob(); } };
-    aimFar = new Trigger() { @Override public boolean get() { return getAimFar(); } };
     // climbMode = new Trigger(RobotContainer.CLIMBER::isInClimbMode);
   }
 
   public void configureButtons() {
     // TEMPORARY CODE
     buttonY.whenActive(new FireCargo());
+    // Trigger triggerWrongCargo = new Trigger(RobotContainer.COLOR_SENSOR.isWrongCargo).and(new Trigger(RobotContainer.FEEDER.isShooterLoaded));
+    // triggerWrongCargo.whenActive(new ShootVision());
 
     // Climber
     start.whenPressed(new ClimberArms(true));  // TODO move to alt buttons when in climb mode?
@@ -45,10 +44,6 @@ public class OperatorControls {
     Fn.whenReleased(new ClimberEnableLimits(true));
     buttonX.toggleWhenPressed(new ClimbMode());  // TODO move to start button?
     // buttonX.whenPressed(new ClimberZero());
-
-    // Hood
-    // aimLob.whenActive(new HoodExtend(false));  // TODO test these
-    // aimFar.whenActive(new HoodExtend(true));
 
     // Intake
     buttonY.and(Fn).whenActive(new ExhaustIntake());  // TODO just on regular button?

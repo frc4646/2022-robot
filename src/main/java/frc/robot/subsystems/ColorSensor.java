@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
@@ -31,6 +33,8 @@ public class ColorSensor extends SmartSubsystem {
   private Color colorOpponent = Constants.COLORSENSOR.MATCH_RED;
   private int countsCorrect = 0, countsWrong = 0;
 
+  public BooleanSupplier isWrongCargo = () -> isWrongCargo();
+
   public ColorSensor() {
     colorSensor = new ColorSensorV3(Constants.COLORSENSOR.I2C_PORT);
     colorMatcher = new ColorMatch();
@@ -46,6 +50,9 @@ public class ColorSensor extends SmartSubsystem {
         cache.distance = colorSensor.getProximity();
         cache.match = colorMatcher.matchClosestColor(cache.colorRaw);
         // TODO switch to matchColor? Incorperates confidence level. Set confidence threshold?  
+      }
+      else{
+        cache.state = STATE.NOT_PRESENT;
       }
     } catch (NullPointerException npe) {
       cache.distance = 0;  // TODO handle matcher returns null?

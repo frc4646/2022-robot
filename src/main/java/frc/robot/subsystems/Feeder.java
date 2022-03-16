@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -8,7 +10,6 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.team254.drivers.SparkMaxFactory;
 import frc.team4646.Test;
 
@@ -22,6 +23,8 @@ public class Feeder extends SmartSubsystem {
   private final DigitalInput breakBeam;
   private DataCache cache = new DataCache();
   private double demand = 0.0;
+
+  public BooleanSupplier isShooterLoaded = () -> isShooterLoaded();
 
   public Feeder() {
     motor = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.FEEDER);

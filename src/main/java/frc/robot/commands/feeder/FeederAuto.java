@@ -11,7 +11,7 @@ import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 
 public class FeederAuto extends CommandBase {
-  private enum STATE {IDLE, LOADING, LOADED};
+  private enum STATE {IDLE, LOADING, LOADED, WRONG_LOADED};
   private Feeder feeder = RobotContainer.FEEDER;
   private Climber climber = RobotContainer.CLIMBER;
   private ColorSensor sensorLoading = RobotContainer.COLOR_SENSOR;
@@ -41,7 +41,7 @@ public class FeederAuto extends CommandBase {
       setState(STATE.LOADED);
     } else if (sensorLoading.isWrongCargo()) {
       setState(STATE.IDLE);
-    } else if (intake.isExtended() && !feeder.isShooterLoaded()) {
+    } else if ((intake.isExtended() || sensorLoading.isCargoPresent()) && !feeder.isShooterLoaded()) {
       setState(STATE.LOADING);
     }
     // } else if (sensorLoading.isCorrectCargo()) {
@@ -58,6 +58,10 @@ public class FeederAuto extends CommandBase {
         setState(STATE.IDLE);
       }
     }
+    // else if(stateCurrent == STATE.WRONG_LOADED) {
+    //   setpoint = Constants.FEEDER.OPEN_LOOP_SHOOT;
+    //   // if()
+    // }
     feeder.setOpenLoop(setpoint);
     SmartDashboard.putString("Feeder: State", stateCurrent.toString());  // TODO refactor
   }

@@ -31,7 +31,7 @@ public final class Constants {
       DRIVETRAIN_FL = 24, DRIVETRAIN_BL = 23, DRIVETRAIN_BR = 22, DRIVETRAIN_FR = 21,
       TALON_SHOOTER_L = 25, TALON_SHOOTER_R = 27, TALON_SHOOTER_TOP = 28,
       CLIMBER_L = 13, CLIMBER_R = 14,
-      INTAKE = 5, TURRET = 26, HOOD = 11,
+      INTAKE = 5, TURRET = 26,
       FEEDER = 8, AGITATOR_R = 31, AGITATOR_L = 32,
       CANIFIER = 9, CANDLE = 15;
   }
@@ -44,7 +44,7 @@ public final class Constants {
 
   public static final class DIGITAL {
     public static final int
-      FEEDER_BREAK_BEAM = 0, HOOD = 1;
+      FEEDER_BREAK_BEAM = 0;
   }
 
   public static final class AGITATOR {
@@ -80,8 +80,8 @@ public final class Constants {
 
     public static final int DISTANCE_MIN = 80;
     public static final Color 
-      MATCH_BLUE = new Color(0.143, 0.427, 0.429), // TODO fill these out based on readings
-      MATCH_RED = new Color(0.561, 0.232, 0.114); // TODO fill these out based on readings
+      MATCH_BLUE = new Color(0.214, 0.325, 0.46),
+      MATCH_RED = new Color(0.479, 0.378, 0.114);
   }
 
   public static final class DIAGNOSTICS {
@@ -170,12 +170,6 @@ public final class Constants {
       P = 0.1,
       I = 0.0,
       D = 0.0;
-  }
-
-  public static final class HOOD {
-    public static final boolean TUNING = false;
-
-    public static final double DEGREES_DEFAULT = 65.0;  // TODO tune
   }
 
   public static final class INFRASTRUCTURE {
