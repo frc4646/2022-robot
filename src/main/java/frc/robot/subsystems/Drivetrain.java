@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.team254.drivers.SparkMaxFactory;
@@ -35,6 +37,8 @@ public class Drivetrain extends SmartSubsystem {
   
   private boolean isBrakeMode;
 
+  private final Field2d field;
+
   public Drivetrain() {
     masterL = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL, true);
     slaveL = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, masterL, false);
@@ -53,6 +57,10 @@ public class Drivetrain extends SmartSubsystem {
     resetEncoders();
     gyro.reset();
     odometry = new DifferentialDriveOdometry(cache.heading);
+
+    
+    field = new Field2d();
+    SmartDashboard.putData(field);
   }
 
   public void configureMotor(CANSparkMax motor, boolean isLeft, boolean isMaster) {
@@ -154,6 +162,8 @@ public class Drivetrain extends SmartSubsystem {
   private double metersToRotations(double meters) {
     return meters * Constants.DRIVETRAIN.GEAR_RATIO / Constants.DRIVETRAIN.WHEEL_DIAMETER / Math.PI / 0.0254;
   }
+
+  public void putTrajectory(String name, Trajectory traj) {field.getObject(name).setTrajectory(traj); }
 
   @Override
   public void runTests() {

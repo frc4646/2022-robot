@@ -141,6 +141,8 @@ public final class Constants {
       AUTO_MAX_VOLTS = 10.0,
       MAX_SPEED_METERS_PER_SECOND = 3.6,
       MAX_ACCEL_METERS_PER_SECOND_SQUARED = 1.5,
+      MAX_SPEED_METERS_PER_SECOND_SLOW = 2.0,
+      MAX_ACCEL_METERS_PER_SECOND_SQUARED_SLOW = 1.0,
       RAMSETE_B = 1.0,     // FRC recommends 2.0
       RAMSETE_ZETA = 0.5;  // FRC recommends 0.7
       
@@ -153,6 +155,14 @@ public final class Constants {
       .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
       .addConstraint(AUTO_VOLTAGE_CONSTRAINT)
       .setReversed(true);
+      
+    public static final TrajectoryConfig TRAJECTORY_CONFIG_SLOW = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND_SLOW, MAX_ACCEL_METERS_PER_SECOND_SQUARED_SLOW)
+    .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
+    .addConstraint(AUTO_VOLTAGE_CONSTRAINT);
+    public static final TrajectoryConfig TRAJECTORY_CONFIG_SLOW_REVERSED = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND_SLOW, MAX_ACCEL_METERS_PER_SECOND_SQUARED_SLOW)
+    .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
+    .addConstraint(AUTO_VOLTAGE_CONSTRAINT)
+    .setReversed(true);
   }
 
   public static final class FEEDER {

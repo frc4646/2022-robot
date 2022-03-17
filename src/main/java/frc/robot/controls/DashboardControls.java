@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.intake.IntakeJuggle;
 import frc.robot.commands.sequence.FireCargo;
 import frc.robot.commands.shooter.ShooterPairTune;
 import frc.robot.commands.shooter.ShooterTune;
@@ -23,6 +24,9 @@ import frc.robot.commands.turret.TurretPosition;
 
 public class DashboardControls {
   public void configureButtons() {
+    
+    SmartDashboard.putData("IntakeJiggle", new IntakeJuggle());
+    
     SmartDashboard.putData("FireCargo", new FireCargo());
     SmartDashboard.putData("Tune: ShooterPair", new ShooterPairTune());
     SmartDashboard.putData("Tune: Shoot", new ShooterTune());

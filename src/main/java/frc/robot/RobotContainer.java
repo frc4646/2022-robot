@@ -18,7 +18,6 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Infrastructure;
 import frc.robot.subsystems.Vision;
@@ -45,7 +44,6 @@ public class RobotContainer {
   public static Diagnostics DIAGNOSTICS;
   public static Drivetrain DRIVETRAIN;
   public static Feeder FEEDER;
-  public static Hood HOOD;
   public static Intake INTAKE;
   public static Infrastructure INFRASTRUCTURE;
   public static Shooter SHOOTER;
@@ -67,7 +65,6 @@ public class RobotContainer {
     COLOR_SENSOR = new ColorSensor();
     DRIVETRAIN = new Drivetrain();
     FEEDER = new Feeder();
-    HOOD = new Hood();
     INFRASTRUCTURE = new Infrastructure();
     INTAKE = new Intake();
     SHOOTER = new Shooter();
@@ -75,7 +72,7 @@ public class RobotContainer {
     TURRET = new Turret();
     VISION = new Vision();
     DIAGNOSTICS = new Diagnostics();
-    allSubsystems = Arrays.asList(AGITATOR, CANIFIER, CLIMBER, COLOR_SENSOR, DRIVETRAIN, FEEDER, HOOD, INFRASTRUCTURE, INTAKE, SHOOTER, SHOOTER_TOP, TURRET, VISION, DIAGNOSTICS);
+    allSubsystems = Arrays.asList(AGITATOR, CANIFIER, CLIMBER, COLOR_SENSOR, DRIVETRAIN, FEEDER, INFRASTRUCTURE, INTAKE, SHOOTER, SHOOTER_TOP, TURRET, VISION, DIAGNOSTICS);
 
     CONTROLS.configureButtons();  // Must create buttons AFTER subsystems
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
@@ -85,7 +82,6 @@ public class RobotContainer {
     // CLIMBER.setDefaultCommand(new ClimberAuto());  // TODO try ClimberZero on button if this doesn't work
     CLIMBER.setDefaultCommand(new ClimberTeleop());
     FEEDER.setDefaultCommand(new FeederAuto());
-    // HOOD.setDefaultCommand(new HoodAim());
     SHOOTER.setDefaultCommand(new ShooterAuto());
     TURRET.setDefaultCommand(new TurretAim());
 
