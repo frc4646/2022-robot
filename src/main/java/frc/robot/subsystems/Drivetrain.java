@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import java.util.Arrays;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
@@ -29,6 +31,8 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   private final CANSparkMax masterL, masterR, slaveL, slaveR;
+  private final RelativeEncoder encoderL, encoderR;
+  private final SparkMaxPIDController pidL, pidR;
   private final Navx gyro;
   private final DifferentialDriveOdometry odometry;
   private DataCache cache = new DataCache();
@@ -40,6 +44,10 @@ public class Drivetrain extends SmartSubsystem {
     slaveL = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BL, masterL, false);
     masterR = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FR, false);
     slaveR = SparkMaxFactory.createPermanentSlaveSparkMax(Constants.CAN.DRIVETRAIN_BR, masterR, false);
+    encoderL = masterL.getEncoder();
+    encoderR = masterR.getEncoder();
+    pidL = masterL.getPIDController();
+    pidR = masterR.getPIDController();
     gyro = new Navx();
 
     configureMotor(masterL, true, true);
@@ -71,10 +79,10 @@ public class Drivetrain extends SmartSubsystem {
 
   @Override
   public void cacheSensors() {
-    cache.distanceL = masterL.getEncoder().getPosition();
-    cache.distanceR = masterR.getEncoder().getPosition();
-    cache.rpmL = masterL.getEncoder().getVelocity();
-    cache.rpmR = masterR.getEncoder().getVelocity();
+    cache.distanceL = encoderL.getPosition();
+    cache.distanceR = encoderR.getPosition();
+    cache.rpmL = encoderL.getVelocity();
+    cache.rpmR = encoderR.getVelocity();
     cache.heading = gyro.getHeading();
     cache.pitch = Rotation2d.fromDegrees(gyro.getPitch());
     odometry.update(getHeading(), rotationsToMeters(cache.distanceL), rotationsToMeters(cache.distanceR));
@@ -97,8 +105,8 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   public void resetEncoders() {
-    masterL.getEncoder().setPosition(0.0);
-    masterR.getEncoder().setPosition(0.0);
+    encoderL.setPosition(0.0);
+    encoderR.setPosition(0.0);
     // cache = new DataCache();
   }
 
@@ -134,8 +142,8 @@ public class Drivetrain extends SmartSubsystem {
     // double feedforwardL = Constants.DRIVETRAIN.FEED_FORWARD.calculate(speeds.leftMetersPerSecond);
     // double feedforwardR = Constants.DRIVETRAIN.FEED_FORWARD.calculate(speeds.rightMetersPerSecond);
     // TODO adjust feed forward using measured gains?
-    masterL.getPIDController().setReference(metersToRotations(wheelSpeedL), ControlType.kDutyCycle);
-    masterR.getPIDController().setReference(metersToRotations(wheelSpeedR), ControlType.kDutyCycle);
+    pidL.setReference(metersToRotations(wheelSpeedL), ControlType.kDutyCycle);
+    pidR.setReference(metersToRotations(wheelSpeedR), ControlType.kDutyCycle);
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -166,9 +174,9 @@ public class Drivetrain extends SmartSubsystem {
     setBrakeMode(false);
     MotorTestSparkMax.checkMotors(this,
       Arrays.asList(new MotorConfig<>("MasterR", masterR), new MotorConfig<>("SlaveR", slaveR)),
-      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, masterR.getEncoder()::getVelocity));
+      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, encoderR::getVelocity));
     MotorTestSparkMax.checkMotors(this,
       Arrays.asList(new MotorConfig<>("MasterL", masterL), new MotorConfig<>("SlaveL", slaveL)),
-      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, masterL.getEncoder()::getVelocity));
+      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, encoderL::getVelocity));
   }
 }

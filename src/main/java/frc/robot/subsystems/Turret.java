@@ -39,8 +39,6 @@ public class Turret extends ServoMotorSubsystem {
   @Override
   public void updateDashboard(boolean showDetails) {
     super.updateDashboard(showDetails);
-    if(showDetails) {
-    }
     if (Constants.TURRET.TUNING) {
       SmartDashboard.putBoolean("Turret: Limit F", cache.limitF);
       SmartDashboard.putBoolean("Turret: Limit R", cache.limitR);

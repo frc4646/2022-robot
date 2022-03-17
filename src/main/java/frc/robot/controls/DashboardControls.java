@@ -23,14 +23,14 @@ import frc.robot.commands.turret.TurretPosition;
 
 public class DashboardControls {
   public void configureButtons() {
-    SmartDashboard.putData("FireCargo", new FireCargo());
-    SmartDashboard.putData("Tune: ShooterPair", new ShooterPairTune());
-    SmartDashboard.putData("Tune: Shoot", new ShooterTune());
-    
     if (Constants.DRIVETRAIN.TUNING) {
       SmartDashboard.putData("Reset Odometry", new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));}));
     }
-
+    if (Constants.SHOOTER.TUNING || Constants.SHOOTER_TOP.TUNING) {
+      SmartDashboard.putData("FireCargo", new FireCargo());
+      SmartDashboard.putData("Tune: ShooterPair", new ShooterPairTune());
+      SmartDashboard.putData("Tune: Shoot", new ShooterTune());
+    }
     if (Constants.TURRET.TUNING) {
       SmartDashboard.putData("Tune: Turret A", new TurretPosition(Constants.TURRET.SERVO.kHomePosition + 70.0, 0.1));
       SmartDashboard.putData("Tune: Turret Front", new TurretPosition(Constants.TURRET.SERVO.kHomePosition - 180, 0.1));

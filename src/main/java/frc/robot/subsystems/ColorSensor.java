@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants;
+import frc.team4646.StabilityCounter;
 import frc.team4646.Test;
 
 public class ColorSensor extends SmartSubsystem {
@@ -27,12 +28,12 @@ public class ColorSensor extends SmartSubsystem {
   
   private final ColorSensorV3 colorSensor;
   private final ColorMatch colorMatcher;
+  private final StabilityCounter stabilityCorrect = new StabilityCounter(1);
+  private final StabilityCounter stabilityWrong = new StabilityCounter(1);
   private DataCache cache = new DataCache();
 
   private Color colorAlliance = Constants.COLORSENSOR.MATCH_RED;
   private Color colorOpponent = Constants.COLORSENSOR.MATCH_RED;
-  private int countsCorrect = 0, countsWrong = 0;
-
   public BooleanSupplier isWrongCargo = () -> isWrongCargo();
 
   public ColorSensor() {
@@ -67,14 +68,8 @@ public class ColorSensor extends SmartSubsystem {
     else
       cache.state = STATE.UNKNOWN_COLOR;
     
-    countsCorrect++;
-    if (cache.state != STATE.CORRECT) {
-      countsCorrect = 0;
-    }
-    countsWrong++;
-    if (cache.state != STATE.WRONG) {
-      countsWrong = 0;
-    }
+    stabilityCorrect.calculate(cache.state == STATE.CORRECT);
+    stabilityWrong.calculate(cache.state == STATE.WRONG);
   }
 
   @Override
@@ -83,8 +78,8 @@ public class ColorSensor extends SmartSubsystem {
     SmartDashboard.putString("Color: State", getState().toString());
     if (showDetails) {
       SmartDashboard.putNumber("Color: Distance", cache.distance);
-      SmartDashboard.putNumber("Color: Counts Correct", countsCorrect);
-      SmartDashboard.putNumber("Color: Counts Wrong", countsWrong);
+      SmartDashboard.putNumber("Color: Counts Correct", stabilityCorrect.counts());
+      SmartDashboard.putNumber("Color: Counts Wrong", stabilityWrong.counts());
     }
     if (Constants.COLORSENSOR.TUNING) {
       SmartDashboard.putNumber("Color: Confidence", cache.match.confidence);

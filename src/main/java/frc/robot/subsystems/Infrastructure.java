@@ -36,19 +36,19 @@ public class Infrastructure extends SmartSubsystem {
     cache.battery = RobotController.getBatteryVoltage();
   }
   
+  @Override
+  public void updateDashboard(boolean showDetails) {
+    if (showDetails) {
+      SmartDashboard.putNumber("Battery", cache.battery);
+    }
+  }
+  
   /** Enable/disable the {@link Compressor} closed loop, which <i>automatically</i> runs the {@link Compressor} when pressure is low */
   public void setCompressor(boolean enable) {
     if(enable) {
       compressor.enableDigital();
     } else {
       compressor.disable();
-    }
-  }
-  
-  @Override
-  public void updateDashboard(boolean showDetails) {
-    if (showDetails) {
-      SmartDashboard.putNumber("Battery", cache.battery);
     }
   }
 

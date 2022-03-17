@@ -3,8 +3,6 @@ package frc.robot;
 import frc.robot.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
 import frc.robot.util.DiagnosticState;
 import frc.robot.util.ShootTree;
-import frc.team254.util.InterpolatingDouble;
-import frc.team254.util.InterpolatingTreeMap;
 import frc.team4646.LEDColor;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -183,7 +181,7 @@ public final class Constants {
   }
 
   public static final class SHOOTER {
-    public static final boolean TUNING = true;
+    public static final boolean TUNING = false;
 
     public static int STABLE_COUNTS = 2;
     public static final double
@@ -201,7 +199,7 @@ public final class Constants {
   }
 
   public static final class SHOOTER_TOP {
-    public static final boolean TUNING = true;
+    public static final boolean TUNING = false;
 
     public static int STABLE_COUNTS = SHOOTER.STABLE_COUNTS;
     public static final double

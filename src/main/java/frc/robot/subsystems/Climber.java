@@ -73,7 +73,7 @@ public class Climber extends SmartSubsystem {
 
     motor.setInverted(isInverted);
     if (isMaster) {
-      // motor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 60, Constants.CAN_TIMEOUT);  // TODO test
+      motor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 60, Constants.CAN_TIMEOUT);
     }
     motor.overrideLimitSwitchesEnable(true);
   }

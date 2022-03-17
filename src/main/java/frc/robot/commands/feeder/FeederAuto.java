@@ -41,7 +41,8 @@ public class FeederAuto extends CommandBase {
       setState(STATE.LOADED);
     } else if (sensorLoading.isWrongCargo()) {
       setState(STATE.IDLE);
-    } else if ((intake.isExtended() || sensorLoading.isCargoPresent()) && !feeder.isShooterLoaded()) {
+    // } else if ((intake.isExtended() || sensorLoading.isCargoPresent()) && !feeder.isShooterLoaded()) {
+    } else if (intake.isExtended() && !feeder.isShooterLoaded()) {
       setState(STATE.LOADING);
     }
     // } else if (sensorLoading.isCorrectCargo()) {
