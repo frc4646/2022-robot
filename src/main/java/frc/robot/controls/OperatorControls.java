@@ -4,17 +4,14 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.climber.ClimberArms;
 import frc.robot.commands.climber.ClimberEnableLimits;
 import frc.robot.commands.feeder.FeederPosition;
 import frc.robot.commands.sequence.ClimbMode;
 import frc.robot.commands.sequence.ExhaustIntake;
-import frc.robot.commands.sequence.FireCargo;
 import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.sequence.StowIntake;
-import frc.robot.commands.shooter.ShooterOpenLoop;
 
 public class OperatorControls {
   private final int TRIGGER_L = 2, TRIGGER_R = 3;
@@ -32,11 +29,6 @@ public class OperatorControls {
   }
 
   public void configureButtons() {
-    // TEMPORARY CODE
-    buttonY.whenActive(new FireCargo());
-    // Trigger triggerWrongCargo = new Trigger(RobotContainer.COLOR_SENSOR.isWrongCargo).and(new Trigger(RobotContainer.FEEDER.isShooterLoaded));
-    // triggerWrongCargo.whenActive(new ShootVision());
-
     // Climber
     start.whenPressed(new ClimberArms(true));  // TODO move to alt buttons when in climb mode?
     start.whenReleased(new ClimberArms(false));
@@ -46,16 +38,12 @@ public class OperatorControls {
     // buttonX.whenPressed(new ClimberZero());
 
     // Intake
-    buttonY.and(Fn).whenActive(new ExhaustIntake());  // TODO just on regular button?
-    buttonY.and(Fn).whenInactive(new StowIntake());
     buttonA.whenActive(new ExhaustIntake());
     buttonA.whenInactive(new StowIntake());
     
     // Shooter
     bumperL.whenPressed(new ShootOpenLoop());
-    bumperL.whenReleased(new ShooterOpenLoop(0.0));
     bumperR.whenPressed(new ShootVision());
-    bumperR.whenReleased(new ShooterOpenLoop(0.0));
 
     // Testing
     buttonB.whenActive(new FeederPosition(1.0));
@@ -77,8 +65,7 @@ public class OperatorControls {
   public boolean getFn() { return operator.getBackButton(); }
 
   public void setRumble(boolean wantLeft, double percent) {
-    RumbleType half = wantLeft ? RumbleType.kLeftRumble : RumbleType.kRightRumble;
-    operator.setRumble(half, percent);
+    operator.setRumble(wantLeft ? RumbleType.kLeftRumble : RumbleType.kRightRumble, percent);
   }
 
   protected JoystickButton makeButton(Button button) {

@@ -15,10 +15,10 @@ import frc.team4646.StabilityCounter;
 import frc.team4646.Test;
 
 public class ColorSensor extends SmartSubsystem {
-  public static enum STATE {
+  public enum STATE {
     NOT_PRESENT, CORRECT, WRONG, UNKNOWN_COLOR
   }
-  public static class DataCache {
+  private class DataCache {
     public STATE state;
 
     public Color colorRaw;
@@ -30,7 +30,7 @@ public class ColorSensor extends SmartSubsystem {
   private final ColorMatch colorMatcher;
   private final StabilityCounter stabilityCorrect = new StabilityCounter(1);
   private final StabilityCounter stabilityWrong = new StabilityCounter(1);
-  private DataCache cache = new DataCache();
+  private final DataCache cache = new DataCache();
 
   private Color colorAlliance = Constants.COLORSENSOR.MATCH_RED;
   private Color colorOpponent = Constants.COLORSENSOR.MATCH_RED;
@@ -75,15 +75,14 @@ public class ColorSensor extends SmartSubsystem {
   @Override
   public void updateDashboard(boolean showDetails) {
     SmartDashboard.putBoolean("Color: Correct", getState() == STATE.CORRECT);
-    SmartDashboard.putString("Color: State", getState().toString());
     if (showDetails) {
+      SmartDashboard.putString("Color: State", getState().toString());
       SmartDashboard.putNumber("Color: Distance", cache.distance);
       SmartDashboard.putNumber("Color: Counts Correct", stabilityCorrect.counts());
       SmartDashboard.putNumber("Color: Counts Wrong", stabilityWrong.counts());
     }
-    if (Constants.COLORSENSOR.TUNING) {
+    if (Constants.TUNING.COLORSENSOR) {
       SmartDashboard.putNumber("Color: Confidence", cache.match.confidence);
-
       SmartDashboard.putNumber("Color: Red", cache.colorRaw.red);
       SmartDashboard.putNumber("Color: Green", cache.colorRaw.green);
       SmartDashboard.putNumber("Color: Blue", cache.colorRaw.blue);

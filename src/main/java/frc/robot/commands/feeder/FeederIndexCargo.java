@@ -3,6 +3,8 @@ package frc.robot.commands.feeder;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.commands.wait.WaitForColorState;
+import frc.robot.commands.wait.WaitForShooterLoaded;
 import frc.robot.subsystems.ColorSensor.STATE;
 
 public class FeederIndexCargo extends ParallelDeadlineGroup {
@@ -12,7 +14,7 @@ public class FeederIndexCargo extends ParallelDeadlineGroup {
     super(
       race(
         new WaitUntilCommand(FeederIndexCargo::hasTwoCargo),
-        new WaitForFeederState(true)  // Don't index when already loaded
+        new WaitForShooterLoaded(true)  // Don't index when already loaded
       ),
       sequence(
         new WaitForColorState(STATE.CORRECT),

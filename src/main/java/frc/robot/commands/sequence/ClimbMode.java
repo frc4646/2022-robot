@@ -4,10 +4,10 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.VisionLED;
 import frc.robot.commands.climber.ClimberArms;
 import frc.robot.commands.intake.IntakeExtend;
 import frc.robot.commands.turret.TurretPosition;
-import frc.robot.commands.vision.VisionLED;
 import frc.robot.subsystems.Vision.LEDMode;
 
 public class ClimbMode extends ConditionalCommand {

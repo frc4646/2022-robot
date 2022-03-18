@@ -13,8 +13,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.team254.drivers.SparkMaxFactory;
@@ -25,7 +23,7 @@ import frc.team4646.TestMotors.MotorTestSparkMax;
 import frc.team4646.TestMotors.TestConfig;
 
 public class Drivetrain extends SmartSubsystem {
-  public static class DataCache {
+  private class DataCache {
     public double distanceL, distanceR;
     public double rpmL, rpmR;
     public Rotation2d heading = new Rotation2d();
@@ -37,11 +35,10 @@ public class Drivetrain extends SmartSubsystem {
   private final SparkMaxPIDController pidL, pidR;
   private final Navx gyro;
   private final DifferentialDriveOdometry odometry;
-  private DataCache cache = new DataCache();
+  private final DataCache cache = new DataCache();
   
   private boolean isBrakeMode;
-
-  private final Field2d field;
+  private double demandL = 0.0, demandR = 0.0;
 
   public Drivetrain() {
     masterL = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL, true);
@@ -65,22 +62,19 @@ public class Drivetrain extends SmartSubsystem {
     resetEncoders();
     gyro.reset();
     odometry = new DifferentialDriveOdometry(cache.heading);
-    
-    field = new Field2d();
-    SmartDashboard.putData(field);
   }
 
   public void configureMotor(CANSparkMax motor, boolean isLeft, boolean isMaster) {
-    // motor.setInverted(!isLeft);
-    motor.enableVoltageCompensation(Constants.DRIVETRAIN.VOLTAGE_COMPENSATION);
+    motor.enableVoltageCompensation(12.0);
     motor.setSmartCurrentLimit(Constants.DRIVETRAIN.CURRENT_LIMIT);
     if (isMaster) {
-      motor.getPIDController().setP(isLeft ? Constants.DRIVETRAIN.VELOCITY_L_P : Constants.DRIVETRAIN.VELOCITY_R_P);
-      motor.getPIDController().setI(isLeft ? Constants.DRIVETRAIN.VELOCITY_L_I : Constants.DRIVETRAIN.VELOCITY_R_I);
-      motor.getPIDController().setD(isLeft ? Constants.DRIVETRAIN.VELOCITY_L_D : Constants.DRIVETRAIN.VELOCITY_R_D);
-      motor.getPIDController().setFF(isLeft ? Constants.DRIVETRAIN.VELOCITY_L_F : Constants.DRIVETRAIN.VELOCITY_R_F);
-      // motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);  // Velocity
-      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 5);  // Position TODO try 10
+      SparkMaxPIDController pid = isLeft ? pidL : pidR;
+      pid.setP(Constants.DRIVETRAIN.VELOCITY_P);
+      pid.setI(Constants.DRIVETRAIN.VELOCITY_I);
+      pid.setD(Constants.DRIVETRAIN.VELOCITY_D);
+      pid.setFF(Constants.DRIVETRAIN.VELOCITY_F);
+      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 5);  // Velocity
+      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 5);  // Position
     }
   }
 
@@ -101,9 +95,12 @@ public class Drivetrain extends SmartSubsystem {
       SmartDashboard.putNumber("Drive: Heading", cache.heading.getDegrees());
       SmartDashboard.putNumber("Drive: Pitch", cache.pitch.getDegrees());
     }
-    if (Constants.DRIVETRAIN.TUNING) {
-      SmartDashboard.putNumber("Drive: RPM L", cache.rpmL);
-      SmartDashboard.putNumber("Drive: RPM R", cache.rpmR);
+    if (Constants.TUNING.DRIVETRAIN) {
+      DifferentialDriveWheelSpeeds speed = getWheelSpeeds();
+      SmartDashboard.putNumber("Drive: Velocity L", speed.leftMetersPerSecond);
+      SmartDashboard.putNumber("Drive: Velocity R", speed.rightMetersPerSecond);
+      SmartDashboard.putNumber("Drive: Error L", demandL - speed.leftMetersPerSecond);
+      SmartDashboard.putNumber("Drive: Error R", demandR - speed.rightMetersPerSecond);
       SmartDashboard.putNumber("Drive: X", odometry.getPoseMeters().getX());
       SmartDashboard.putNumber("Drive: Y", odometry.getPoseMeters().getY());
     }
@@ -112,7 +109,8 @@ public class Drivetrain extends SmartSubsystem {
   public void resetEncoders() {
     encoderL.setPosition(0.0);
     encoderR.setPosition(0.0);
-    // cache = new DataCache();
+    cache.distanceL = 0.0;
+    cache.distanceR = 0.0;
   }
 
   public void resetPose(Pose2d pose) {
@@ -139,36 +137,24 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   public void setVolts(double left, double right) {
-    masterL.set(left/12.0);
-    masterR.set(right/12.0);
+    setOpenLoop(left / 12.0, right / 12.0);
   }
 
   public void setClosedLoopVelocity(double wheelSpeedL, double wheelSpeedR) {
-    // double feedforwardL = Constants.DRIVETRAIN.FEED_FORWARD.calculate(speeds.leftMetersPerSecond);
-    // double feedforwardR = Constants.DRIVETRAIN.FEED_FORWARD.calculate(speeds.rightMetersPerSecond);
-    // TODO adjust feed forward using measured gains?
-    pidL.setReference(metersToRotations(wheelSpeedL), ControlType.kDutyCycle);
-    pidR.setReference(metersToRotations(wheelSpeedR), ControlType.kDutyCycle);
+    pidL.setReference(metersToRotations(wheelSpeedL * 60.0), ControlType.kVelocity);
+    pidR.setReference(metersToRotations(wheelSpeedR * 60.0), ControlType.kVelocity);
+    demandL = wheelSpeedL;
+    demandR = wheelSpeedR;
   }
 
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(rotationsToMeters(cache.rpmL), rotationsToMeters(cache.rpmR));
-  }
-
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {return new DifferentialDriveWheelSpeeds(rotationsToMeters(cache.rpmL / 60.0), rotationsToMeters(cache.rpmR / 60.0));  }
   public Pose2d getPose() { return odometry.getPoseMeters(); }
-  public double getDistance() { return (cache.distanceL + cache.distanceR) / 2.0; }
-  public double getRPM(){ return (cache.rpmL + cache.rpmR) / 2.0; }
+  public double getDistance() { return rotationsToMeters(cache.distanceL + cache.distanceR) / 2.0; }
   public Rotation2d getHeading() { return cache.heading; }
   public Rotation2d getPitch() { return cache.pitch; }
 
-  private double rotationsToMeters(double rotations) {
-    return rotations / Constants.DRIVETRAIN.GEAR_RATIO * Constants.DRIVETRAIN.WHEEL_DIAMETER * Math.PI * 0.0254;
-  }
-  private double metersToRotations(double meters) {
-    return meters * Constants.DRIVETRAIN.GEAR_RATIO / Constants.DRIVETRAIN.WHEEL_DIAMETER / Math.PI / 0.0254;
-  }
-
-  public void putTrajectory(String name, Trajectory traj) {field.getObject(name).setTrajectory(traj); }
+  private double rotationsToMeters(double rotations) { return rotations / Constants.DRIVETRAIN.GEAR_RATIO * Constants.DRIVETRAIN.WHEEL_DIAMETER * Math.PI * 0.0254; }
+  private double metersToRotations(double meters) { return meters * Constants.DRIVETRAIN.GEAR_RATIO / Constants.DRIVETRAIN.WHEEL_DIAMETER / Math.PI / 0.0254; }
 
   @Override
   public void runTests() {

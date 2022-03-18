@@ -10,7 +10,7 @@ import frc.team4646.Test;
 public class Vision extends SmartSubsystem {
   public enum LEDMode { PIPELINE, OFF, BLINK, ON }         // Order must match Limelight docs
   public enum CamMode { VISION_PROCESSOR, DRIVER_CAMERA }  // Order must match Limelight docs
-  public static class DataCache {
+  private class DataCache {
     public double xDegrees;     // Horizontal Offset From Crosshair To Target (LL1: -27 degrees to 27 degrees | LL2: -29.8 to 29.8 degrees)
     public double yDegrees;     // Vertical Offset From Crosshair To Target (LL1: -20.5 degrees to 20.5 degrees | LL2: -24.85 to 24.85 degrees)
     public double areaRaw;         // Target Area (0% of image to 100% of image)
@@ -81,7 +81,7 @@ public class Vision extends SmartSubsystem {
     SmartDashboard.putBoolean("Vision: Target", cache.seesTarget);
     SmartDashboard.putNumber("Vision: Distance", cache.distanceFiltered);
     SmartDashboard.putNumber("Vision: X", cache.xDegrees);
-    if (Constants.VISION.TUNING) {
+    if (Constants.TUNING.VISION) {
       SmartDashboard.putNumber("Vision: Area", cache.areaRaw);
       SmartDashboard.putNumber("Vision: Distance Raw", cache.distanceCalculated);
     }

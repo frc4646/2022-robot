@@ -9,13 +9,13 @@ import frc.team4646.LEDColor;
 import frc.team4646.Test;
 
 public class Canifier extends SmartSubsystem {
-  public static class DataCache {
+  private class DataCache {
     double red = 0.0, green = 0.0, blue = 0.0;
     boolean isTurrentHome;
   }
 
   private final CANifier canifier;
-  private DataCache cache = new DataCache();
+  private final DataCache cache = new DataCache();
 
   public Canifier() {
     canifier = new CANifier(Constants.CAN.CANIFIER);

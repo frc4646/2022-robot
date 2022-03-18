@@ -12,8 +12,8 @@ import frc.robot.Constants;
 /** These are hand crafted, artisenal trajectories */
 public class Paths {
   private static final TrajectoryConfig
-    FORWARDS = Constants.DRIVETRAIN.TRAJECTORY_CONFIG,
-    BACKWARDS = Constants.DRIVETRAIN.TRAJECTORY_CONFIG_REVERSED;
+    FORWARDS = Constants.DRIVETRAIN.PATH_CONFIG_F,
+    BACKWARDS = Constants.DRIVETRAIN.PATH_CONFIG_R;
 
   public static class LEFT {
     private static final Pose2d
@@ -34,7 +34,7 @@ public class Paths {
     public static final Trajectory
       CARGO_2 = TrajectoryGenerator.generateTrajectory(POSE_START, List.of(), POSE_CARGO_2, FORWARDS),
       HUMAN_PLAYER = TrajectoryGenerator.generateTrajectory(POSE_CARGO_2, List.of(), POSE_HUMAN_PLAYER, FORWARDS),
-      SHOOT_3And4 = TrajectoryGenerator.generateTrajectory(POSE_HUMAN_PLAYER, List.of(), POSE_CARGO_2, BACKWARDS),
+      SHOOT_3_4 = TrajectoryGenerator.generateTrajectory(POSE_HUMAN_PLAYER, List.of(), POSE_CARGO_2, BACKWARDS),
       ALLIANCE_WALL = TrajectoryGenerator.generateTrajectory(POSE_CARGO_2, List.of(), POSE_ALLIANCE_WALL, FORWARDS);
   }
 

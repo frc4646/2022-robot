@@ -15,8 +15,7 @@ public class FeederPosition extends CommandBase {
 
   @Override
   public void initialize() {
-    double initialPosition = subsystem.getPosition();
-    subsystem.setClosedLoopPosition(initialPosition + turnsRelative);
+    subsystem.setClosedLoopPosition(subsystem.getPosition() + turnsRelative);
   }
 
   @Override

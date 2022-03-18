@@ -22,9 +22,10 @@ import frc.team254.drivers.TalonUtil;
 import frc.team4646.Test;
 
 public class Climber extends SmartSubsystem {
-  private static class DataCache {
+  private class DataCache {
     public boolean limitL, limitR;
-    public double positionL, velocityL, currentL, positionR, velocityR, currentR;
+    public double positionL, positionR;
+    public double currentL, currentR;
   }
 
   private final TalonFX masterL, masterR;
@@ -39,8 +40,8 @@ public class Climber extends SmartSubsystem {
     armL = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID.ARM_L_OUT, Constants.SOLENOID.ARM_L_IN);
     armR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID.ARM_R_OUT, Constants.SOLENOID.ARM_R_IN);
 
-    configureMotor(masterL, true, false);
-    configureMotor(masterR, true, true);
+    configureMotor(masterL, false);
+    configureMotor(masterR, true);
 
     isBrakeMode = false;
     setBrakeMode(true);
@@ -50,50 +51,39 @@ public class Climber extends SmartSubsystem {
     forceZero(false);
   }
 
-  protected void configureMotor(TalonFX motor, boolean isMaster, boolean isInverted) {
-    TalonUtil.checkError(motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set reverse limit switch: ");
-    if (isMaster) {
-      TalonUtil.checkError(motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), getName() + ": Could not detect encoder: ");
-      TalonUtil.checkError(motor.configForwardSoftLimitThreshold(Constants.CLIMBER.LIMIT_F, Constants.CAN_TIMEOUT), getName() + ": Could not set forward soft limit: ");
-      TalonUtil.checkError(motor.configForwardSoftLimitEnable(true, Constants.CAN_TIMEOUT), getName() + ": Could not enable forward soft limit: ");
-      TalonUtil.checkError(motor.configReverseSoftLimitThreshold(0.0, Constants.CAN_TIMEOUT), getName() + ": Could not set reverse soft limit: ");
-      TalonUtil.checkError(motor.configReverseSoftLimitEnable(true, Constants.CAN_TIMEOUT), getName() + ": Could not enable reverse soft limit: ");
+  protected void configureMotor(TalonFX motor, boolean isInverted) {
+    TalonUtil.checkError(motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), "Climber: Could not set reverse limit switch: ");
+    TalonUtil.checkError(motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), "Climber: Could not detect encoder: ");
+    TalonUtil.checkError(motor.configForwardSoftLimitThreshold(Constants.CLIMBER.LIMIT_F, Constants.CAN_TIMEOUT), "Climber: Could not set forward soft limit: ");
+    TalonUtil.checkError(motor.configForwardSoftLimitEnable(true, Constants.CAN_TIMEOUT), "Climber: Could not enable forward soft limit: ");
+    TalonUtil.checkError(motor.configReverseSoftLimitThreshold(0.0, Constants.CAN_TIMEOUT), "Climber: Could not set reverse soft limit: ");
+    TalonUtil.checkError(motor.configReverseSoftLimitEnable(true, Constants.CAN_TIMEOUT), "Climber: Could not enable reverse soft limit: ");
 
-      TalonUtil.checkError(motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), getName() + ": Could not detect encoder: ");
-      TalonUtil.checkError(motor.config_kP(0, Constants.CLIMBER.P, Constants.CAN_TIMEOUT), getName() + ": could not set P: ");
-      TalonUtil.checkError(motor.config_kI(0, Constants.CLIMBER.I, Constants.CAN_TIMEOUT), getName() + ": could not set I: ");
-      TalonUtil.checkError(motor.config_kD(0, Constants.CLIMBER.D, Constants.CAN_TIMEOUT), getName() + ": could not set D: ");
-      TalonUtil.checkError(motor.config_kF(0, Constants.CLIMBER.F, Constants.CAN_TIMEOUT), getName() + ": could not set F: ");
-    }
+    TalonUtil.checkError(motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), "Climber: Could not detect encoder: ");
+    TalonUtil.checkError(motor.config_kP(0, Constants.CLIMBER.P, Constants.CAN_TIMEOUT), "Climber: could not set P: ");
+    TalonUtil.checkError(motor.config_kI(0, Constants.CLIMBER.I, Constants.CAN_TIMEOUT), "Climber: could not set I: ");
+    TalonUtil.checkError(motor.config_kD(0, Constants.CLIMBER.D, Constants.CAN_TIMEOUT), "Climber: could not set D: ");
+    TalonUtil.checkError(motor.config_kF(0, Constants.CLIMBER.F, Constants.CAN_TIMEOUT), "Climber: could not set F: ");
 
     StatorCurrentLimitConfiguration limitStator = new StatorCurrentLimitConfiguration(true, 60, 60, 0.2);
-    TalonUtil.checkError(motor.configStatorCurrentLimit(limitStator, Constants.CAN_TIMEOUT), getName() + ": Could not set stator current limits");
-    TalonUtil.checkError(motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT), getName() + ": Could not set voltage comp saturation");
+    TalonUtil.checkError(motor.configStatorCurrentLimit(limitStator, Constants.CAN_TIMEOUT), "Climber: Could not set stator current limits");
+    TalonUtil.checkError(motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT), "Climber: Could not set voltage comp saturation");
     motor.enableVoltageCompensation(true);
 
     motor.setInverted(isInverted);
-    if (isMaster) {
-      motor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 60, Constants.CAN_TIMEOUT);
-    }
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 60, Constants.CAN_TIMEOUT);
     motor.overrideLimitSwitchesEnable(true);
   }
 
   @Override
   public void cacheSensors() {
     cache.limitL = masterL.getSensorCollection().isRevLimitSwitchClosed() == 1;
-    cache.positionL = masterL.getSelectedSensorPosition(0);
-    cache.velocityL = masterL.getSelectedSensorVelocity(0);
-    cache.currentL = masterL.getStatorCurrent();
     cache.limitR = masterR.getSensorCollection().isRevLimitSwitchClosed() == 1;
+    cache.positionL = masterL.getSelectedSensorPosition(0);
     cache.positionR = masterR.getSelectedSensorPosition(0);
-    cache.velocityR = masterR.getSelectedSensorVelocity(0);
     cache.currentR = masterR.getStatorCurrent();
-    if (isAtHomingLocation(true)) {
-      zeroSensors(true);
-    }
-    if (isAtHomingLocation(false)) {
-      zeroSensors(false);
-    }
+    cache.currentL = masterL.getStatorCurrent();
+    resetIfAtHome();
   }
 
   @Override
@@ -101,12 +91,10 @@ public class Climber extends SmartSubsystem {
     if (showDetails) {
       SmartDashboard.putBoolean("Climber: Limit L", cache.limitL);
       SmartDashboard.putBoolean("Climber: Limit R", cache.limitR);
-      if (Constants.CLIMBER.TUNING) {
+      if (Constants.TUNING.CLIMBER) {
         SmartDashboard.putNumber("Climber: PositionL", cache.positionL);
-        SmartDashboard.putNumber("Climber: VelocityL", cache.velocityL);
-        SmartDashboard.putNumber("Climber: CurrentL", cache.currentL);
         SmartDashboard.putNumber("Climber: PositionR", cache.positionR);
-        SmartDashboard.putNumber("Climber: VelocityR", cache.velocityR);
+        SmartDashboard.putNumber("Climber: CurrentL", cache.currentL);
         SmartDashboard.putNumber("Climber: CurrentR", cache.currentR);
       }
     }
@@ -115,6 +103,15 @@ public class Climber extends SmartSubsystem {
   @Override
   public void onEnable(boolean isAutonomous) {
     setBrakeMode(true);
+  }
+
+  public void resetIfAtHome() {
+    if (isAtHomingLocation(true)) {
+      zeroSensors(true);
+    }
+    if (isAtHomingLocation(false)) {
+      zeroSensors(false);
+    }
   }
 
   public void zeroSensors(boolean left) {
@@ -129,7 +126,11 @@ public class Climber extends SmartSubsystem {
   public void forceZero(boolean left) {
     TalonFX motor = (left) ? masterL : masterR;
     motor.setSelectedSensorPosition(0, 0, Constants.CAN_TIMEOUT);
-    cache.positionL = motor.getSelectedSensorPosition(0);
+    if (left) {
+      cache.positionL = 0.0;
+    } else {
+      cache.positionR = 0.0;
+    }
   }
 
   public void setBrakeMode(boolean enable) {
@@ -170,9 +171,7 @@ public class Climber extends SmartSubsystem {
     inClimbMode = enable;
   }
 
-  public double getPosition(boolean left) {
-    return ticksToUnits((left) ? cache.positionL : cache.positionR);
-  }
+  public double getPosition(boolean left) { return ticksToUnits((left) ? cache.positionL : cache.positionR); }
 
   public boolean isArmsExtended() { return armsExtended; }
   public boolean isInClimbMode() { return inClimbMode; }

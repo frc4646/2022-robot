@@ -10,7 +10,7 @@ import frc.robot.RobotContainer;
 
 public class DrivePath extends SequentialCommandGroup {
   public DrivePath(Trajectory trajectory) {
-    this(trajectory, false);
+    this(trajectory, true);
   }
 
   public DrivePath(Trajectory trajectory, boolean velocityMode) {
@@ -23,7 +23,7 @@ public class DrivePath extends SequentialCommandGroup {
       trajectory,
       RobotContainer.DRIVETRAIN::getPose,
       new RamseteController(Constants.DRIVETRAIN.RAMSETE_B, Constants.DRIVETRAIN.RAMSETE_ZETA),  // TODO make configurable?
-      Constants.DRIVETRAIN.DRIVE_KINEMATICS,
+      Constants.DRIVETRAIN.KINEMATICS,
       RobotContainer.DRIVETRAIN::setClosedLoopVelocity,
       RobotContainer.DRIVETRAIN
     );
@@ -36,7 +36,7 @@ public class DrivePath extends SequentialCommandGroup {
       RobotContainer.DRIVETRAIN::getPose,
       new RamseteController(Constants.DRIVETRAIN.RAMSETE_B, Constants.DRIVETRAIN.RAMSETE_ZETA),
       Constants.DRIVETRAIN.FEED_FORWARD,
-      Constants.DRIVETRAIN.DRIVE_KINEMATICS,
+      Constants.DRIVETRAIN.KINEMATICS,
       RobotContainer.DRIVETRAIN::getWheelSpeeds,
       new PIDController(Constants.DRIVETRAIN.VOLTAGE_P, Constants.DRIVETRAIN.VOLTAGE_I, Constants.DRIVETRAIN.VOLTAGE_D),
       new PIDController(Constants.DRIVETRAIN.VOLTAGE_P, Constants.DRIVETRAIN.VOLTAGE_I, Constants.DRIVETRAIN.VOLTAGE_D),

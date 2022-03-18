@@ -10,6 +10,10 @@ public class ShooterOpenLoop extends InstantCommand {
   private final ShooterTop shooterTop = RobotContainer.SHOOTER_TOP;
   public final double output;
 
+  public ShooterOpenLoop() {
+    this(0.0);
+  }
+
   public ShooterOpenLoop(double percent) {
     addRequirements(shooter, shooterTop);
     this.output = percent;

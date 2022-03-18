@@ -15,7 +15,7 @@ public class ModeMiddle extends ModeBase {
     Command phase2 = new WaitCommand(15.0);
 
     if (strategy == STRATEGY_PHASE_2.HUMAN_PLAYER)
-      phase2 = new HumanPlayerThenShoot(Paths.MIDDLE.HUMAN_PLAYER, Paths.MIDDLE.SHOOT_3And4);
+      phase2 = new HumanPlayerThenShoot(Paths.MIDDLE.HUMAN_PLAYER, Paths.MIDDLE.SHOOT_3_4);
 
     return phase2;
   }

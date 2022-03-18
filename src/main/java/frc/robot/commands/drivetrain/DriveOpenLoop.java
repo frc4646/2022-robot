@@ -8,6 +8,10 @@ public class DriveOpenLoop extends InstantCommand {
   private final Drivetrain subsystem = RobotContainer.DRIVETRAIN;
   private final double output;
 
+  public DriveOpenLoop() {
+    this(0.0);
+  }
+
   public DriveOpenLoop(double percent) {
     addRequirements(subsystem);
     this.output = percent;

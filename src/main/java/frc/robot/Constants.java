@@ -4,11 +4,11 @@ import frc.robot.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
 import frc.robot.util.DiagnosticState;
 import frc.robot.util.ShootTree;
 import frc.team4646.LEDColor;
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -16,9 +16,7 @@ import edu.wpi.first.wpilibj.util.Color;
 public final class Constants {
   public static int CAN_TIMEOUT = 100;
 
-  public static final String SHOW_DETAILS = "Show Details";
-
-  
+  public static final String SHOW_DETAILS = "Show Details";  
   static {
     SmartDashboard.putBoolean(SHOW_DETAILS, false);
   }
@@ -29,9 +27,8 @@ public final class Constants {
       DRIVETRAIN_FL = 24, DRIVETRAIN_BL = 23, DRIVETRAIN_BR = 22, DRIVETRAIN_FR = 21,
       TALON_SHOOTER_L = 25, TALON_SHOOTER_R = 27, TALON_SHOOTER_TOP = 28,
       CLIMBER_L = 13, CLIMBER_R = 14,
-      INTAKE = 5, TURRET = 26,
-      FEEDER = 8, AGITATOR_R = 31, AGITATOR_L = 32,
-      CANIFIER = 9, CANDLE = 15;
+      AGITATOR_R = 31, AGITATOR_L = 32,
+      INTAKE = 5, TURRET = 26, FEEDER = 8, CANIFIER = 9;
   }
 
   public static final class SOLENOID {
@@ -46,6 +43,17 @@ public final class Constants {
       FEEDER_BOTTOM_BREAK_BEAM = 1;
   }
 
+  public static final class TUNING {
+    public static final boolean 
+      CLIMBER = false,
+      COLORSENSOR = true,
+      DRIVETRAIN = true,
+      FEEDER = false,
+      SHOOTERS = false,
+      TURRET = false,
+      VISION = false;
+  }
+
   public static final class AGITATOR {
     public static final double
       OPEN_LOOP_EXHAUST = 0.90,
@@ -55,13 +63,11 @@ public final class Constants {
   }
   
   public static final class CLIMBER {
-    public static final boolean TUNING = false;
-
     public static final double
       OPEN_LOOP_ZERO = 0.1,
       DEADBAND = 0.2,
       TIMEOUT_ZERO = 5.0,
-      GEAR_RATIO = 72.0 / 14.0,  // TODO correct values
+      GEAR_RATIO = 72.0 / 14.0,
       TICKS_PER_UNIT_DISTANCE = 2048.0 * GEAR_RATIO,
       LIMIT_F = 999999.0,
       POSITION_DEADBAND = 0.1,  // Tune
@@ -69,11 +75,9 @@ public final class Constants {
       I = 0.0,
       D = 0.0,
       F = 0.0;
-  }  
+  }
 
-  public static final class COLORSENSOR {
-    public static final boolean TUNING = true;
-    
+  public static final class COLORSENSOR {    
     public static final I2C.Port I2C_PORT = I2C.Port.kMXP;
 
     public static final int DISTANCE_MIN = 120;
@@ -83,7 +87,7 @@ public final class Constants {
   }
 
   public static final class DIAGNOSTICS {
-    public static final double RUMBLE_PERCENT = 0.2;  // TODO tune
+    public static final double RUMBLE_PERCENT = 0.2;
     public static final DiagnosticState
       FAULT_CARGO = new DiagnosticState(new LEDColor(1.0, 0.0, 1.0)),
       FAULT_TURRET = new DiagnosticState(new LEDColor(1.0, 1.0, 0.0), true),
@@ -93,15 +97,12 @@ public final class Constants {
   }
 
   public static final class DRIVETRAIN {
-    public static final boolean TUNING = false;
-
     public static final double
       TIMEOUT_DISABLED_COAST = 5.0,
       THROTTLE_SLEW_LIMIT = 1.20,  // % output per second
       THROTTLE_DEADBAND = 0.04,
       TURNING_DEADBAND = 0.035;
 
-    public static final double VOLTAGE_COMPENSATION = 12.0;
     public static final int CURRENT_LIMIT = 30;
 
     public static final double 
@@ -109,6 +110,7 @@ public final class Constants {
       WHEEL_TRACK_WIDTH_INCHES = 26.0,
       WHEEL_SCRUB_FACTOR = 1.02,
       GEAR_RATIO = 10.71,
+      VELOCITY_MAX = 5290.0,
 
       FEED_FORWARD_GAIN_STATIC = 0.31492,  // Tuned 3/6
       FEED_FORWARD_GAIN_VELOCITY = 2.87,
@@ -116,62 +118,44 @@ public final class Constants {
       VOLTAGE_P = 0.001,  // Tuned 3/6
       VOLTAGE_I = 0.0,
       VOLTAGE_D = 0.0,
-      VELOCITY_L_P = 0.0,
-      VELOCITY_L_I = 0.0,
-      VELOCITY_L_D = 0.0,
-      VELOCITY_L_F = 0.0,
-      VELOCITY_R_P = 0.0,
-      VELOCITY_R_I = 0.0,
-      VELOCITY_R_D = 0.0,
-      VELOCITY_R_F = 0.0;
-      //Left and right should be tuned via a step response to a velocity change - P = V, D = A, I = dist. Start
+      VELOCITY_P = 0.0005,
+      VELOCITY_I = 0.0,
+      VELOCITY_D = 0.0,
+      VELOCITY_F = 1.0 / VELOCITY_MAX;
+      //Left and right should be tuned via a step response to a velocity change - P = V, D = A, I = dist
 
     public static final boolean IS_LEFT_ENCODER_INVERTED = false;
     public static final boolean IS_RIGHT_ENCODER_INVERTED = true;
 
-    public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(WHEEL_TRACK_WIDTH_INCHES * 0.0254);
+    public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(WHEEL_TRACK_WIDTH_INCHES * 0.0254);
     public static final SimpleMotorFeedforward FEED_FORWARD = new SimpleMotorFeedforward(
       FEED_FORWARD_GAIN_STATIC, FEED_FORWARD_GAIN_VELOCITY, FEED_FORWARD_GAIN_ACCEL
     );
 
     public static final double
-      AUTO_MAX_VOLTS = 10.0,
-      MAX_SPEED_METERS_PER_SECOND = 3.6,
-      MAX_ACCEL_METERS_PER_SECOND_SQUARED = 1.5,
-      MAX_SPEED_METERS_PER_SECOND_SLOW = 2.0,
-      MAX_ACCEL_METERS_PER_SECOND_SQUARED_SLOW = 1.0,
+      MAX_AUTO_VOLTS = 10.0,
+      MAX_METERS_PER_SECOND = 3.6,
+      MAX_METERS_PER_SECOND_SQUARED = 1.5,
+      MAX_METERS_PER_SECOND_SLOW = 2.0,
+      MAX_METERS_PER_SECOND_SQUARED_SLOW = 1.0,
       RAMSETE_B = 1.0,     // FRC recommends 2.0
       RAMSETE_ZETA = 0.5;  // FRC recommends 0.7
       
-    public static final DifferentialDriveVoltageConstraint
-      AUTO_VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(FEED_FORWARD, DRIVE_KINEMATICS, AUTO_MAX_VOLTS);
-    public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED)
-      .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
-      .addConstraint(AUTO_VOLTAGE_CONSTRAINT);
-    public static final TrajectoryConfig TRAJECTORY_CONFIG_REVERSED = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED)
-      .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
-      .addConstraint(AUTO_VOLTAGE_CONSTRAINT)
-      .setReversed(true);
-      
-    public static final TrajectoryConfig TRAJECTORY_CONFIG_SLOW = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND_SLOW, MAX_ACCEL_METERS_PER_SECOND_SQUARED_SLOW)
-    .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
-    .addConstraint(AUTO_VOLTAGE_CONSTRAINT);
-    public static final TrajectoryConfig TRAJECTORY_CONFIG_SLOW_REVERSED = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND_SLOW, MAX_ACCEL_METERS_PER_SECOND_SQUARED_SLOW)
-    .setKinematics(DRIVE_KINEMATICS)  // Ensures max speed is actually obeyed
-    .addConstraint(AUTO_VOLTAGE_CONSTRAINT)
-    .setReversed(true);
+    public static final DifferentialDriveVoltageConstraint VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(FEED_FORWARD, KINEMATICS, MAX_AUTO_VOLTS);
+    public static final TrajectoryConfig 
+      PATH_CONFIG_F = new TrajectoryConfig(MAX_METERS_PER_SECOND, MAX_METERS_PER_SECOND_SQUARED).setKinematics(KINEMATICS).addConstraint(VOLTAGE_CONSTRAINT),
+      PATH_CONFIG_R = new TrajectoryConfig(MAX_METERS_PER_SECOND, MAX_METERS_PER_SECOND_SQUARED).setKinematics(KINEMATICS).addConstraint(VOLTAGE_CONSTRAINT).setReversed(true),
+      PATH_CONFIG_F_SLOW = new TrajectoryConfig(MAX_METERS_PER_SECOND_SLOW, MAX_METERS_PER_SECOND_SQUARED_SLOW).setKinematics(KINEMATICS).addConstraint(VOLTAGE_CONSTRAINT),
+      PATH_CONFIG_R_SLOW = new TrajectoryConfig(MAX_METERS_PER_SECOND_SLOW, MAX_METERS_PER_SECOND_SQUARED_SLOW).setKinematics(KINEMATICS).addConstraint(VOLTAGE_CONSTRAINT).setReversed(true);
   }
 
-  public static final class FEEDER {
-    public static final boolean TUNING = false;
-    
+  public static final class FEEDER {    
     public static final double
       OPEN_LOOP_EXHAUST = 0.2,
       OPEN_LOOP_LOAD = 0.3,
       OPEN_LOOP_SHOOT = 0.5,
       OPEN_LOOP_RAMP = 0.25,  // TODO tune
       TIMEOUT_EXHAUST = 1.0,
-      TIMEOUT_LOAD = 3.0,
       GEAR_RATIO = 72.0 / 14.0,
       POSITION_DEADBAND = 0.1,
       P = 0.1,
@@ -191,8 +175,6 @@ public final class Constants {
   }
 
   public static final class SHOOTER {
-    public static final boolean TUNING = false;
-
     public static int STABLE_COUNTS = 2;
     public static final double
       OPEN_LOOP_REV_SECONDS = 1.0,
@@ -209,12 +191,10 @@ public final class Constants {
   }
 
   public static final class SHOOTER_TOP {
-    public static final boolean TUNING = false;
-
     public static int STABLE_COUNTS = SHOOTER.STABLE_COUNTS;
     public static final double
       RPM_MAX = 6380.0 * 1.25,  //  Tuned 3/15
-      RPM_DEFAULT = 2200.0,
+      RPM_DEFAULT = SHOOTER.RPM_DEFAULT * 2.0,
       RPM_ERROR_ALLOWED = SHOOTER.RPM_ERROR_ALLOWED * 2.0,  // Tuned 3/1, 25-50 seem to work well TODO try 30 again
       RPM_TRIM = SHOOTER.RPM_TRIM * 2.0,
       TICKS_PER_REV = 2048.0,
@@ -225,13 +205,10 @@ public final class Constants {
   }
 
   public static final class TURRET {
-    public static final boolean TUNING = false;
-    public static final boolean SOFT_LIMITS_AT_STARTUP = true;
-
     public static final double
-      STICK_GAIN = 25.0,
-      STICK_DEADBAND = 0.4,  // TODO Reduce when switch to new controller
-      GEAR_RATIO = 72.0 / 14.0 * 154.0 / 16.0,  // Number > 1 means "geared down"
+      STICK_GAIN = 150.0,
+      STICK_DEADBAND = 0.1,
+      GEAR_RATIO = 72.0 / 14.0 * 154.0 / 16.0,
       VELOCITY_MAX = 21500.0;
 
     public static final ServoMotorSubsystemConstants SERVO = new ServoMotorSubsystemConstants();
@@ -270,8 +247,6 @@ public final class Constants {
   }
 
   public static final class VISION {
-    public static final boolean TUNING = false;
-
     public static int STABLE_COUNTS = 2;
 
     public static final double
@@ -292,12 +267,6 @@ public final class Constants {
   }
 
   public static final class FIELD {
-    public static final double CLIMBER_TIME_REQUIRED_TO_HOLD = 5.0;
     public static final double VISION_TAPE_INCHES = 102.0;
-  }
-
-  /** TRUE if not connected to the field at competition OR if the Smartdashboard button is pressed */
-  public static boolean DashboardDuringComp() {
-    return !DriverStation.isFMSAttached() || SmartDashboard.getBoolean(SHOW_DETAILS, false);
   }
 }

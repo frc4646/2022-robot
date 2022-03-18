@@ -7,6 +7,7 @@ import frc.robot.commands.feeder.FeederLoadCargo;
 import frc.robot.commands.shooter.ShooterAim;
 import frc.robot.commands.shooter.ShooterLockRPM;
 import frc.robot.commands.turret.TurretLockPosition;
+import frc.robot.commands.wait.WaitForAim;
 
 public class ShootVision extends SequentialCommandGroup {
   public ShootVision() {

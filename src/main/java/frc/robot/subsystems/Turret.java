@@ -10,7 +10,7 @@ import frc.team254.drivers.TalonUtil;
 import frc.team4646.Test;
 
 public class Turret extends ServoMotorSubsystem {
-  private static class DataCache {
+  private class DataCache {
     public boolean limitF, limitR;
   }
 
@@ -20,10 +20,10 @@ public class Turret extends ServoMotorSubsystem {
   public Turret() {
     super(Constants.TURRET.SERVO);
     canifier = RobotContainer.CANIFIER;
-    TalonUtil.checkError(mMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set forward limit switch: ");
-    TalonUtil.checkError(mMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), getName() + ": Could not set reverse limit switch: ");
+    TalonUtil.checkError(mMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), "Turret: Could not set forward limit switch: ");
+    TalonUtil.checkError(mMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), "Turret: Could not set reverse limit switch: ");
     mMaster.overrideLimitSwitchesEnable(true);
-    mMaster.overrideSoftLimitsEnable(Constants.TURRET.SOFT_LIMITS_AT_STARTUP);
+    mMaster.overrideSoftLimitsEnable(true);
     forceZero();
     setBrakeMode(false);
   }
@@ -39,12 +39,10 @@ public class Turret extends ServoMotorSubsystem {
   @Override
   public void updateDashboard(boolean showDetails) {
     super.updateDashboard(showDetails);
-    if (Constants.TURRET.TUNING) {
+    if (Constants.TUNING.TURRET) {
       SmartDashboard.putBoolean("Turret: Limit F", cache.limitF);
       SmartDashboard.putBoolean("Turret: Limit R", cache.limitR);
       SmartDashboard.putNumber("Turret: Error", mPeriodicIO.error_ticks);
-      SmartDashboard.putNumber("Turret: Velocity", mPeriodicIO.velocity_ticks_per_100ms);
-      SmartDashboard.putBoolean("Turret: Zeroed", mHasBeenZeroed);
     }
   }
 

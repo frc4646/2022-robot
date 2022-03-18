@@ -12,7 +12,8 @@ public abstract class ModeBase extends SequentialCommandGroup {
   public static final double TIME_INTAKE_DEPLOY = 0.2;
 
   @Override
-  public void end(boolean isInterrupted) {
+  public void end(boolean interrupted) {
+    super.end(interrupted);
     RobotContainer.AGITATOR.setOpenLoop(0.0, 0.0);
     RobotContainer.FEEDER.setOpenLoop(0.0);
     RobotContainer.INTAKE.setExtend(false);

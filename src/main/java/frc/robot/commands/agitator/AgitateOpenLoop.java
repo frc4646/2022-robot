@@ -7,6 +7,10 @@ import frc.robot.subsystems.Agitator;
 public class AgitateOpenLoop extends InstantCommand {
   private final Agitator subsystem = RobotContainer.AGITATOR;
   private final double output;
+  
+  public AgitateOpenLoop() {
+    this(0.0);
+  }
 
   public AgitateOpenLoop(double percent) {
     addRequirements(subsystem);

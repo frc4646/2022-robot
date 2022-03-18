@@ -13,10 +13,9 @@ import frc.team4646.StabilityCounter;
 import frc.team4646.Test;
 
 public class Shooter extends SmartSubsystem {
-  public static class DataCache {
+  private class DataCache {
     public double nativeVelocityL, nativeVelocityR;
     public double rpmL, rpmR;
-    public double ampsStatorL, ampsStatorR;
   }
 
   private final TalonFX masterL, masterR;
@@ -52,19 +51,15 @@ public class Shooter extends SmartSubsystem {
     cache.nativeVelocityR = masterR.getSelectedSensorVelocity();
     cache.rpmL = nativeUnitsToRPM(cache.nativeVelocityL);
     cache.rpmR = nativeUnitsToRPM(cache.nativeVelocityR);
-    cache.ampsStatorL = masterL.getStatorCurrent();
-    cache.ampsStatorR = masterR.getStatorCurrent();
     stability.calculate(isShooting() && getErrorRPM() < Constants.SHOOTER.RPM_ERROR_ALLOWED);
   }
 
   @Override
   public void updateDashboard(boolean showDetails) {
     SmartDashboard.putBoolean("Shooter: Stable", stability.isStable());
-    if (Constants.SHOOTER.TUNING) {
+    if (Constants.TUNING.SHOOTERS) {
       SmartDashboard.putNumber("Shooter: RPM", getRPM());
       SmartDashboard.putNumber("Shooter: Error", getErrorRPM());
-      SmartDashboard.putNumber("Shooter: Amps Stator L", cache.ampsStatorL);
-      SmartDashboard.putNumber("Shooter: Amps Stator R", cache.ampsStatorR);
       SmartDashboard.putNumber("Shooter: Demand", demand);
     }
   }
@@ -83,7 +78,6 @@ public class Shooter extends SmartSubsystem {
     demand = rpm;
   }
 
-  public double getAmpsStator() { return (cache.ampsStatorL + cache.ampsStatorR) / 2.0; }
   public double getRPM() { return (cache.rpmL + cache.rpmR) / 2.0; }
   public double getSetpoint() { return demand; }
 

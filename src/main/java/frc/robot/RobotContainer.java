@@ -2,13 +2,13 @@ package frc.robot;
 
 import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.SignalDriveTeam;
-import frc.robot.commands.agitator.AgitatorAuto;
+import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.climber.ClimberTeleop;
 import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.drivetrain.DriveDisabled;
-import frc.robot.commands.feeder.FeederAuto;
-import frc.robot.commands.intake.IntakeAuto;
-import frc.robot.commands.shooter.ShooterAuto;
+import frc.robot.commands.feeder.FeederOpenLoop;
+import frc.robot.commands.intake.IntakeOpenLoop;
+import frc.robot.commands.shooter.ShooterOpenLoop;
 import frc.robot.commands.turret.TurretAim;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;
@@ -79,12 +79,12 @@ public class RobotContainer {
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
-    AGITATOR.setDefaultCommand(new AgitatorAuto());
+    AGITATOR.setDefaultCommand(new AgitateOpenLoop(0.0).perpetually());
     // CLIMBER.setDefaultCommand(new ClimberAuto());  // TODO try ClimberZero on button if this doesn't work
     CLIMBER.setDefaultCommand(new ClimberTeleop());
-    FEEDER.setDefaultCommand(new FeederAuto());
-    INTAKE.setDefaultCommand(new IntakeAuto());
-    SHOOTER.setDefaultCommand(new ShooterAuto());
+    FEEDER.setDefaultCommand(new FeederOpenLoop(0.0).perpetually());
+    INTAKE.setDefaultCommand(new IntakeOpenLoop(0.0).perpetually());
+    SHOOTER.setDefaultCommand(new ShooterOpenLoop(0.0).perpetually());
     TURRET.setDefaultCommand(new TurretAim());
 
     autoModeSelector = new AutoModeSelector();

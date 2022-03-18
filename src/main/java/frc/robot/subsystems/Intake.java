@@ -15,8 +15,6 @@ public class Intake extends SmartSubsystem {
   private final TalonFX motor;
   private final DoubleSolenoid solenoid;
 
-  private boolean extended = false;
-
   public Intake() {
     motor = TalonFXFactory.createDefaultTalon(Constants.CAN.INTAKE);
     solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID.INTAKE_OUT, Constants.SOLENOID.INTAKE_IN);
@@ -37,13 +35,7 @@ public class Intake extends SmartSubsystem {
   }
 
   public void setExtend (boolean extend) {
-    Value direction = (extend) ? Value.kForward : Value.kReverse;
-    solenoid.set(direction);
-    extended = extend;
-  }
-
-  public boolean isExtended() {
-    return extended;
+    solenoid.set(extend ? Value.kForward : Value.kReverse);
   }
 
   @Override

@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.feeder.FeederLoadCargo;
 import frc.robot.commands.feeder.FeederOpenLoop;
-import frc.robot.commands.shooter.WaitForShooterVelocity;
+import frc.robot.commands.wait.WaitForShooterVelocity;
 
 public class FireCargo extends SequentialCommandGroup {
   public FireCargo() {

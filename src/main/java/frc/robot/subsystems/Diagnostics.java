@@ -9,10 +9,10 @@ import frc.robot.util.DiagnosticState;
 import frc.team4646.LEDColor;
 
 public class Diagnostics extends SmartSubsystem {
-  public static final LEDColor
-    OFF = new LEDColor(0, 0, 0),
-    RED = new LEDColor(255, 0, 0),
-    BLUE = new LEDColor(0, 0, 255);
+  public final LEDColor
+    OFF = new LEDColor(0.0, 0.0, 0.0),
+    RED = new LEDColor(1.0, 0.0, 0.0),
+    BLUE = new LEDColor(0.0, 00, 1.0);
 
   private final Canifier canifier;
   private final OperatorControls operator = RobotContainer.CONTROLS.getOperator();
@@ -26,24 +26,18 @@ public class Diagnostics extends SmartSubsystem {
 
   @Override
   public void updateDashboard(boolean showDetails) {
-    canifier.setLEDs(robotState);
-    double rumble = (DriverStation.isDisabled() && isCriticalIssuePresent) ? Constants.DIAGNOSTICS.RUMBLE_PERCENT : 0.0;
-    operator.setRumble(true, rumble);  // tune which side is better
-    operator.setRumble(false, rumble);
+    setLEDs();
+    setRumble((DriverStation.isDisabled() && isCriticalIssuePresent) ? Constants.DIAGNOSTICS.RUMBLE_PERCENT : 0.0);
   }
 
   @Override
   public void onEnable(boolean isAutonomous) {
-    if (isAutonomous) {
-      modeDefault = DriverStation.getAlliance() == Alliance.Red ? RED : BLUE;
-    } else {
-      modeDefault = OFF;  // Keep drive team sensitive to diagnostics
-    }
+    modeDefault = !isAutonomous ? OFF : allianceColor();
   }
 
   @Override
   public void onDisable() {
-    modeDefault = DriverStation.getAlliance() == Alliance.Red ? RED : BLUE;
+    modeDefault = allianceColor();
   }
 
   public void setState(DiagnosticState state) {
@@ -55,4 +49,15 @@ public class Diagnostics extends SmartSubsystem {
     robotState = modeDefault;
     isCriticalIssuePresent = false;
   }
+
+  private void setLEDs() {
+    canifier.setLEDs(robotState);
+  }
+
+  private void setRumble(double percent) {
+    operator.setRumble(true, percent);
+    operator.setRumble(false, percent);
+  }
+
+  private LEDColor allianceColor() { return DriverStation.getAlliance() == Alliance.Red ? RED : BLUE; }
 }

@@ -8,6 +8,10 @@ public class IntakeOpenLoop extends InstantCommand {
   private final Intake subsystem = RobotContainer.INTAKE;
   private final double intakeSpeed;
 
+  public IntakeOpenLoop() {
+    this(0.0);
+  }
+
   public IntakeOpenLoop(double intakePercent) {
     addRequirements(subsystem);
     this.intakeSpeed = intakePercent;

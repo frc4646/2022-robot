@@ -13,15 +13,17 @@ public class Agitator extends SmartSubsystem {
 
   public Agitator() {
     masterL = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.AGITATOR_L, true);
-    masterL.enableVoltageCompensation(12.0);
-    masterL.setOpenLoopRampRate(Constants.AGITATOR.OPEN_LOOP_RAMP);
-
     masterR = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.AGITATOR_R, false);
-    masterR.enableVoltageCompensation(12.0);
-    masterR.setOpenLoopRampRate(Constants.AGITATOR.OPEN_LOOP_RAMP);
-  
+    configureMotor(masterL);
+    configureMotor(masterR);
+
     isBrakeMode = true;
     setBrakeMode(false);
+  }
+
+  protected void configureMotor(CANSparkMax motor) {
+    motor.enableVoltageCompensation(12.0);
+    motor.setOpenLoopRampRate(Constants.AGITATOR.OPEN_LOOP_RAMP);
   }
 
   @Override

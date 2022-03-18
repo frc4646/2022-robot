@@ -8,7 +8,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.commands.feeder.FeederLoadCargo;
 import frc.robot.commands.feeder.FeederOpenLoop;
-import frc.robot.commands.shooter.WaitForShooterVelocity;
+import frc.robot.commands.wait.WaitForShooterVelocity;
 
 public class SmartFireCargo extends SequentialCommandGroup {
   public SmartFireCargo() {
@@ -28,12 +28,12 @@ public class SmartFireCargo extends SequentialCommandGroup {
               new FeederOpenLoop(Constants.FEEDER.OPEN_LOOP_SHOOT),
               new WaitCommand(0.5)
             ),
-            new InstantCommand(() -> {}),
-            RobotContainer.FEEDER.isShooterLoaded
+            new InstantCommand(),
+            RobotContainer.FEEDER::isShooterLoaded
           )
         ),
-        new InstantCommand(() -> {}),
-        RobotContainer.FEEDER.isShooterLoaded
+        new InstantCommand(),
+        RobotContainer.FEEDER::isShooterLoaded
       )
     );
   }

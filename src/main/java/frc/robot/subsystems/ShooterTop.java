@@ -13,10 +13,9 @@ import frc.team4646.StabilityCounter;
 import frc.team4646.Test;
 
 public class ShooterTop extends SmartSubsystem {
-  public static class DataCache {
+  private class DataCache {
     public double nativeVelocityL;
     public double rpmL;
-    public double ampsStatorL;
   }
 
   private final TalonFX masterTop;
@@ -48,17 +47,15 @@ public class ShooterTop extends SmartSubsystem {
   public void cacheSensors() {
     cache.nativeVelocityL = masterTop.getSelectedSensorVelocity();
     cache.rpmL = nativeUnitsToRPM(cache.nativeVelocityL);
-    cache.ampsStatorL = masterTop.getStatorCurrent();
     stability.calculate(isShooting() && getErrorRPM() < Constants.SHOOTER_TOP.RPM_ERROR_ALLOWED);
   }
 
   @Override
   public void updateDashboard(boolean showDetails) {   
     SmartDashboard.putBoolean("ShooterTop: Stable", stability.isStable()); 
-    if (Constants.SHOOTER.TUNING) {
+    if (Constants.TUNING.SHOOTERS) {
       SmartDashboard.putNumber("ShooterTop: RPM", getRPM());
       SmartDashboard.putNumber("ShooterTop: Error", getErrorRPM());
-      SmartDashboard.putNumber("ShooterTop: Amps Stator L", cache.ampsStatorL);
       SmartDashboard.putNumber("ShooterTop: Demand", demand);
     }
   }
@@ -75,7 +72,6 @@ public class ShooterTop extends SmartSubsystem {
     demand = rpm;
   }
 
-  public double getAmpsStator() { return (cache.ampsStatorL); }
   public double getRPM() { return (cache.rpmL); }
   public double getSetpoint() { return demand; }
 

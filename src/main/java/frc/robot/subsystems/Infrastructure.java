@@ -11,7 +11,7 @@ import frc.robot.Constants;
 import frc.team4646.Test;
 
 public class Infrastructure extends SmartSubsystem {
-  public static class DataCache {
+  private class DataCache {
     public double battery;
   }
 
@@ -43,7 +43,6 @@ public class Infrastructure extends SmartSubsystem {
     }
   }
   
-  /** Enable/disable the {@link Compressor} closed loop, which <i>automatically</i> runs the {@link Compressor} when pressure is low */
   public void setCompressor(boolean enable) {
     if(enable) {
       compressor.enableDigital();
@@ -57,9 +56,6 @@ public class Infrastructure extends SmartSubsystem {
     Test.add(this, "Compressor - Connected", !pcm.getCompressorNotConnectedStickyFault());
     Test.add(this, "Compressor - Current Low", !pcm.getCompressorCurrentTooHighStickyFault());  // Max continuous 12V / 17A
     Test.add(this, "Compressor - Not Shorted", !pcm.getCompressorShortedStickyFault());
-    Test.add(this, "Battery - Voltage", RobotController.getBatteryVoltage() > 13.0);
-    // if (Constants.INFRASTRUCTURE.CAMERA_STREAM) {
-    //   Test.add(this, "Camera - Enabled", camera.isEnabled());
-    // }
+    Test.add(this, "Battery - Voltage", RobotController.getBatteryVoltage() > 12.5);
   }
 }
