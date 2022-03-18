@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -22,46 +20,32 @@ public class Feeder extends SmartSubsystem {
   }
 
   private final CANSparkMax motor;
-  private final RelativeEncoder encoder;
-  private final SparkMaxPIDController pid;
   private final DigitalInput breakBeam, breakBeamBottom;
   private final DataCache cache = new DataCache();
-  private double demand = 0.0;
-  private boolean isBrakeMode;
+  private boolean isBrakeMode = true;
 
   public Feeder() {
     motor = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.FEEDER);
     breakBeam = new DigitalInput(Constants.DIGITAL.FEEDER_BREAK_BEAM);
     breakBeamBottom = new DigitalInput(Constants.DIGITAL.FEEDER_BOTTOM_BREAK_BEAM);
-    encoder = motor.getEncoder();
-    pid = motor.getPIDController();
 
     motor.setInverted(true);
     motor.enableVoltageCompensation(12.0);
     motor.setOpenLoopRampRate(Constants.FEEDER.OPEN_LOOP_RAMP);
-    pid.setP(Constants.FEEDER.P);
-    pid.setI(Constants.FEEDER.I);
-    pid.setD(Constants.FEEDER.D);
-    motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
 
-    isBrakeMode = true;
-    setBrakeMode(false);
+    setBrakeMode(!isBrakeMode);
   }
 
   @Override
   public void cacheSensors () {
     cache.shooterLoaded = !breakBeam.get();
     cache.shooterLoadedBottom = !breakBeamBottom.get();
-    cache.position = encoder.getPosition();
   }
 
   @Override
   public void updateDashboard(boolean showDetails) {
     SmartDashboard.putBoolean("Feeder: Loaded", isShooterLoaded());
     SmartDashboard.putBoolean("Feeder: Bottom Loaded", isShooterLoadedBottom());
-    if (Constants.TUNING.FEEDER) {
-      SmartDashboard.putNumber("Feeder: Position", getPosition());
-    }
   }
 
   @Override
@@ -76,14 +60,7 @@ public class Feeder extends SmartSubsystem {
 
   public void setOpenLoop(double percent) {
     motor.set(percent);
-    demand = percent;
   }
-
-  public void setClosedLoopPosition(double position) {
-    double setpoint = position * Constants.FEEDER.GEAR_RATIO;
-    pid.setReference(setpoint, ControlType.kPosition);
-    demand = setpoint;
-  }  
 
   public void setBrakeMode(boolean enable) {
     if (isBrakeMode == enable) {
@@ -109,7 +86,6 @@ public class Feeder extends SmartSubsystem {
     return 0;  // TODO
   }
 
-  public boolean isOnTarget() { return Math.abs(getPosition() - demand) < Constants.FEEDER.POSITION_DEADBAND; }
   public boolean isShooterLoaded() { return cache.shooterLoaded; }
   public boolean isShooterLoadedBottom() { return cache.shooterLoadedBottom; }
 

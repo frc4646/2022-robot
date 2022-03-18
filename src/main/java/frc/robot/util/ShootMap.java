@@ -3,7 +3,7 @@ package frc.robot.util;
 import frc.team254.util.InterpolatingDouble;
 import frc.team254.util.InterpolatingTreeMap;
 
-public class ShootTree {
+public class ShootMap {
   private final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>
     mapBottom = new InterpolatingTreeMap<>(),
     mapTop = new InterpolatingTreeMap<>();

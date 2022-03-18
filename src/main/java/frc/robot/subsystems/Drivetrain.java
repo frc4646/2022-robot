@@ -37,7 +37,7 @@ public class Drivetrain extends SmartSubsystem {
   private final DifferentialDriveOdometry odometry;
   private final DataCache cache = new DataCache();
   
-  private boolean isBrakeMode;
+  private boolean isBrakeMode = true;
   private double demandL = 0.0, demandR = 0.0;
 
   public Drivetrain() {
@@ -56,9 +56,7 @@ public class Drivetrain extends SmartSubsystem {
     configureMotor(masterR, false, true);
     configureMotor(slaveR, false, false);
 
-    isBrakeMode = true;
-    setBrakeMode(false);
-
+    setBrakeMode(!isBrakeMode);
     resetEncoders();
     gyro.reset();
     odometry = new DifferentialDriveOdometry(cache.heading);
@@ -149,7 +147,6 @@ public class Drivetrain extends SmartSubsystem {
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {return new DifferentialDriveWheelSpeeds(rotationsToMeters(cache.rpmL / 60.0), rotationsToMeters(cache.rpmR / 60.0));  }
   public Pose2d getPose() { return odometry.getPoseMeters(); }
-  public double getDistance() { return rotationsToMeters(cache.distanceL + cache.distanceR) / 2.0; }
   public Rotation2d getHeading() { return cache.heading; }
   public Rotation2d getPitch() { return cache.pitch; }
 

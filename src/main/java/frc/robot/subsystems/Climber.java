@@ -43,8 +43,7 @@ public class Climber extends SmartSubsystem {
     configureMotor(masterL, false);
     configureMotor(masterR, true);
 
-    isBrakeMode = false;
-    setBrakeMode(true);
+    setBrakeMode(!isBrakeMode);
     setArms(false);  // solenoid default is OFF, not IN
     setSoftLimitsEnabled(true);
     forceZero(true);
