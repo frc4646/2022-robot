@@ -18,6 +18,6 @@ public class IntakeJuggle extends CommandBase {
   public void execute() {
     subsystem.setOpenLoop(intakeSpeed);
     pulse++;
-    intakeSpeed = Math.sin(pulse*2*Math.PI/50); // at 20ms, this should be one pulse a second
+    intakeSpeed = Math.sin(pulse*2*Math.PI/10); // at 20ms, this should be one pulse a second
   }
 }

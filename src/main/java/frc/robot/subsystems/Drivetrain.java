@@ -65,7 +65,6 @@ public class Drivetrain extends SmartSubsystem {
     resetEncoders();
     gyro.reset();
     odometry = new DifferentialDriveOdometry(cache.heading);
-
     
     field = new Field2d();
     SmartDashboard.putData(field);
@@ -103,8 +102,6 @@ public class Drivetrain extends SmartSubsystem {
       SmartDashboard.putNumber("Drive: Pitch", cache.pitch.getDegrees());
     }
     if (Constants.DRIVETRAIN.TUNING) {
-      // SmartDashboard.putNumber("Drive: Distance L", cache.distanceL);
-      // SmartDashboard.putNumber("Drive: Distance R", cache.distanceR);
       SmartDashboard.putNumber("Drive: RPM L", cache.rpmL);
       SmartDashboard.putNumber("Drive: RPM R", cache.rpmR);
       SmartDashboard.putNumber("Drive: X", odometry.getPoseMeters().getX());
@@ -126,7 +123,7 @@ public class Drivetrain extends SmartSubsystem {
 
   public void setBrakeMode(boolean enable) {
     if (isBrakeMode == enable) {
-      return;  // Already in this mode
+      return;
     }
     IdleMode mode = enable ? IdleMode.kBrake : IdleMode.kCoast;
     masterL.setIdleMode(mode);

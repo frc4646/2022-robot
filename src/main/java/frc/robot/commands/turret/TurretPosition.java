@@ -16,7 +16,6 @@ public class TurretPosition extends CommandBase {
 
   @Override
   public void initialize() {
-    //subsystem.setSetpointPositionPID(setpoint, 0.0);
     subsystem.setSetpointMotionMagic(setpoint, 0.0);
   }
 

@@ -16,25 +16,25 @@ public class SmartFireCargo extends SequentialCommandGroup {
       new FeederOpenLoop(Constants.FEEDER.OPEN_LOOP_SHOOT),
       new WaitCommand(0.25),
       new FeederLoadCargo().withTimeout(1.0),
-
       new ConditionalCommand( // shoot second if we have it
         sequence(
           new WaitForShooterVelocity(),
           new FeederOpenLoop(Constants.FEEDER.OPEN_LOOP_SHOOT),
           new WaitCommand(0.25),
-          new FeederLoadCargo().withTimeout(1.0)
+          new FeederLoadCargo().withTimeout(1.0),
+          new ConditionalCommand( // shoot third if we have it
+            sequence(
+              new WaitForShooterVelocity(),
+              new FeederOpenLoop(Constants.FEEDER.OPEN_LOOP_SHOOT),
+              new WaitCommand(0.5)
+            ),
+            new InstantCommand(() -> {}),
+            RobotContainer.FEEDER.isShooterLoaded
+          )
         ),
-        
-        new ConditionalCommand( // shoot third if we have it
-          sequence(
-            new WaitForShooterVelocity(),
-            new FeederOpenLoop(Constants.FEEDER.OPEN_LOOP_SHOOT),
-            new WaitCommand(0.5)
-          ),
-          new InstantCommand(() -> {}),
-          RobotContainer.FEEDER.isShooterLoaded),
-        RobotContainer.FEEDER.isShooterLoaded)
-
+        new InstantCommand(() -> {}),
+        RobotContainer.FEEDER.isShooterLoaded
+      )
     );
   }
 }

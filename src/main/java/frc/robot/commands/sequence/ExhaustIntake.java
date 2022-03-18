@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.feeder.FeederOpenLoop;
-import frc.robot.commands.intake.IntakeActivate;
+import frc.robot.commands.intake.IntakeOpenLoop;
 import frc.robot.commands.intake.IntakeExtend;
 
 public class ExhaustIntake extends SequentialCommandGroup {
   public ExhaustIntake() {
     addCommands(
       new IntakeExtend(true),
-      new IntakeActivate(-Constants.INTAKE.OPEN_LOOP),
+      new IntakeOpenLoop(-Constants.INTAKE.OPEN_LOOP),
       new WaitCommand(0.5),  // Wait for intake out and running before feeder pulse
       parallel(
         new AgitateOpenLoop(-Constants.AGITATOR.OPEN_LOOP_EXHAUST),

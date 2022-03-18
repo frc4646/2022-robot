@@ -9,7 +9,7 @@ import frc.robot.commands.drivetrain.DriveOpenLoop;
 import frc.robot.commands.drivetrain.DrivePath;
 import frc.robot.commands.feeder.FeederOpenLoop;
 import frc.robot.commands.feeder.WaitForColorState;
-import frc.robot.commands.intake.IntakeActivate;
+import frc.robot.commands.intake.IntakeOpenLoop;
 import frc.robot.commands.intake.IntakeExtend;
 import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.ShootVision;
@@ -35,7 +35,7 @@ public class GrabCargo2ThenShoot extends SequentialCommandGroup {
       parallel(
         new DriveOpenLoop(0.0),
         new WaitCommand(ModeBase.TIME_CANCEL_MOMENTUM),
-        new IntakeExtend(false).andThen(new IntakeActivate(0.0))  // Workaround: StowIntake not finishing
+        new IntakeExtend(false).andThen(new IntakeOpenLoop(0.0))  // Workaround: StowIntake not finishing
       ),
       new ShootVision(),
       parallel(

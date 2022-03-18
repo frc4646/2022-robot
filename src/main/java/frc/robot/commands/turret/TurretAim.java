@@ -20,7 +20,6 @@ public class TurretAim extends CommandBase {
   public void execute() {
     double position = turret.getPosition();
     double setpoint = position;
-    double feedforward = 0.0;
     double stick = operator.getTurretStick();
     int snap = operator.getTurretSnap();
 
@@ -31,7 +30,7 @@ public class TurretAim extends CommandBase {
     } else if (Math.abs(stick) >= Constants.TURRET.STICK_DEADBAND) {
       setpoint += stick * Constants.TURRET.STICK_GAIN;
     }
-    turret.setSetpointMotionMagic(setpoint, feedforward);
+    turret.setSetpointMotionMagic(setpoint, 0.0);
   }
 
   private boolean isVisionWanted(double position) {

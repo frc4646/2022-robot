@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.climber.ClimberOpenLoop;
 import frc.robot.commands.drivetrain.DriveOpenLoop;
 import frc.robot.commands.drivetrain.DrivePath;
-import frc.robot.commands.intake.IntakeActivate;
+import frc.robot.commands.intake.IntakeOpenLoop;
 import frc.robot.commands.intake.IntakeExtend;
 import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.ShootVision;
@@ -20,7 +20,7 @@ public class HumanPlayerThenShoot extends SequentialCommandGroup {
       ),
       parallel(
         new DrivePath(pathShoot3And4),
-        new IntakeExtend(false).andThen(new IntakeActivate(0.0))
+        new IntakeExtend(false).andThen(new IntakeOpenLoop(0.0))
       ),
       new DriveOpenLoop(0.0),
       new WaitCommand(ModeBase.TIME_CANCEL_MOMENTUM),

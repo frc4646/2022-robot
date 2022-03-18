@@ -5,7 +5,6 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterTop;
-import frc.team254.util.InterpolatingDouble;
 
 public class ShooterRev extends InstantCommand {
   private final Shooter shooter = RobotContainer.SHOOTER;

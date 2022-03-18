@@ -7,6 +7,7 @@ import frc.robot.commands.climber.ClimberTeleop;
 import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.drivetrain.DriveDisabled;
 import frc.robot.commands.feeder.FeederAuto;
+import frc.robot.commands.intake.IntakeAuto;
 import frc.robot.commands.shooter.ShooterAuto;
 import frc.robot.commands.turret.TurretAim;
 import frc.robot.controls.AutoModeSelector;
@@ -82,6 +83,7 @@ public class RobotContainer {
     // CLIMBER.setDefaultCommand(new ClimberAuto());  // TODO try ClimberZero on button if this doesn't work
     CLIMBER.setDefaultCommand(new ClimberTeleop());
     FEEDER.setDefaultCommand(new FeederAuto());
+    INTAKE.setDefaultCommand(new IntakeAuto());
     SHOOTER.setDefaultCommand(new ShooterAuto());
     TURRET.setDefaultCommand(new TurretAim());
 

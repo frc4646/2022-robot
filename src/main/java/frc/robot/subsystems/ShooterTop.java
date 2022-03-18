@@ -53,7 +53,8 @@ public class ShooterTop extends SmartSubsystem {
   }
 
   @Override
-  public void updateDashboard(boolean showDetails) {    
+  public void updateDashboard(boolean showDetails) {   
+    SmartDashboard.putBoolean("ShooterTop: Stable", stability.isStable()); 
     if (Constants.SHOOTER.TUNING) {
       SmartDashboard.putNumber("ShooterTop: RPM", getRPM());
       SmartDashboard.putNumber("ShooterTop: Error", getErrorRPM());

@@ -5,7 +5,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Feeder;
 
 public class FeederOpenLoop extends InstantCommand {
-  private Feeder subsystem = RobotContainer.FEEDER;
+  private final Feeder subsystem = RobotContainer.FEEDER;
   private final double output;
 
   public FeederOpenLoop(double percent) {

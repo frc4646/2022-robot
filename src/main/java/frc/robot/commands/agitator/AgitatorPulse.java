@@ -9,6 +9,7 @@ public class AgitatorPulse extends CommandBase {
   private final Agitator subsystem = RobotContainer.AGITATOR;
   private final DelayedBoolean switchTimer;
   private final double strength;
+  private final double strength2 = 0.0;
   private boolean isLeft = true;
 
   public AgitatorPulse(double strength, double time) {
@@ -28,8 +29,8 @@ public class AgitatorPulse extends CommandBase {
       isLeft = !isLeft;
       switchTimer.reset();
     }
-    double setpointL = isLeft ? strength : strength * 0.25;
-    double setpointR = isLeft ? strength * 0.25 : strength;
+    double setpointL = isLeft ? strength : strength * strength2;
+    double setpointR = isLeft ? strength * strength2 : strength;
     subsystem.setOpenLoop(setpointL, setpointR);
   }
 }

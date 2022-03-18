@@ -14,9 +14,7 @@ public class FeederLoadCargo extends CommandBase {
 
   @Override
   public void initialize() {
-    if (!isFinished()) {
-      subsystem.setOpenLoop(Constants.FEEDER.OPEN_LOOP_LOAD);
-    }
+    subsystem.setOpenLoop(Constants.FEEDER.OPEN_LOOP_LOAD);
   }
   
   @Override

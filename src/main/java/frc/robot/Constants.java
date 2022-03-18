@@ -42,7 +42,8 @@ public final class Constants {
 
   public static final class DIGITAL {
     public static final int
-      FEEDER_BREAK_BEAM = 0;
+      FEEDER_BREAK_BEAM = 0, 
+      FEEDER_BOTTOM_BREAK_BEAM = 1;
   }
 
   public static final class AGITATOR {
@@ -50,8 +51,7 @@ public final class Constants {
       OPEN_LOOP_EXHAUST = 0.90,
       OPEN_LOOP_LOAD = 0.45,
       OPEN_LOOP_SHOOT = 0.45,
-      OPEN_LOOP_RAMP = 0.125,  // TODO tune
-      TIMEOUT_STOW = 0.5;  // TODO tune
+      OPEN_LOOP_RAMP = 0.125;  // TODO tune
   }
   
   public static final class CLIMBER {
@@ -72,11 +72,11 @@ public final class Constants {
   }  
 
   public static final class COLORSENSOR {
-    public static final boolean TUNING = false;
+    public static final boolean TUNING = true;
     
     public static final I2C.Port I2C_PORT = I2C.Port.kMXP;
 
-    public static final int DISTANCE_MIN = 80;
+    public static final int DISTANCE_MIN = 120;
     public static final Color 
       MATCH_BLUE = new Color(0.214, 0.325, 0.46),
       MATCH_RED = new Color(0.479, 0.378, 0.114);
@@ -87,7 +87,6 @@ public final class Constants {
     public static final DiagnosticState
       FAULT_CARGO = new DiagnosticState(new LEDColor(1.0, 0.0, 1.0)),
       FAULT_TURRET = new DiagnosticState(new LEDColor(1.0, 1.0, 0.0), true),
-      FAULT_OUTSIDE_VISION_RANGE = new DiagnosticState(new LEDColor(0.6, 0.0, 0.0)),
       CLIMBING = new DiagnosticState(new LEDColor(0.0, 1.0, 1.0)),
       CARGO_LOADED = new DiagnosticState(new LEDColor(0.3, 0.0, 0.3)),
       CAN_PRESS_SHOOT = new DiagnosticState(new LEDColor(0.0, 1.0, 0.0));
@@ -102,7 +101,7 @@ public final class Constants {
       THROTTLE_DEADBAND = 0.04,
       TURNING_DEADBAND = 0.035;
 
-    public static final double VOLTAGE_COMPENSATION = 12.0;  // TODO INCREASE BEFORE COMPETITION
+    public static final double VOLTAGE_COMPENSATION = 12.0;
     public static final int CURRENT_LIMIT = 30;
 
     public static final double 
@@ -187,7 +186,8 @@ public final class Constants {
   public static final class INTAKE {
     public static final double
       OPEN_LOOP = 0.32846,
-      OPEN_LOOP_RAMP = 0.4;
+      OPEN_LOOP_RAMP = 0.4,
+      TIMEOUT_STOW = 1.0;
   }
 
   public static final class SHOOTER {
@@ -215,7 +215,7 @@ public final class Constants {
     public static final double
       RPM_MAX = 6380.0 * 1.25,  //  Tuned 3/15
       RPM_DEFAULT = 2200.0,
-      RPM_ERROR_ALLOWED = 60.0,  // Tuned 3/1, 25-50 seem to work well TODO try 30 again
+      RPM_ERROR_ALLOWED = SHOOTER.RPM_ERROR_ALLOWED * 2.0,  // Tuned 3/1, 25-50 seem to work well TODO try 30 again
       RPM_TRIM = SHOOTER.RPM_TRIM * 2.0,
       TICKS_PER_REV = 2048.0,
       P = 0.02,  // Probably between 0.0075 and 0.25

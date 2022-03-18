@@ -1,21 +1,24 @@
 package frc.robot.commands.sequence;
 
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-import frc.robot.commands.agitator.AgitateOpenLoop;
+import frc.robot.commands.agitator.AgitatorPulse;
 import frc.robot.commands.feeder.FeederLoadCargo;
-import frc.robot.commands.intake.IntakeActivate;
 import frc.robot.commands.intake.IntakeExtend;
+import frc.robot.commands.intake.IntakeOpenLoop;
 
 public class StowIntake extends SequentialCommandGroup {
   public StowIntake() {
     addCommands(
+      new WaitCommand(0.5),
       new IntakeExtend(false),
-      new ScheduleCommand(new FeederLoadCargo().withTimeout(2.0)),  // TODO might be causing outer gruops to pause
-      new IntakeActivate(0.0),
-      new WaitCommand(Constants.AGITATOR.TIMEOUT_STOW).andThen(new AgitateOpenLoop(0.0))  // Let agitators settle cargo
+      deadline(
+        new WaitCommand(Constants.INTAKE.TIMEOUT_STOW),
+        new FeederLoadCargo(),
+        new AgitatorPulse(Constants.AGITATOR.OPEN_LOOP_LOAD * 1.0, 0.5),
+        new IntakeOpenLoop(0.0)
+      )
     );
   }
 }

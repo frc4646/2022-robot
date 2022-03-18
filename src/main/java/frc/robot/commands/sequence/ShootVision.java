@@ -18,7 +18,7 @@ public class ShootVision extends SequentialCommandGroup {
         ),
         new ShooterAim(),
         new AgitatorPulse(Constants.AGITATOR.OPEN_LOOP_LOAD * 1.5, 0.5)
-        ),
+      ),
       parallel(
         new ShooterLockRPM(),  // Protect form obstructions, ex: first cargo in flight
         new TurretLockPosition()

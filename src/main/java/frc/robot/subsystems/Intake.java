@@ -26,7 +26,8 @@ public class Intake extends SmartSubsystem {
     motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
     motor.enableVoltageCompensation(true);
     motor.configOpenloopRamp(Constants.INTAKE.OPEN_LOOP_RAMP);
-    // TODO supply current limiting
+    // StatorCurrentLimitConfiguration limit = new StatorCurrentLimitConfiguration(true, 30.0, 50.0, 0.02);
+    // TalonUtil.checkError(motor.configStatorCurrentLimit(limit), "Intake: Could not set stator current limit");
 
     setExtend(false);  // solenoid default is OFF, not IN
   }
