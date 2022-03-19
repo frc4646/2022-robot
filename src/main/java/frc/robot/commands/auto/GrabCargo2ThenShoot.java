@@ -1,10 +1,8 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.RobotContainer;
 import frc.robot.commands.drivetrain.DriveOpenLoop;
 import frc.robot.commands.drivetrain.DrivePath;
 import frc.robot.commands.feeder.FeederOpenLoop;
@@ -20,7 +18,6 @@ import frc.robot.subsystems.ColorSensor.STATE;
 public class GrabCargo2ThenShoot extends SequentialCommandGroup {
   public GrabCargo2ThenShoot(Trajectory pathCargo2, double distanceShoot) {
     addCommands(
-      new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(pathCargo2.getInitialPose()); }),
       deadline(
         race(
           new DrivePath(pathCargo2).beforeStarting(new WaitCommand(ModeBase.TIME_INTAKE_DEPLOY)),

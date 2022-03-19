@@ -8,10 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.commands.drivetrain.DriveOpenLoop;
 import frc.robot.commands.drivetrain.DrivePath;
 import frc.robot.commands.feeder.FeederOpenLoop;
@@ -23,7 +21,7 @@ import frc.robot.commands.shooter.ShooterOpenLoop;
 import frc.robot.commands.shooter.ShooterRev;
 import frc.robot.commands.turret.TurretPosition;
 
-public class RightFiveCargo extends ModeBase {
+public class ModeRight5Cargo extends ModeBase {
   private static final TrajectoryConfig
     FORWARDS = Constants.DRIVETRAIN.PATH_CONFIG_F,
     BACKWARDS = Constants.DRIVETRAIN.PATH_CONFIG_R,
@@ -31,8 +29,8 @@ public class RightFiveCargo extends ModeBase {
     
   private static final Pose2d
     POSE_START = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
-    POSE_CARGO_3 = new Pose2d(.3, 3.0, Rotation2d.fromDegrees(95.0)),
-    POSE_HUMAN_PLAYER = new Pose2d(0.78, 6.9, Rotation2d.fromDegrees(40)),
+    POSE_CARGO_3 = new Pose2d(0.3, 3.0, Rotation2d.fromDegrees(95.0)),
+    POSE_HUMAN_PLAYER = new Pose2d(0.78, 6.9, Rotation2d.fromDegrees(40.0)),
     POSE_SHOOT_4_5 = new Pose2d(0.1, 3.6, Rotation2d.fromDegrees(82.0));
     // POSE_START = new Pose2d(7.8, 6.3, Rotation2d.fromDegrees(91.5)),
     // POSE_CARGO_3 = new Pose2d(POSE_START.getX() + 3.2, POSE_START.getY() + 0.3, Rotation2d.fromDegrees(POSE_START.getRotation().getDegrees() - 85.0)),
@@ -48,9 +46,9 @@ public class RightFiveCargo extends ModeBase {
     HUMAN_PLAYER = TrajectoryGenerator.generateTrajectory(POSE_CARGO_3, List.of(), POSE_HUMAN_PLAYER, FORWARDS),
     SHOOT_4_5 = TrajectoryGenerator.generateTrajectory(POSE_HUMAN_PLAYER, List.of(), POSE_SHOOT_4_5, BACKWARDS);
     
-  public RightFiveCargo() {
-    addCommands(
-      new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(CARGO_2_3.getInitialPose()); }),
+  public ModeRight5Cargo() {
+    addCommands(      
+      new ResetAuto(CARGO_2_3.getInitialPose()),
 
       // grab the 2nd cargo, continuing on to the 3rd
       // but be shooting when you get to the end
@@ -60,7 +58,7 @@ public class RightFiveCargo extends ModeBase {
         new DeployIntake(),
         // sequence(
           new TurretPosition(215.0, 5.0).beforeStarting(new WaitCommand(1.5)), // TODO refactor out const
-          new WaitCommand(CARGO_2_3.getTotalTimeSeconds() - 3).andThen(new ShooterRev(150))//,
+          new WaitCommand(CARGO_2_3.getTotalTimeSeconds() - 3.0).andThen(new ShooterRev(150.0))//,
           // new WaitCommand(CARGO_2_3.getTotalTimeSeconds() - 1).andThen(new ShootVision()) 
         // )
       ),

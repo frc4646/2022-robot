@@ -8,9 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.commands.drivetrain.DrivePath;
 
 public class ModeTest extends ModeBase {
@@ -37,15 +35,15 @@ public class ModeTest extends ModeBase {
     PATH_SHOOT_4_5 = TrajectoryGenerator.generateTrajectory(POSE_HUMAN, List.of(), POSE_SHOOT_4_5, FORWARDS);
 
   public ModeTest(boolean useVelocityMode) {
-    // addCommands(
-    //   new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(PATH.getInitialPose()); }),
-    //   new DrivePath(PATH, useVelocityMode)
-    // );
     addCommands(
-      new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(PATH.getInitialPose()); }),
-      new DrivePath(PATH_CARGO_3, useVelocityMode)
-      // new DrivePath(PATH_HUMAN, useVelocityMode),
-      // new DrivePath(PATH_SHOOT_4_5, useVelocityMode)
+      new ResetAuto(PATH.getInitialPose()),
+      new DrivePath(PATH, useVelocityMode)
     );
+    // addCommands(      
+    //   new ResetAuto(PATH.getInitialPose()),
+    //   new DrivePath(PATH_CARGO_3, useVelocityMode)
+    //   // new DrivePath(PATH_HUMAN, useVelocityMode),
+    //   // new DrivePath(PATH_SHOOT_4_5, useVelocityMode)
+    // );
   }
 }

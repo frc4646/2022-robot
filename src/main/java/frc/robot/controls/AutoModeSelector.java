@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.auto.ModeMiddle;
 import frc.robot.commands.auto.ModeRight;
 import frc.robot.commands.auto.ModeTest;
-import frc.robot.commands.auto.RightFiveCargo;
+import frc.robot.commands.auto.ModeRight5Cargo;
 import frc.robot.commands.auto.ModeFallback;
 import frc.robot.commands.auto.ModeLeft;
 import frc.robot.commands.auto.ModeBase.STRATEGY_PHASE_2;
@@ -62,7 +62,7 @@ public class AutoModeSelector {
       case LEFT_2_CARGO:
         return Optional.of(new ModeLeft(STRATEGY_PHASE_2.NONE));
       case RIGHT_5_CARGO:
-        return Optional.of(new RightFiveCargo());
+        return Optional.of(new ModeRight5Cargo());
       case RIGHT_2_CARGO:
         return Optional.of(new ModeRight(STRATEGY_PHASE_2.NONE));
       case TEST_1:

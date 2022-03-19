@@ -18,7 +18,7 @@ public class ShooterLockRPM extends InstantCommand {
 
   @Override
   public void initialize() {
-    shooter.setClosedLoop(vision.getShooterRPMBottom());
+    shooter.setClosedLoop(vision.getShooterRPMBottom(), true);
     shooterTop.setClosedLoop(vision.getShooterRPMTop());
   }
 }

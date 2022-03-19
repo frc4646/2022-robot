@@ -19,7 +19,7 @@ public class Canifier extends SmartSubsystem {
 
   public Canifier() {
     canifier = new CANifier(Constants.CAN.CANIFIER);
-    // canifier.setStatusFramePeriod(CANifierStatusFrame.Status_1_General, 255, Constants.CAN_TIMEOUT);  // TODO Test
+    canifier.setStatusFramePeriod(CANifierStatusFrame.Status_1_General, 255, Constants.CAN_TIMEOUT);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_2_General, 10, Constants.CAN_TIMEOUT);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_3_PwmInputs0, 1000, Constants.CAN_TIMEOUT);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_4_PwmInputs1, 1000, Constants.CAN_TIMEOUT);

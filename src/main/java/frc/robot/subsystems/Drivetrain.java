@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.team254.drivers.SparkMaxFactory;
@@ -28,6 +29,8 @@ public class Drivetrain extends SmartSubsystem {
     public double rpmL, rpmR;
     public Rotation2d heading = new Rotation2d();
     public Rotation2d pitch = new Rotation2d();  // Positive is nose up
+    public double timestampLast;
+    public double headingRate;
   }
 
   private final CANSparkMax masterL, masterR, slaveL, slaveR;
@@ -82,8 +85,13 @@ public class Drivetrain extends SmartSubsystem {
     cache.distanceR = encoderR.getPosition();
     cache.rpmL = encoderL.getVelocity();
     cache.rpmR = encoderR.getVelocity();
-    cache.heading = gyro.getHeading();
     cache.pitch = Rotation2d.fromDegrees(gyro.getPitch());
+    double now = Timer.getFPGATimestamp();
+    double dt = now - cache.timestampLast;
+    Rotation2d headingNow = gyro.getHeading();
+    cache.headingRate = headingNow.minus(cache.heading).getDegrees() / dt; //gyro.getHeadingRate();
+    cache.heading = headingNow;
+    cache.timestampLast = now;
     odometry.update(getHeading(), rotationsToMeters(cache.distanceL), rotationsToMeters(cache.distanceR));
   }
 
@@ -92,6 +100,7 @@ public class Drivetrain extends SmartSubsystem {
     if (showDetails) {
       SmartDashboard.putNumber("Drive: Heading", cache.heading.getDegrees());
       SmartDashboard.putNumber("Drive: Pitch", cache.pitch.getDegrees());
+      SmartDashboard.putNumber("Drive: Heading Rate", cache.headingRate);
     }
     if (Constants.TUNING.DRIVETRAIN) {
       DifferentialDriveWheelSpeeds speed = getWheelSpeeds();
@@ -114,7 +123,9 @@ public class Drivetrain extends SmartSubsystem {
   public void resetPose(Pose2d pose) {
     resetEncoders();
     gyro.reset();
-    odometry.resetPosition(pose, gyro.getHeading());
+    cache.timestampLast = Timer.getFPGATimestamp();
+    cache.heading = gyro.getHeading();
+    odometry.resetPosition(pose, cache.heading);
   }
 
   public void setBrakeMode(boolean enable) {

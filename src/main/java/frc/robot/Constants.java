@@ -2,7 +2,7 @@ package frc.robot;
 
 import frc.robot.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
 import frc.robot.util.DiagnosticState;
-import frc.robot.util.ShootTree;
+import frc.robot.util.ShootMap;
 import frc.team4646.LEDColor;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -171,7 +171,7 @@ public final class Constants {
     public static final double
       OPEN_LOOP = 0.32846,
       OPEN_LOOP_RAMP = 0.4,
-      TIMEOUT_STOW = 1.0;
+      TIMEOUT_STOW = 1.25;
   }
 
   public static final class SHOOTER {
@@ -205,6 +205,7 @@ public final class Constants {
   }
 
   public static final class TURRET {
+    public static int STABLE_COUNTS = 4;
     public static final double
       STICK_GAIN = 150.0,
       STICK_DEADBAND = 0.1,
@@ -247,7 +248,7 @@ public final class Constants {
   }
 
   public static final class VISION {
-    public static int STABLE_COUNTS = 2;
+    public static int STABLE_COUNTS = 3;
 
     public static final double
       HORIZONTAL_FOV = 54.0,  // Degrees (LL1: 54.0, LL2: 59.6)
@@ -256,13 +257,13 @@ public final class Constants {
       CAMERA_MOUNTING_ANGLE = 33.2, // Degrees, tuned 2/27
       CAMERA_MOUNTING_OFFSET = 16.0;  // Tuned 3/4
 
-    public static ShootTree shootTree = new ShootTree();
+    public static ShootMap MAP = new ShootMap();
     static {
-      shootTree.add(75.0, 1450.0, 2800.0);
-      shootTree.add(90.0, 1500.0, 3000.0);
-      shootTree.add(120.0, 1600.0, 3200.0);
-      shootTree.add(150.0, 1700.0, 3400.0);
-      shootTree.add(170.0, 1850.0, 3700.0);
+      MAP.add(75.0, 1450.0, 2800.0);
+      MAP.add(90.0, 1500.0, 3000.0);
+      MAP.add(120.0, 1600.0, 3200.0);
+      MAP.add(150.0, 1700.0, 3400.0);
+      MAP.add(170.0, 1850.0, 3700.0);
     }
   }
 

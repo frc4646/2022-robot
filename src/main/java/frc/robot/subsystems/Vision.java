@@ -73,7 +73,7 @@ public class Vision extends SmartSubsystem {
     if (noTargetCounts > 5) {
       filterDistance.reset();
     }
-    cache.inShootRange = cache.distanceCalculated > Constants.VISION.shootTree.getDistanceMin() && cache.distanceCalculated < Constants.VISION.shootTree.getDistanceMax();
+    cache.inShootRange = cache.distanceCalculated > Constants.VISION.MAP.getDistanceMin() && cache.distanceCalculated < Constants.VISION.MAP.getDistanceMax();
   }
 
   @Override
@@ -124,14 +124,14 @@ public class Vision extends SmartSubsystem {
 
   private double calculateShooterSetpointBottom() {
     if (isTargetPresent()) {
-      return Constants.VISION.shootTree.getRPMBottom(cache.distanceFiltered);
+      return Constants.VISION.MAP.getRPMBottom(cache.distanceFiltered);
     }
     return cache.rpmCalculatedBottom;
   }
 
   private double calculateShooterSetpointTop() {
     if (isTargetPresent()) {
-      return Constants.VISION.shootTree.getRPMTop(cache.distanceFiltered);
+      return Constants.VISION.MAP.getRPMTop(cache.distanceFiltered);
     }
     return cache.rpmCalculatedTop;
   }

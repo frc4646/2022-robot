@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.team254.drivers.TalonUtil;
+import frc.team4646.StabilityCounter;
 import frc.team4646.Test;
 
 public class Turret extends ServoMotorSubsystem {
@@ -15,6 +16,7 @@ public class Turret extends ServoMotorSubsystem {
   }
 
   private final Canifier canifier;
+  private final StabilityCounter stability = new StabilityCounter(Constants.TURRET.STABLE_COUNTS);
   private final DataCache cache = new DataCache();
   
   public Turret() {
@@ -34,6 +36,7 @@ public class Turret extends ServoMotorSubsystem {
     cache.limitF = mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1;
     cache.limitR = mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1;
     resetIfAtHome();
+    stability.calculate(Math.abs(mPeriodicIO.error_ticks) < 2.0 * Constants.TURRET.SERVO.kTicksPerUnitDistance);
   }
 
   @Override
@@ -74,7 +77,7 @@ public class Turret extends ServoMotorSubsystem {
   }
 
   public boolean isOnTarget() {
-    return true; // TODO Math.abs(mPeriodicIO.error_ticks) < 1.0 * Constants.Turret.SERVO.kTicksPerUnitDistance;
+    return stability.isStable();
   }  
 
   public boolean isInDeadzone() {

@@ -14,15 +14,23 @@ public class Navx {
   }
 
   public Rotation2d getHeading() {
-    return gyro.getRotation2d().rotateBy(offset);
+    return getHeadingRaw().rotateBy(offset);
   }
 
   public double getPitch() {
     return gyro.getPitch();
   }
 
+  public double getHeadingRate() {
+    return gyro.getRate();
+  }
+
   public void reset() {
-    Rotation2d current = gyro.getRotation2d();
+    Rotation2d current = getHeadingRaw();
     offset = current.rotateBy(Rotation2d.fromDegrees(-current.getDegrees() * 2.0));
+  }
+
+  private Rotation2d getHeadingRaw() {
+    return Rotation2d.fromDegrees(-gyro.getRotation2d().getDegrees());
   }
 }

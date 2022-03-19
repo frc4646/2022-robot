@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class ModeLeft extends ModeBase {
   public ModeLeft (STRATEGY_PHASE_2 strategy) {
     addCommands(
+      new ResetAuto(Paths.LEFT.CARGO_2.getInitialPose()),
       new GrabCargo2ThenShoot(Paths.LEFT.CARGO_2, 115.0),
       selectPhase2(strategy)
     );

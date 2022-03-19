@@ -1,10 +1,6 @@
 package frc.robot.commands.auto;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.RobotContainer;
 import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.drivetrain.DriveOpenLoop;
 import frc.robot.commands.sequence.DeployIntake;
@@ -17,9 +13,8 @@ import frc.robot.subsystems.ColorSensor.STATE;
 /** Time based grab a cargo and shoot it */
 public class ModeFallback extends ModeBase {
   public ModeFallback() {
-    addCommands(
-      new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0))); }),
-   
+    addCommands(      
+      new ResetAuto(),   
       new DeployIntake(),
       new DriveOpenLoop(.15).beforeStarting(new WaitCommand(1.0)),
       new WaitForDistanceDriven(1.8).withTimeout(1.5),

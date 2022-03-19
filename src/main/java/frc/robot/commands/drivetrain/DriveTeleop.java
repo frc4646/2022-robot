@@ -28,7 +28,7 @@ public class DriveTeleop extends CommandBase {
   @Override
   public void execute() {
     double stickThrottle = controls.getThrottle();
-    if (shooter.isShooting()) {
+    if (shooter.isIntendingToShoot()) {
       stickThrottle = stickThrottle * 0.05;
     }
     final double throttle = throttleAccelLimiter.calculate(stickThrottle);

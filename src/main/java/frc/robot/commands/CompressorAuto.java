@@ -22,6 +22,6 @@ public class CompressorAuto extends CommandBase {
 
   @Override
   public void execute() {
-    subsystem.setCompressor(isTeleop && !shooter.isShooting());
+    subsystem.setCompressor(isTeleop && !shooter.isIntendingToShoot());
   }
 }

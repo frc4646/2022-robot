@@ -21,7 +21,7 @@ public class ShooterTune extends CommandBase {
 
   @Override
   public void initialize() {
-    shooter.setClosedLoop(SmartDashboard.getNumber(DASHBOARD_KEY_SHOOTER_TUNE, 0.0));
+    shooter.setClosedLoop(SmartDashboard.getNumber(DASHBOARD_KEY_SHOOTER_TUNE, 0.0), true);
     shooterTop.setClosedLoop(SmartDashboard.getNumber(DASHBOARD_KEY_SHOOTER_TOP_TUNE, 0.0));
   }
 }

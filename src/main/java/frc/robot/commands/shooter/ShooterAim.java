@@ -30,7 +30,7 @@ public class ShooterAim extends CommandBase {
       setpointBottom = vision.getShooterRPMBottom();
       setpointTop = vision.getShooterRPMTop();
     }
-    shooter.setClosedLoop(setpointBottom + trim);
+    shooter.setClosedLoop(setpointBottom + trim, true);
     shooterTop.setClosedLoop(setpointTop + trim);
   }
 }

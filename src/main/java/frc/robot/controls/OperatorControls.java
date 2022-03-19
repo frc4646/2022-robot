@@ -11,6 +11,7 @@ import frc.robot.commands.sequence.ExhaustIntake;
 import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.sequence.StowIntake;
+import frc.robot.commands.shooter.ShooterOpenLoop;
 import frc.robot.commands.shooter.ShooterRev;
 
 public class OperatorControls {
@@ -43,8 +44,11 @@ public class OperatorControls {
     
     // Shooter
     bumperL.whenPressed(new ShootOpenLoop());
+    bumperL.whenReleased(new ShooterOpenLoop());
     bumperR.whenPressed(new ShootVision());
+    bumperR.whenReleased(new ShooterOpenLoop());
     buttonY.whenPressed(new ShooterRev());
+    buttonY.whenReleased(new ShooterOpenLoop());
   }
 
   public boolean getAimLob() { return operator.getRawAxis(TRIGGER_L) > TRIGGER_DEADBAND; }

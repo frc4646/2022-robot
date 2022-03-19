@@ -24,6 +24,7 @@ public class Shooter extends SmartSubsystem {
 
   private double targetVelocityRPM = Double.POSITIVE_INFINITY;
   private double demand = 0.0;
+  private boolean isIntentToShoot = false;
 
   public Shooter() {
     masterL = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_L);
@@ -69,19 +70,22 @@ public class Shooter extends SmartSubsystem {
     masterL.set(TalonFXControlMode.PercentOutput, percent);
     masterR.set(TalonFXControlMode.PercentOutput, percent);
     demand = percent;
+    isIntentToShoot = false;
   }
 
-  public void setClosedLoop(double rpm) {
+  public void setClosedLoop(double rpm, boolean isShooting) {
     targetVelocityRPM = rpm;
     masterL.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
     masterR.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
     demand = rpm;
+    isIntentToShoot = isShooting;
   }
 
   public double getRPM() { return (cache.rpmL + cache.rpmR) / 2.0; }
   public double getSetpoint() { return demand; }
 
-  public boolean isShooting() { return demand >= Constants.VISION.shootTree.getRPMBottomMin() * 0.9; }
+  public boolean isIntendingToShoot() { return isIntentToShoot; }
+  public boolean isShooting() { return demand >= Constants.VISION.MAP.getRPMBottomMin() * 0.9; }
   public boolean isStable() { return stability.isStable(); }
 
   private double nativeUnitsToRPM(double ticks_per_100_ms) { return ticks_per_100_ms * 10.0 * 60.0 / Constants.SHOOTER.TICKS_PER_REV; }

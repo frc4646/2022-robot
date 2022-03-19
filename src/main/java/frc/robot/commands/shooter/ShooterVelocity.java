@@ -18,7 +18,7 @@ public class ShooterVelocity extends InstantCommand {
 
   @Override
   public void initialize() {
-    shooter.setClosedLoop(rpm);
+    shooter.setClosedLoop(rpm, true);
     shooterTop.setClosedLoop(rpmTop);
   }
 }
