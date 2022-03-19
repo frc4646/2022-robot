@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterTop;
+import frc.robot.util.ShootSetpoint;
 
 public class ShooterTune extends CommandBase {
   public static final String DASHBOARD_KEY_SHOOTER_TUNE = "Tune: Shoot RPM";
@@ -21,7 +22,11 @@ public class ShooterTune extends CommandBase {
 
   @Override
   public void initialize() {
-    shooter.setClosedLoop(SmartDashboard.getNumber(DASHBOARD_KEY_SHOOTER_TUNE, 0.0), true);
-    shooterTop.setClosedLoop(SmartDashboard.getNumber(DASHBOARD_KEY_SHOOTER_TOP_TUNE, 0.0));
+    ShootSetpoint setpoint = new ShootSetpoint(
+      SmartDashboard.getNumber(DASHBOARD_KEY_SHOOTER_TUNE, 0.0),
+      SmartDashboard.getNumber(DASHBOARD_KEY_SHOOTER_TOP_TUNE, 0.0)
+    );
+    shooter.setClosedLoop(setpoint, true);
+    shooterTop.setClosedLoop(setpoint);
   }
 }

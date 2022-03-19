@@ -79,12 +79,12 @@ public class RobotContainer {
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
-    AGITATOR.setDefaultCommand(new AgitateOpenLoop(0.0).perpetually());
+    AGITATOR.setDefaultCommand(new AgitateOpenLoop().perpetually());
     // CLIMBER.setDefaultCommand(new ClimberAuto());  // TODO try ClimberZero on button if this doesn't work
     CLIMBER.setDefaultCommand(new ClimberTeleop());
-    FEEDER.setDefaultCommand(new FeederOpenLoop(0.0).perpetually());
-    INTAKE.setDefaultCommand(new IntakeOpenLoop(0.0).perpetually());
-    SHOOTER.setDefaultCommand(new ShooterOpenLoop(0.0).perpetually());
+    FEEDER.setDefaultCommand(new FeederOpenLoop().perpetually());
+    INTAKE.setDefaultCommand(new IntakeOpenLoop().perpetually());
+    SHOOTER.setDefaultCommand(new ShooterOpenLoop().perpetually());
     TURRET.setDefaultCommand(new TurretAim());
 
     autoModeSelector = new AutoModeSelector();
@@ -92,6 +92,10 @@ public class RobotContainer {
 
   public void cacheSensors() {
     allSubsystems.forEach(SmartSubsystem::cacheSensors);
+  }
+
+  public void updateHardware() {
+    allSubsystems.forEach(SmartSubsystem::updateHardware);
   }
 
   public void updateDashboard() {
@@ -102,9 +106,7 @@ public class RobotContainer {
   }
 
   public void onEnable(boolean isAutonomous) {
-    for(SmartSubsystem subsystem : allSubsystems) {
-      subsystem.onEnable(isAutonomous);
-    }
+    allSubsystems.forEach(s -> s.onEnable(isAutonomous));
   }
 
   public void onDisable() {

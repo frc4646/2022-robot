@@ -12,12 +12,17 @@ import frc.team4646.Test;
 
 public class Infrastructure extends SmartSubsystem {
   private class DataCache {
+    public boolean enableCompressor = true;
     public double battery;
+  }
+  private class OutputCache {
+    public boolean enableCompressor = true;
   }
 
   private final Compressor compressor;
   private final PneumaticsControlModule pcm;
   private final DataCache cache = new DataCache();
+  private final OutputCache outputs = new OutputCache();
 
   public Infrastructure() {
     compressor = new Compressor(Constants.CAN.PNEUMATIC_CONTROL_MODULE, PneumaticsModuleType.CTREPCM);
@@ -35,6 +40,11 @@ public class Infrastructure extends SmartSubsystem {
   public void cacheSensors() {
     cache.battery = RobotController.getBatteryVoltage();
   }
+
+  @Override
+  public void updateHardware() {
+    updateCompressor();
+  }
   
   @Override
   public void updateDashboard(boolean showDetails) {
@@ -44,10 +54,17 @@ public class Infrastructure extends SmartSubsystem {
   }
   
   public void setCompressor(boolean enable) {
-    if(enable) {
-      compressor.enableDigital();
-    } else {
-      compressor.disable();
+    outputs.enableCompressor = enable;
+  }
+
+  private void updateCompressor() {
+    if (outputs.enableCompressor != cache.enableCompressor) {
+      cache.enableCompressor = outputs.enableCompressor;
+      if(cache.enableCompressor) {
+        compressor.enableDigital();
+      } else {
+        compressor.disable();
+      }
     }
   }
 

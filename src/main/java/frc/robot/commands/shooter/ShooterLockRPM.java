@@ -5,6 +5,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterTop;
 import frc.robot.subsystems.Vision;
+import frc.robot.util.ShootSetpoint;
 
 /** Second cargo cannot interfere */
 public class ShooterLockRPM extends InstantCommand {
@@ -18,7 +19,8 @@ public class ShooterLockRPM extends InstantCommand {
 
   @Override
   public void initialize() {
-    shooter.setClosedLoop(vision.getShooterRPMBottom(), true);
-    shooterTop.setClosedLoop(vision.getShooterRPMTop());
+    ShootSetpoint setpoint = vision.getShooterRPM();
+    shooter.setClosedLoop(setpoint, true);
+    shooterTop.setClosedLoop(setpoint);
   }
 }

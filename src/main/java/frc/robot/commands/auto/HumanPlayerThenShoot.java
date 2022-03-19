@@ -9,18 +9,20 @@ import frc.robot.commands.intake.IntakeOpenLoop;
 import frc.robot.commands.intake.IntakeExtend;
 import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.ShootVision;
+import frc.robot.commands.wait.WaitForDistanceDriven;
 
 public class HumanPlayerThenShoot extends SequentialCommandGroup {
   public HumanPlayerThenShoot(Trajectory pathHumanPlayer, Trajectory pathShoot3And4) {
     addCommands(
       deadline(
-        new DrivePath(pathHumanPlayer),
-        new DeployIntake().beforeStarting(new WaitCommand(0.25))  // TODO wait for distance driven
+        new DrivePath(pathHumanPlayer),  // TODO stop early if has two cargo
+        new DeployIntake().beforeStarting(new WaitForDistanceDriven(1.5))  // TODO tune
       ),
-      parallel(
+      deadline(
         new DrivePath(pathShoot3And4),
-        // TODO stop early if has two cargo
-        new IntakeExtend(false).andThen(new IntakeOpenLoop())  // TODO stow
+        new IntakeExtend(false).andThen(new IntakeOpenLoop())  // TODO stow after distance driven instead
+        // TODO new StowIntake().beforeStarting(new WaitForDistanceDriven(0.5))
+        // TODO new ShooterRev().beforeStarting(new WaitForDistanceDriven(2.0))
       ),
       new DriveOpenLoop(),
       new ShootVision().beforeStarting(new WaitCommand(ModeBase.TIME_CANCEL_MOMENTUM))  // TODO wait for drive speed

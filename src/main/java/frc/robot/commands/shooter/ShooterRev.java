@@ -6,33 +6,27 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterTop;
 import frc.robot.subsystems.Vision;
+import frc.robot.util.ShootSetpoint;
 
 public class ShooterRev extends CommandBase {
   private final Shooter shooter = RobotContainer.SHOOTER;
   private final ShooterTop shooterTop = RobotContainer.SHOOTER_TOP;
   private final Vision vision = RobotContainer.VISION;
-  private final double distanceDefault;
+  private final ShootSetpoint setpointNoVision;
 
   public ShooterRev() {
-    this((Constants.VISION.MAP.getDistanceMax() + Constants.VISION.MAP.getDistanceMin()) / 2.0);
+    this(Constants.VISION.MAP.getDistanceDefault());
   }
 
   public ShooterRev(double distance) {
     addRequirements(shooter, shooterTop);
-    this.distanceDefault = distance;
+    setpointNoVision = new ShootSetpoint(distance);
   }
 
   @Override
   public void execute() {
-    double setpointB, setpointT;
-    if (vision.isTargetPresent()) {
-      setpointB = vision.getShooterRPMBottom();
-      setpointT = vision.getShooterRPMTop();
-    } else {
-      setpointB = Constants.VISION.MAP.getRPMBottom(distanceDefault);
-      setpointT = Constants.VISION.MAP.getRPMTop(distanceDefault);
-    }
-    shooter.setClosedLoop(setpointB, false);
-    shooterTop.setClosedLoop(setpointT);
+    ShootSetpoint setpoint = vision.isTargetPresent() ? vision.getShooterRPM() : setpointNoVision;
+    shooter.setClosedLoop(setpoint, false);
+    shooterTop.setClosedLoop(setpoint);
   }
 }

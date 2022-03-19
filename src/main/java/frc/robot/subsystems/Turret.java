@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -36,7 +37,8 @@ public class Turret extends ServoMotorSubsystem {
     cache.limitF = mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1;
     cache.limitR = mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1;
     resetIfAtHome();
-    stability.calculate(Math.abs(mPeriodicIO.error_ticks) < 2.0 * Constants.TURRET.SERVO.kTicksPerUnitDistance);
+    stability.calculate(Math.abs(mPeriodicIO.error_ticks) <= Constants.TURRET.SERVO.kMotionMagicDeadband);
+    // TODO use position to compute error
   }
 
   @Override
@@ -53,13 +55,13 @@ public class Turret extends ServoMotorSubsystem {
   public void onEnable(boolean isAutonomous) {
     setBrakeMode(true);
     setOpenLoop(0.0);  // Handle if zeroed while disabled
+    mMaster.set(TalonFXControlMode.PercentOutput, 0.0);  // Send a neutral command
   }
 
   @Override
   public void onDisable() {
     setBrakeMode(false);
   }
-
 
   @Override
   public void resetIfAtHome() {
@@ -78,13 +80,6 @@ public class Turret extends ServoMotorSubsystem {
 
   public boolean isOnTarget() {
     return stability.isStable();
-  }  
-
-  public boolean isInDeadzone() {
-    double position = getPosition();
-    boolean inDeadzoneR = position < 115.0 && position > 45.0;
-    boolean inDeadzoneL = position > 245.0 && position < 315.0;
-    return inDeadzoneR || inDeadzoneL;
   }
 
   @Override

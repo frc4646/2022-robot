@@ -19,5 +19,6 @@ public abstract class ModeBase extends SequentialCommandGroup {
     RobotContainer.INTAKE.setExtend(false);
     RobotContainer.INTAKE.setOpenLoop(0.0);
     RobotContainer.SHOOTER.setOpenLoop(0.0);
+    RobotContainer.SHOOTER_TOP.setOpenLoop(0.0);
   }
 }

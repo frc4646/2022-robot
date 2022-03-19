@@ -35,7 +35,7 @@ public class SignalDriveTeam extends CommandBase {
     }
   }
 
-  private boolean canPressShoot() { return vision.isTargetPresent() && vision.isInShootRange() && feeder.isShooterLoaded() && !turret.isInDeadzone(); }
+  private boolean canPressShoot() { return vision.isTargetPresent() && vision.isInShootRange() && feeder.isShooterLoaded(); }
   private boolean isCargoLoaded() { return feeder.isShooterLoaded(); }
   private boolean isClimbing() { return climber.isInClimbMode(); }
   private boolean isTurretFaultPresent() { return !turret.hasBeenZeroed(); }

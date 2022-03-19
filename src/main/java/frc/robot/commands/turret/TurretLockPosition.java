@@ -16,7 +16,7 @@ public class TurretLockPosition extends InstantCommand {
 
   @Override
   public void initialize() {
-    double setpoint = turret.getPosition() - vision.getTurretSetpoint();
+    double setpoint = turret.getPosition() - vision.getTurretError();
     turret.setSetpointMotionMagic(setpoint, 0.0);
   }
 }

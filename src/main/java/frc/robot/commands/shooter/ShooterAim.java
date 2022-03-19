@@ -7,6 +7,7 @@ import frc.robot.controls.OperatorControls;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterTop;
 import frc.robot.subsystems.Vision;
+import frc.robot.util.ShootSetpoint;
 
 public class ShooterAim extends CommandBase {
   private final Shooter shooter = RobotContainer.SHOOTER;
@@ -20,17 +21,13 @@ public class ShooterAim extends CommandBase {
 
   @Override
   public void execute() {
-    double setpointBottom = Constants.SHOOTER.RPM_DEFAULT;
-    double setpointTop = Constants.SHOOTER_TOP.RPM_DEFAULT;
     double stickTrim = operator.getShooterTrim();
     double trim = Math.abs(stickTrim) >= Constants.SHOOTER.DEADBAND ? stickTrim * Constants.SHOOTER.RPM_TRIM : 0.0;
     boolean override = operator.getFn();
+    ShootSetpoint setpoint = vision.isTargetPresent() && !override ? vision.getShooterRPM() : ShootSetpoint.DEFAULT;
+    setpoint = new ShootSetpoint(setpoint.rpmBottom + trim, setpoint.rpmTop + trim);
 
-    if (vision.isTargetPresent() && !override) {
-      setpointBottom = vision.getShooterRPMBottom();
-      setpointTop = vision.getShooterRPMTop();
-    }
-    shooter.setClosedLoop(setpointBottom + trim, true);
-    shooterTop.setClosedLoop(setpointTop + trim);
+    shooter.setClosedLoop(setpoint, true);
+    shooterTop.setClosedLoop(setpoint);
   }
 }

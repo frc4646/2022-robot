@@ -1,11 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,13 +12,16 @@ import frc.team4646.Test;
 public class Feeder extends SmartSubsystem {
   private class DataCache {
     public boolean shooterLoaded, shooterLoadedBottom;
-    public double position;
+    public boolean inBrakeMode = true;
+  }
+  private class OutputCache {
+    public double setpoint = 0.0;
   }
 
   private final CANSparkMax motor;
   private final DigitalInput breakBeam, breakBeamBottom;
   private final DataCache cache = new DataCache();
-  private boolean isBrakeMode = true;
+  private final OutputCache outputs = new OutputCache();
 
   public Feeder() {
     motor = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.FEEDER);
@@ -32,14 +31,18 @@ public class Feeder extends SmartSubsystem {
     motor.setInverted(true);
     motor.enableVoltageCompensation(12.0);
     motor.setOpenLoopRampRate(Constants.FEEDER.OPEN_LOOP_RAMP);
-
-    setBrakeMode(!isBrakeMode);
+    setBrakeMode(!cache.inBrakeMode);
   }
 
   @Override
   public void cacheSensors () {
     cache.shooterLoaded = !breakBeam.get();
     cache.shooterLoadedBottom = !breakBeamBottom.get();
+  }
+
+  @Override
+  public void updateHardware() {
+    updateMotors();
   }
 
   @Override
@@ -58,36 +61,21 @@ public class Feeder extends SmartSubsystem {
     setBrakeMode(false);
   }
 
-  public void setOpenLoop(double percent) {
-    motor.set(percent);
-  }
-
-  public void setBrakeMode(boolean enable) {
-    if (isBrakeMode == enable) {
-      return;
-    }
-    IdleMode mode = enable ? IdleMode.kBrake : IdleMode.kCoast;
-    motor.setIdleMode(mode);
-    isBrakeMode = enable;
-  }
-
-  public double getPosition() { return cache.position / Constants.FEEDER.GEAR_RATIO; }
-
-  public int getQueuedCargo() {
-    return (isShooterLoaded() ? 1 : 0) +
-           (isShooterLoadedBottom() ? 1 : 0);  // TODO
-  }
-
-  public int getQueuedCargoCorrect() {
-    return 0;  // TODO
-  }
-
-  public int getQueuedCargoWrong() {
-    return 0;  // TODO
-  }
-
+  public void setOpenLoop(double percent) { outputs.setpoint = percent; }
   public boolean isShooterLoaded() { return cache.shooterLoaded; }
   public boolean isShooterLoadedBottom() { return cache.shooterLoadedBottom; }
+
+  private void updateMotors() {
+    motor.set(outputs.setpoint);
+  }
+
+  private void setBrakeMode(boolean enable) {
+    if (cache.inBrakeMode != enable) {
+      IdleMode mode = enable ? IdleMode.kBrake : IdleMode.kCoast;
+      motor.setIdleMode(mode);
+      cache.inBrakeMode = enable;
+    }
+  }
 
   @Override
   public void runTests() {

@@ -10,6 +10,8 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import frc.robot.Constants;
 import frc.robot.commands.drivetrain.DrivePath;
+import frc.robot.commands.sequence.DeployIntake;
+import frc.robot.commands.wait.WaitForDistanceDriven;
 
 public class ModeTest extends ModeBase {
   private static final TrajectoryConfig
@@ -37,9 +39,12 @@ public class ModeTest extends ModeBase {
   public ModeTest(boolean useVelocityMode) {
     addCommands(
       new ResetAuto(PATH.getInitialPose()),
-      new DrivePath(PATH, useVelocityMode)
+      deadline(
+        new DrivePath(PATH, useVelocityMode),
+        new DeployIntake().beforeStarting(new WaitForDistanceDriven(1.0))
+      )
     );
-    // addCommands(      
+    // addCommands(
     //   new ResetAuto(PATH.getInitialPose()),
     //   new DrivePath(PATH_CARGO_3, useVelocityMode)
     //   // new DrivePath(PATH_HUMAN, useVelocityMode),

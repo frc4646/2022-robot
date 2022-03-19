@@ -31,6 +31,17 @@ public class Drivetrain extends SmartSubsystem {
     public Rotation2d pitch = new Rotation2d();  // Positive is nose up
     public double timestampLast;
     public double headingRate;
+    private boolean inBrakeMode = true;
+  }
+  private class OutputCache {
+    public ControlType mode = ControlType.kDutyCycle;
+    public double setpointL = 0.0, setpointR = 0.0;
+
+    public void set(ControlType mode, double setpointL, double setpointR) {
+      outputs.mode = mode;
+      outputs.setpointL = setpointL;
+      outputs.setpointR = setpointR;
+    }
   }
 
   private final CANSparkMax masterL, masterR, slaveL, slaveR;
@@ -39,9 +50,7 @@ public class Drivetrain extends SmartSubsystem {
   private final Navx gyro;
   private final DifferentialDriveOdometry odometry;
   private final DataCache cache = new DataCache();
-  
-  private boolean isBrakeMode = true;
-  private double demandL = 0.0, demandR = 0.0;
+  private final OutputCache outputs = new OutputCache();
 
   public Drivetrain() {
     masterL = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.DRIVETRAIN_FL, true);
@@ -59,7 +68,7 @@ public class Drivetrain extends SmartSubsystem {
     configureMotor(masterR, false, true);
     configureMotor(slaveR, false, false);
 
-    setBrakeMode(!isBrakeMode);
+    setBrakeMode(!cache.inBrakeMode);
     resetEncoders();
     gyro.reset();
     odometry = new DifferentialDriveOdometry(cache.heading);
@@ -74,8 +83,8 @@ public class Drivetrain extends SmartSubsystem {
       pid.setI(Constants.DRIVETRAIN.VELOCITY_I);
       pid.setD(Constants.DRIVETRAIN.VELOCITY_D);
       pid.setFF(Constants.DRIVETRAIN.VELOCITY_F);
-      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 5);  // Velocity
-      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 5);  // Position
+      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);  // Velocity
+      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 10);  // Position
     }
   }
 
@@ -96,6 +105,11 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   @Override
+  public void updateHardware() {
+    updateMotors();
+  }
+
+  @Override
   public void updateDashboard(boolean showDetails) {
     if (showDetails) {
       SmartDashboard.putNumber("Drive: Heading", cache.heading.getDegrees());
@@ -104,14 +118,17 @@ public class Drivetrain extends SmartSubsystem {
     }
     if (Constants.TUNING.DRIVETRAIN) {
       DifferentialDriveWheelSpeeds speed = getWheelSpeeds();
-      SmartDashboard.putNumber("Drive: Velocity L", speed.leftMetersPerSecond);
-      SmartDashboard.putNumber("Drive: Velocity R", speed.rightMetersPerSecond);
-      SmartDashboard.putNumber("Drive: Error L", demandL - speed.leftMetersPerSecond);
-      SmartDashboard.putNumber("Drive: Error R", demandR - speed.rightMetersPerSecond);
+      SmartDashboard.putNumber("Drive: Velocity", (speed.leftMetersPerSecond + speed.rightMetersPerSecond) / 2.0);
+      SmartDashboard.putNumber("Drive: Error L", outputs.setpointL - speed.leftMetersPerSecond);
+      SmartDashboard.putNumber("Drive: Error R", outputs.setpointR - speed.rightMetersPerSecond);
       SmartDashboard.putNumber("Drive: X", odometry.getPoseMeters().getX());
       SmartDashboard.putNumber("Drive: Y", odometry.getPoseMeters().getY());
     }
   }
+
+  public void setOpenLoop(double percentL, double percentR) { outputs.set(ControlType.kDutyCycle, percentL, percentR); }
+  public void setVolts(double voltsL, double voltsR) { outputs.set(ControlType.kDutyCycle, voltsL / 12.0, voltsR / 12.0); }
+  public void setClosedLoopVelocity(double speedL, double speedR) { outputs.set(ControlType.kVelocity, speedL, speedR); }
 
   public void resetEncoders() {
     encoderL.setPosition(0.0);
@@ -129,40 +146,34 @@ public class Drivetrain extends SmartSubsystem {
   }
 
   public void setBrakeMode(boolean enable) {
-    if (isBrakeMode == enable) {
-      return;
+    if (cache.inBrakeMode != enable) {
+      cache.inBrakeMode = enable;
+      IdleMode mode = cache.inBrakeMode ? IdleMode.kBrake : IdleMode.kCoast;
+      masterL.setIdleMode(mode);
+      slaveL.setIdleMode(mode);
+      masterR.setIdleMode(mode);
+      slaveR.setIdleMode(mode);
     }
-    IdleMode mode = enable ? IdleMode.kBrake : IdleMode.kCoast;
-    masterL.setIdleMode(mode);
-    slaveL.setIdleMode(mode);
-    masterR.setIdleMode(mode);
-    slaveR.setIdleMode(mode);
-    isBrakeMode = enable;
-  }
-
-  public void setOpenLoop(double left, double right) {
-    masterL.set(left);
-    masterR.set(right);
-  }
-
-  public void setVolts(double left, double right) {
-    setOpenLoop(left / 12.0, right / 12.0);
-  }
-
-  public void setClosedLoopVelocity(double wheelSpeedL, double wheelSpeedR) {
-    pidL.setReference(metersToRotations(wheelSpeedL * 60.0), ControlType.kVelocity);
-    pidR.setReference(metersToRotations(wheelSpeedR * 60.0), ControlType.kVelocity);
-    demandL = wheelSpeedL;
-    demandR = wheelSpeedR;
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {return new DifferentialDriveWheelSpeeds(rotationsToMeters(cache.rpmL / 60.0), rotationsToMeters(cache.rpmR / 60.0));  }
   public Pose2d getPose() { return odometry.getPoseMeters(); }
   public Rotation2d getHeading() { return cache.heading; }
+  public double getHeadingRate() { return cache.headingRate; }
   public Rotation2d getPitch() { return cache.pitch; }
 
   private double rotationsToMeters(double rotations) { return rotations / Constants.DRIVETRAIN.GEAR_RATIO * Constants.DRIVETRAIN.WHEEL_DIAMETER * Math.PI * 0.0254; }
   private double metersToRotations(double meters) { return meters * Constants.DRIVETRAIN.GEAR_RATIO / Constants.DRIVETRAIN.WHEEL_DIAMETER / Math.PI / 0.0254; }
+
+  private void updateMotors() {
+    if (outputs.mode == ControlType.kVelocity) {
+      pidL.setReference(metersToRotations(outputs.setpointL * 60.0), ControlType.kVelocity);
+      pidR.setReference(metersToRotations(outputs.setpointR * 60.0), ControlType.kVelocity);
+    } else {
+      masterL.set(outputs.setpointL);
+      masterR.set(outputs.setpointR);
+    }
+  }
 
   @Override
   public void runTests() {

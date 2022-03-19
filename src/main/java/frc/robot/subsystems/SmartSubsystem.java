@@ -9,6 +9,12 @@ public class SmartSubsystem extends SubsystemBase {
    * <i>Synchronizes sensor values</i> across subsystems each cycle of the scheduler by being called <i>before</i> all subsystems run commands.
    */
   public void cacheSensors() {};
+
+  /** 
+   * Override to optionally set outputs after commands.
+   * <i>Improves consistency</i> of command execution by being called <i>after</i> all subsystems run commands.
+   */
+  public void updateHardware() {};
   
   /** 
    * Override to update SmartDashboard values.

@@ -10,12 +10,16 @@ import frc.team4646.Test;
 
 public class Canifier extends SmartSubsystem {
   private class DataCache {
-    double red = 0.0, green = 0.0, blue = 0.0;
-    boolean isTurrentHome;
+    public LEDColor color = new LEDColor();
+    public boolean isTurrentHome;
+  }
+  private class OutputCache {
+    public LEDColor color = new LEDColor();
   }
 
   private final CANifier canifier;
   private final DataCache cache = new DataCache();
+  private final OutputCache outputs = new OutputCache();
 
   public Canifier() {
     canifier = new CANifier(Constants.CAN.CANIFIER);
@@ -33,24 +37,25 @@ public class Canifier extends SmartSubsystem {
   }
 
   @Override
+  public void updateHardware() {
+    updateLEDs();
+  }
+
+  @Override
   public void updateDashboard(boolean showDetails) {
     SmartDashboard.putBoolean("Canifier: Turret Home", cache.isTurrentHome);
   }
   
-  public void setLEDs(LEDColor color) {
-    if (color.red == cache.red && color.green == cache.green && color.blue == cache.blue) {
-      return;
-    }
-    cache.red = color.red;
-    cache.green = color.green;
-    cache.blue = color.blue;
-    canifier.setLEDOutput(cache.red, CANifier.LEDChannel.LEDChannelA);
-    canifier.setLEDOutput(cache.green, CANifier.LEDChannel.LEDChannelB);
-    canifier.setLEDOutput(cache.blue, CANifier.LEDChannel.LEDChannelC);
-  }
+  public void setLEDs(LEDColor color) { outputs.color = color; }
+  public boolean isTurretHome() { return cache.isTurrentHome; }
 
-  public boolean isTurretHome() {
-    return cache.isTurrentHome;
+  private void updateLEDs() {
+    if (!cache.color.isEqual(outputs.color)) {      
+      cache.color = outputs.color;
+      canifier.setLEDOutput(cache.color.red / 255.0, CANifier.LEDChannel.LEDChannelA);
+      canifier.setLEDOutput(cache.color.green / 255.0, CANifier.LEDChannel.LEDChannelB);
+      canifier.setLEDOutput(cache.color.blue / 255.0, CANifier.LEDChannel.LEDChannelC);
+    }
   }
 
   @Override

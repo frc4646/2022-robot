@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.util.ShootSetpoint;
 import frc.team4646.Test;
 
 public class Vision extends SmartSubsystem {
@@ -17,10 +18,12 @@ public class Vision extends SmartSubsystem {
     public boolean seesTarget;  // Whether the limelight has any valid targets (0 or 1)
     public int modeLED = LEDMode.PIPELINE.ordinal();
     public double distanceCalculated;
-    public double rpmCalculatedBottom;
-    public double rpmCalculatedTop;
+    public ShootSetpoint rpmCalculated = new ShootSetpoint();
     public boolean inShootRange = false;
     public double distanceFiltered;
+  }
+  private class OutputCache {
+    public int modeLED = LEDMode.PIPELINE.ordinal();
   }
 
   private final double HEIGHT_VISION_TAPE_TO_CAMERA = Constants.FIELD.VISION_TAPE_INCHES - Constants.VISION.CAMERA_MOUNTING_HEIGHT;
@@ -30,6 +33,7 @@ public class Vision extends SmartSubsystem {
   private final NetworkTable table;
   private final LinearFilter filterDistance = LinearFilter.singlePoleIIR(FILTER_TIME_CONSTANT, .02);
   private final DataCache cache = new DataCache();
+  private final OutputCache outputs = new OutputCache();
   private int seesTargetCounts = 0, noTargetCounts = 0;
 
   public Vision() {
@@ -40,20 +44,12 @@ public class Vision extends SmartSubsystem {
   /** See https://docs.limelightvision.io/en/latest/networktables_api.html. */
   @Override
   public void cacheSensors() {
-    cacheRaw();
-    cacheCalculate();
-    cacheFilter();
-  }
-
-  public void cacheRaw() {
     cache.modeLED = (int) table.getEntry("ledMode").getDouble(1.0);
     cache.seesTarget = table.getEntry("tv").getDouble(0) == 1.0;
     cache.xDegrees = table.getEntry("tx").getDouble(0.0);
     cache.yDegrees = table.getEntry("ty").getDouble(0.0);
     cache.areaRaw = table.getEntry("ta").getDouble(0.0);
-  }
 
-  public void cacheCalculate() {
     seesTargetCounts++;
     noTargetCounts++;
     if (!isTargetPresent()) {
@@ -62,18 +58,30 @@ public class Vision extends SmartSubsystem {
       noTargetCounts = 0;
     }
     cache.distanceCalculated = calculateGroundDistanceToHubInches();
-    cache.rpmCalculatedBottom = calculateShooterSetpointBottom();
-    cache.rpmCalculatedTop = calculateShooterSetpointTop();
-  }
+    if (isTargetPresent()) {
+      cache.rpmCalculated = new ShootSetpoint(
+        Constants.VISION.MAP.getRPMBottom(cache.distanceFiltered),  // TODO filter distance before calculating rpms?
+        Constants.VISION.MAP.getRPMTop(cache.distanceFiltered)  // TODO filter distance before calculating rpms?
+      );
+    }
+    // Use prior rpm calculated when we lose vision
 
-  public void cacheFilter() {
     if (cache.seesTarget) {
       cache.distanceFiltered = filterDistance.calculate(cache.distanceCalculated);
     }
     if (noTargetCounts > 5) {
       filterDistance.reset();
     }
+    // TODO should use distanceFiltered?
     cache.inShootRange = cache.distanceCalculated > Constants.VISION.MAP.getDistanceMin() && cache.distanceCalculated < Constants.VISION.MAP.getDistanceMax();
+  }
+
+  @Override
+  public void updateHardware() {
+    if (outputs.modeLED != cache.modeLED) {
+      table.getEntry("ledMode").setNumber(outputs.modeLED);
+      cache.modeLED = outputs.modeLED;
+    }
   }
 
   @Override
@@ -98,17 +106,10 @@ public class Vision extends SmartSubsystem {
     setLED(LEDMode.OFF);
   }
 
-  public void setLED(LEDMode mode) {
-    int ledMode = mode.ordinal();
-    if (ledMode != cache.modeLED) {
-      table.getEntry("ledMode").setNumber(ledMode);
-      cache.modeLED = ledMode;
-    }
-  }
+  public void setLED(LEDMode mode) { outputs.modeLED = mode.ordinal(); }
 
-  public double getShooterRPMTop() { return cache.rpmCalculatedTop; }
-  public double getShooterRPMBottom() { return cache.rpmCalculatedBottom; }
-  public double getTurretSetpoint() { return cache.xDegrees; }
+  public ShootSetpoint getShooterRPM() { return cache.rpmCalculated; }
+  public double getTurretError() { return cache.xDegrees; }
 
   public boolean isTargetPresent() { return cache.seesTarget; }
   public boolean isStable() { return seesTargetCounts >= Constants.VISION.STABLE_COUNTS; }
@@ -120,20 +121,6 @@ public class Vision extends SmartSubsystem {
       return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians(cache.yDegrees + Constants.VISION.CAMERA_MOUNTING_ANGLE)) - Constants.VISION.CAMERA_MOUNTING_OFFSET;
     }
     return cache.distanceFiltered;  // Last known
-  }
-
-  private double calculateShooterSetpointBottom() {
-    if (isTargetPresent()) {
-      return Constants.VISION.MAP.getRPMBottom(cache.distanceFiltered);
-    }
-    return cache.rpmCalculatedBottom;
-  }
-
-  private double calculateShooterSetpointTop() {
-    if (isTargetPresent()) {
-      return Constants.VISION.MAP.getRPMTop(cache.distanceFiltered);
-    }
-    return cache.rpmCalculatedTop;
   }
 
   @Override

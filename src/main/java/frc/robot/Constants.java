@@ -68,9 +68,10 @@ public final class Constants {
       DEADBAND = 0.2,
       TIMEOUT_ZERO = 5.0,
       GEAR_RATIO = 72.0 / 14.0,
-      TICKS_PER_UNIT_DISTANCE = 2048.0 * GEAR_RATIO,
-      LIMIT_F = 999999.0,
-      POSITION_DEADBAND = 0.1,  // Tune
+      TICKS_TO_TOP = 10000.0,  // TODO
+      TICKS_PER_UNIT_DISTANCE = 1.0 / TICKS_TO_TOP,
+      LIMIT_F = TICKS_TO_TOP,
+      POSITION_DEADBAND = 0.02,  // Tune
       P = 0.0,
       I = 0.0,
       D = 0.0,
@@ -89,11 +90,11 @@ public final class Constants {
   public static final class DIAGNOSTICS {
     public static final double RUMBLE_PERCENT = 0.2;
     public static final DiagnosticState
-      FAULT_CARGO = new DiagnosticState(new LEDColor(1.0, 0.0, 1.0)),
-      FAULT_TURRET = new DiagnosticState(new LEDColor(1.0, 1.0, 0.0), true),
-      CLIMBING = new DiagnosticState(new LEDColor(0.0, 1.0, 1.0)),
-      CARGO_LOADED = new DiagnosticState(new LEDColor(0.3, 0.0, 0.3)),
-      CAN_PRESS_SHOOT = new DiagnosticState(new LEDColor(0.0, 1.0, 0.0));
+      FAULT_CARGO = new DiagnosticState(new LEDColor(255, 0, 255)),
+      FAULT_TURRET = new DiagnosticState(new LEDColor(255, 255, 0), true),
+      CLIMBING = new DiagnosticState(new LEDColor(0, 255, 255)),
+      CARGO_LOADED = new DiagnosticState(new LEDColor(76, 0, 76)),
+      CAN_PRESS_SHOOT = new DiagnosticState(new LEDColor(0, 255, 0));
   }
 
   public static final class DRIVETRAIN {
@@ -155,12 +156,7 @@ public final class Constants {
       OPEN_LOOP_LOAD = 0.3,
       OPEN_LOOP_SHOOT = 0.5,
       OPEN_LOOP_RAMP = 0.25,  // TODO tune
-      TIMEOUT_EXHAUST = 1.0,
-      GEAR_RATIO = 72.0 / 14.0,
-      POSITION_DEADBAND = 0.1,
-      P = 0.1,
-      I = 0.0,
-      D = 0.0;
+      TIMEOUT_EXHAUST = 1.0;
   }
 
   public static final class INFRASTRUCTURE {
@@ -179,7 +175,6 @@ public final class Constants {
     public static final double
       OPEN_LOOP_REV_SECONDS = 1.0,
       RPM_MAX = 6380.0 * 1.105,  //  Tuned 3/15
-      RPM_DEFAULT = 2200.0,
       RPM_ERROR_ALLOWED = 80.0,  // Tuned 3/1, 25-50 seem to work well TODO try 30 again
       RPM_TRIM = 150.0,
       DEADBAND = 0.05,
@@ -194,7 +189,6 @@ public final class Constants {
     public static int STABLE_COUNTS = SHOOTER.STABLE_COUNTS;
     public static final double
       RPM_MAX = 6380.0 * 1.25,  //  Tuned 3/15
-      RPM_DEFAULT = SHOOTER.RPM_DEFAULT * 2.0,
       RPM_ERROR_ALLOWED = SHOOTER.RPM_ERROR_ALLOWED * 2.0,  // Tuned 3/1, 25-50 seem to work well TODO try 30 again
       RPM_TRIM = SHOOTER.RPM_TRIM * 2.0,
       TICKS_PER_REV = 2048.0,
@@ -215,7 +209,7 @@ public final class Constants {
     public static final ServoMotorSubsystemConstants SERVO = new ServoMotorSubsystemConstants();
     static {
       SERVO.kMasterConstants.id = CAN.TURRET;
-      SERVO.kMasterConstants.invert_motor = false;
+      SERVO.kMasterConstants.invert_motor = true;
       SERVO.kMasterConstants.invert_sensor_phase = false;
       SERVO.kSupplyContinuousCurrentLimit = 20;
       SERVO.kSupplyPeakCurrentLimit = 40;
@@ -249,10 +243,7 @@ public final class Constants {
 
   public static final class VISION {
     public static int STABLE_COUNTS = 3;
-
     public static final double
-      HORIZONTAL_FOV = 54.0,  // Degrees (LL1: 54.0, LL2: 59.6)
-      VERTICAL_FOV = 41.0,  // Degrees (LL1: 41.0, LL2: 49.7)
       CAMERA_MOUNTING_HEIGHT = 44.5,  // Inches
       CAMERA_MOUNTING_ANGLE = 33.2, // Degrees, tuned 2/27
       CAMERA_MOUNTING_OFFSET = 16.0;  // Tuned 3/4

@@ -12,8 +12,17 @@ import frc.team254.drivers.TalonFXFactory;
 import frc.team4646.Test;
 
 public class Intake extends SmartSubsystem {
+  private class DataCache {
+    public boolean extended = true;
+  }
+  private class OutputCache {
+    public double setpoint = 0.0;
+    public boolean extend = false;
+  }
   private final TalonFX motor;
   private final DoubleSolenoid solenoid;
+  private final DataCache cache = new DataCache();
+  private final OutputCache outputs = new OutputCache();
 
   public Intake() {
     motor = TalonFXFactory.createDefaultTalon(Constants.CAN.INTAKE);
@@ -26,16 +35,27 @@ public class Intake extends SmartSubsystem {
     motor.configOpenloopRamp(Constants.INTAKE.OPEN_LOOP_RAMP);
     // StatorCurrentLimitConfiguration limit = new StatorCurrentLimitConfiguration(true, 30.0, 50.0, 0.02);
     // TalonUtil.checkError(motor.configStatorCurrentLimit(limit), "Intake: Could not set stator current limit");
-
-    setExtend(false);  // solenoid default is OFF, not IN
+    setExtend(!cache.extended);  // solenoid default is OFF, not IN
   }
 
-  public void setOpenLoop (double intakeSpeed) {
-    motor.set(ControlMode.PercentOutput, intakeSpeed);
+  @Override
+  public void updateHardware() {
+    updateSolenoids();
+    updateMotors();
   }
 
-  public void setExtend (boolean extend) {
-    solenoid.set(extend ? Value.kForward : Value.kReverse);
+  public void setOpenLoop (double intakeSpeed) { outputs.setpoint = intakeSpeed; }
+  public void setExtend (boolean extend) { outputs.extend = extend; }
+
+  private void updateMotors() {
+    motor.set(ControlMode.PercentOutput, outputs.setpoint);
+  }
+
+  private void updateSolenoids() {
+    if (outputs.extend != cache.extended) {
+      cache.extended = outputs.extend;
+      solenoid.set(cache.extended ? Value.kForward : Value.kReverse);
+    }
   }
 
   @Override
@@ -43,5 +63,6 @@ public class Intake extends SmartSubsystem {
     Test.checkFirmware(this, motor);
     Test.checkSolenoid(this, solenoid);
     Test.checkStatusFrames(this, motor);
+    Test.add(this, "Extended", !cache.extended);
   }
 }

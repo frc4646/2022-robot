@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.util.ShootSetpoint;
 import frc.team254.drivers.TalonFXFactory;
 import frc.team254.drivers.TalonUtil;
 import frc.team4646.StabilityCounter;
@@ -16,15 +17,23 @@ public class Shooter extends SmartSubsystem {
   private class DataCache {
     public double nativeVelocityL, nativeVelocityR;
     public double rpmL, rpmR;
+  }  
+  private class OutputCache {
+    public TalonFXControlMode mode = TalonFXControlMode.PercentOutput;
+    public double setpoint = 0.0;
+    public boolean intendToShoot = false;
+
+    public void set(TalonFXControlMode mode, double setpoint, boolean intendToShoot) {
+      outputs.mode = mode;
+      outputs.setpoint = setpoint;
+      outputs.intendToShoot = intendToShoot;
+    }
   }
 
   private final TalonFX masterL, masterR;
   private final StabilityCounter stability = new StabilityCounter(Constants.SHOOTER.STABLE_COUNTS);
   private final DataCache cache = new DataCache();
-
-  private double targetVelocityRPM = Double.POSITIVE_INFINITY;
-  private double demand = 0.0;
-  private boolean isIntentToShoot = false;
+  private final OutputCache outputs = new OutputCache();
 
   public Shooter() {
     masterL = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_L);
@@ -56,41 +65,37 @@ public class Shooter extends SmartSubsystem {
   }
 
   @Override
+  public void updateHardware() {
+    updateMotors();
+  }
+
+  @Override
   public void updateDashboard(boolean showDetails) {
     SmartDashboard.putBoolean("Shooter: Stable", stability.isStable());
     if (Constants.TUNING.SHOOTERS) {
       SmartDashboard.putNumber("Shooter: RPM", getRPM());
       SmartDashboard.putNumber("Shooter: Error", getErrorRPM());
-      SmartDashboard.putNumber("Shooter: Demand", demand);
     }
   }
 
-  public void setOpenLoop(double percent) {
-    // targetVelocityRPM = Double.POSITIVE_INFINITY;
-    masterL.set(TalonFXControlMode.PercentOutput, percent);
-    masterR.set(TalonFXControlMode.PercentOutput, percent);
-    demand = percent;
-    isIntentToShoot = false;
-  }
-
-  public void setClosedLoop(double rpm, boolean isShooting) {
-    targetVelocityRPM = rpm;
-    masterL.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
-    masterR.set(TalonFXControlMode.Velocity, rpmToNativeUnits(rpm));
-    demand = rpm;
-    isIntentToShoot = isShooting;
-  }
+  public void setOpenLoop(double percent) { outputs.set(TalonFXControlMode.PercentOutput, percent, percent > 0.0); }
+  public void setClosedLoop(ShootSetpoint setpoint, boolean isShooting) { outputs.set(TalonFXControlMode.Velocity, setpoint.rpmBottom, isShooting); }
 
   public double getRPM() { return (cache.rpmL + cache.rpmR) / 2.0; }
-  public double getSetpoint() { return demand; }
 
-  public boolean isIntendingToShoot() { return isIntentToShoot; }
-  public boolean isShooting() { return demand >= Constants.VISION.MAP.getRPMBottomMin() * 0.9; }
+  public boolean isIntendingToShoot() { return outputs.intendToShoot; }
+  public boolean isShooting() { return outputs.mode == TalonFXControlMode.Velocity && outputs.setpoint >= Constants.VISION.MAP.getRPMBottomMin() * 0.9; }
   public boolean isStable() { return stability.isStable(); }
 
+  private double getErrorRPM() { return Math.abs(outputs.setpoint - getRPM()); }
   private double nativeUnitsToRPM(double ticks_per_100_ms) { return ticks_per_100_ms * 10.0 * 60.0 / Constants.SHOOTER.TICKS_PER_REV; }
   private double rpmToNativeUnits(double rpm) { return rpm / 60.0 / 10.0 * Constants.SHOOTER.TICKS_PER_REV; }
-  private double getErrorRPM() { return Math.abs(targetVelocityRPM - getRPM()); }
+
+  private void updateMotors() {
+    double setpoint = outputs.mode == TalonFXControlMode.Velocity ? rpmToNativeUnits(outputs.setpoint) : outputs.setpoint;
+    masterL.set(outputs.mode, setpoint);
+    masterR.set(outputs.mode, setpoint);
+  }
 
   @Override
   public void runTests() {

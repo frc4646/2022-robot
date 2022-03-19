@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
@@ -25,14 +24,26 @@ public class Climber extends SmartSubsystem {
   private class DataCache {
     public boolean limitL, limitR;
     public double positionL, positionR;
-    public double currentL, currentR;
+    public boolean inBrakeMode = false;
+    public boolean extended = true;
+  }
+  private class OutputCache {
+    public TalonFXControlMode mode = TalonFXControlMode.PercentOutput;
+    public double setpointL = 0.0, setpointR = 0.0;
+    public boolean extend = false;
+
+    public void set(TalonFXControlMode mode, double setpointL, double setpointR) {
+      outputs.mode = mode;
+      outputs.setpointL = setpointL;
+      outputs.setpointR = setpointR;
+    }
   }
 
   private final TalonFX masterL, masterR;
   private final DoubleSolenoid armL, armR;
   private final DataCache cache = new DataCache();
-  private boolean isBrakeMode = false, armsExtended = false, hasBeenZeroedL = false, hasBeenZeroedR = false, inClimbMode = false;
-  private double demand = 0.0;
+  private final OutputCache outputs = new OutputCache();
+  private boolean hasBeenZeroedL = false, hasBeenZeroedR = false, inClimbMode = false;
 
   public Climber() {
     masterL = TalonFXFactory.createDefaultTalon(Constants.CAN.CLIMBER_L);
@@ -43,8 +54,8 @@ public class Climber extends SmartSubsystem {
     configureMotor(masterL, false);
     configureMotor(masterR, true);
 
-    setBrakeMode(!isBrakeMode);
-    setArms(false);  // solenoid default is OFF, not IN
+    updateBrakeMode(!cache.inBrakeMode);
+    setArms(!cache.extended);  // solenoid default is OFF, not IN
     setSoftLimitsEnabled(true);
     forceZero(true);
     forceZero(false);
@@ -71,6 +82,7 @@ public class Climber extends SmartSubsystem {
 
     motor.setInverted(isInverted);
     motor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 60, Constants.CAN_TIMEOUT);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 60, Constants.CAN_TIMEOUT);
     motor.overrideLimitSwitchesEnable(true);
   }
 
@@ -78,11 +90,15 @@ public class Climber extends SmartSubsystem {
   public void cacheSensors() {
     cache.limitL = masterL.getSensorCollection().isRevLimitSwitchClosed() == 1;
     cache.limitR = masterR.getSensorCollection().isRevLimitSwitchClosed() == 1;
-    cache.positionL = masterL.getSelectedSensorPosition(0);
-    cache.positionR = masterR.getSelectedSensorPosition(0);
-    cache.currentR = masterR.getStatorCurrent();
-    cache.currentL = masterL.getStatorCurrent();
+    cache.positionL = ticksToUnits(masterL.getSelectedSensorPosition());
+    cache.positionR = ticksToUnits(masterR.getSelectedSensorPosition());
     resetIfAtHome();
+  }
+
+  @Override
+  public void updateHardware() {
+    updateSolenoids();
+    updateMotors();
   }
 
   @Override
@@ -91,18 +107,24 @@ public class Climber extends SmartSubsystem {
       SmartDashboard.putBoolean("Climber: Limit L", cache.limitL);
       SmartDashboard.putBoolean("Climber: Limit R", cache.limitR);
       if (Constants.TUNING.CLIMBER) {
-        SmartDashboard.putNumber("Climber: PositionL", cache.positionL);
-        SmartDashboard.putNumber("Climber: PositionR", cache.positionR);
-        SmartDashboard.putNumber("Climber: CurrentL", cache.currentL);
-        SmartDashboard.putNumber("Climber: CurrentR", cache.currentR);
+        SmartDashboard.putNumber("Climber: Position L", cache.positionL);
+        SmartDashboard.putNumber("Climber: Position R", cache.positionR);
+        SmartDashboard.putNumber("Climber: Position Raw", masterL.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Climber: Velocity Raw", masterL.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Climber: Current", masterL.getStatorCurrent());
       }
     }
   }
 
   @Override
   public void onEnable(boolean isAutonomous) {
-    setBrakeMode(true);
+    updateBrakeMode(true);
   }
+
+  public void setOpenLoop(double percent) { outputs.set(TalonFXControlMode.PercentOutput, percent, percent); }
+  public void setClosedLoopPosition(double percentUp) { outputs.set(TalonFXControlMode.Position, percentUp, percentUp); }
+  public void setArms(boolean extend) { outputs.extend = extend; }
+  public void setClimbMode(boolean enable) { inClimbMode = enable; }
 
   public void resetIfAtHome() {
     if (isAtHomingLocation(true)) {
@@ -132,54 +154,50 @@ public class Climber extends SmartSubsystem {
     }
   }
 
-  public void setBrakeMode(boolean enable) {
-    if (isBrakeMode == enable) {
-      return;  // Already in this mode
-    }
-    NeutralMode mode = enable ? NeutralMode.Brake : NeutralMode.Coast;
-    masterL.setNeutralMode(mode);
-    masterR.setNeutralMode(mode);
-    isBrakeMode = enable;
-  }
-
   public void setSoftLimitsEnabled(boolean enable) {
     masterL.overrideSoftLimitsEnable(enable);
     masterR.overrideSoftLimitsEnable(enable);
   }
 
-  public void setOpenLoop(double percent) {
-    masterL.set(TalonFXControlMode.PercentOutput, percent);
-    masterR.set(TalonFXControlMode.PercentOutput, percent);
-    demand = percent;
-  }
+  public double getPosition(boolean left) { return left ? cache.positionL : cache.positionR; }
 
-  public void setClosedLoopPosition(double position) {
-    demand = unitsToTicks(position);
-    masterL.set(ControlMode.Position, demand, DemandType.ArbitraryFeedForward, 0.0);
-    masterR.set(ControlMode.Position, demand, DemandType.ArbitraryFeedForward, 0.0);
-  }
-
-  public void setArms(boolean extend) {
-    Value direction = (extend) ? Value.kForward : Value.kReverse;
-    armL.set(direction);
-    armR.set(direction);
-    armsExtended = extend;
-  }
-
-  public void setClimbMode(boolean enable) {
-    inClimbMode = enable;
-  }
-
-  public double getPosition(boolean left) { return ticksToUnits((left) ? cache.positionL : cache.positionR); }
-
-  public boolean isArmsExtended() { return armsExtended; }
+  public boolean isExtended() { return cache.extended; }
   public boolean isInClimbMode() { return inClimbMode; }
   public boolean isZeroed() { return hasBeenZeroedL && hasBeenZeroedR; }
-  public boolean isAtHomingLocation(boolean left) { return (left) ? cache.limitL : cache.limitR; }
-  public boolean isOnTarget(boolean left) { return Math.abs(getPosition(left) - demand) < Constants.CLIMBER.POSITION_DEADBAND; }
+  public boolean isAtHomingLocation(boolean left) { return left ? cache.limitL : cache.limitR; }
+  public boolean isStable() { return isOnTarget(true) && isOnTarget(false); }
 
-  protected double ticksToUnits(double ticks) { return ticks / Constants.CLIMBER.TICKS_PER_UNIT_DISTANCE; }
-  protected double unitsToTicks(double units) { return units * Constants.CLIMBER.TICKS_PER_UNIT_DISTANCE; }
+  private double ticksToUnits(double ticks) { return ticks / Constants.CLIMBER.TICKS_PER_UNIT_DISTANCE; }
+  private double unitsToTicks(double units) { return units * Constants.CLIMBER.TICKS_PER_UNIT_DISTANCE; }
+  private boolean isOnTarget(boolean left) {
+    double setpoint = left ? outputs.setpointL : outputs.setpointR;
+    return Math.abs(getPosition(left) - setpoint) < Constants.CLIMBER.POSITION_DEADBAND;
+  }
+
+  private void updateMotors() {
+    double setpointL = outputs.mode == TalonFXControlMode.Position ? unitsToTicks(outputs.setpointL) : outputs.setpointL;
+    double setpointR = outputs.mode == TalonFXControlMode.Position ? unitsToTicks(outputs.setpointR) : outputs.setpointR;
+    masterL.set(outputs.mode, setpointL, DemandType.ArbitraryFeedForward, 0.0);
+    masterR.set(outputs.mode, setpointR, DemandType.ArbitraryFeedForward, 0.0);
+  }
+
+  private void updateSolenoids() {
+    if (outputs.extend != cache.extended) {
+      cache.extended = outputs.extend;
+      Value direction = (cache.extended) ? Value.kForward : Value.kReverse;
+      armL.set(direction);
+      armR.set(direction);
+    }
+  }
+
+  private void updateBrakeMode(boolean enable) {
+    if (cache.inBrakeMode != enable) {
+      cache.inBrakeMode = enable;
+      NeutralMode mode = cache.inBrakeMode ? NeutralMode.Brake : NeutralMode.Coast;
+      masterL.setNeutralMode(mode);
+      masterR.setNeutralMode(mode);
+    }
+  }
 
   @Override
   public void runTests() {
@@ -189,6 +207,9 @@ public class Climber extends SmartSubsystem {
     Test.checkSolenoid(this, armR);
     Test.add(this, "Limit L", cache.limitL);
     Test.add(this, "Limit R", cache.limitR);
+    Test.add(this, "Brake Mode", cache.inBrakeMode);
+    Test.add(this, "Zeroed", isZeroed());
+    Test.add(this, "Extended", isExtended());
     Test.checkStatusFrames(this, masterL);
     Test.checkStatusFrames(this, masterR);
   }

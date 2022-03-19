@@ -8,17 +8,22 @@ import frc.team254.drivers.SparkMaxFactory;
 import frc.team4646.Test;
 
 public class Agitator extends SmartSubsystem {
+  private class DataCache {
+    public boolean inBrakeMode = true;
+  }
+  private class OutputCache {
+    public double setpointL = 0.0, setpointR = 0.0;
+  }
   private final CANSparkMax masterL, masterR;
-  private boolean isBrakeMode;
+  private final DataCache cache = new DataCache();
+  private final OutputCache outputs = new OutputCache();
 
   public Agitator() {
     masterL = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.AGITATOR_L, true);
     masterR = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.AGITATOR_R, false);
     configureMotor(masterL);
     configureMotor(masterR);
-
-    isBrakeMode = true;
-    setBrakeMode(false);
+    updateBrakeMode(false);
   }
 
   protected void configureMotor(CANSparkMax motor) {
@@ -27,33 +32,43 @@ public class Agitator extends SmartSubsystem {
   }
 
   @Override
+  public void updateHardware() {
+    updateMotors();
+  }
+
+  @Override
   public void onEnable(boolean isAutonomous) {
-    setBrakeMode(true);
+    updateBrakeMode(true);
   }
 
   @Override
   public void onDisable() {
-    setBrakeMode(false);
+    updateBrakeMode(false);
   }
 
   public void setOpenLoop(double left, double right) {
-    masterL.set(left);
-    masterR.set(right);
+    outputs.setpointL = left;
+    outputs.setpointR = right;
   }
 
-  public void setBrakeMode(boolean enable) {
-    if (isBrakeMode == enable) {
-      return;
+  private void updateMotors() {
+    masterL.set(outputs.setpointL);
+    masterR.set(outputs.setpointR);
+  }
+
+  private void updateBrakeMode(boolean enable) {
+    if (enable != cache.inBrakeMode) {
+      cache.inBrakeMode = enable;
+      IdleMode mode = cache.inBrakeMode ? IdleMode.kBrake : IdleMode.kCoast;
+      masterL.setIdleMode(mode);
+      masterR.setIdleMode(mode);
     }
-    IdleMode mode = enable ? IdleMode.kBrake : IdleMode.kCoast;
-    masterL.setIdleMode(mode);
-    masterR.setIdleMode(mode);
-    isBrakeMode = enable;
   }
 
   @Override
   public void runTests() {
     Test.checkFirmware(this, masterL);
-    Test.checkFirmware(this, masterR);  
+    Test.checkFirmware(this, masterR);
+    Test.add(this, "Brake Mode", cache.inBrakeMode);
   }
 }

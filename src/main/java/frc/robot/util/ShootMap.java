@@ -24,6 +24,9 @@ public class ShootMap {
   public double getDistanceMax() { return distanceMax; }
   public double getRPMBottomMin() { return rpmBottomMin; }
   public double getRPMTopMin() { return rpmTopMin; }
+  public double getDistanceDefault() { return (getDistanceMin() + getDistanceMax()) / 2.0; }
+  public double getRPMBottomDefault() { return getRPMBottom(getDistanceDefault()); }
+  public double getRPMTopDefault() { return getRPMTop(getDistanceDefault()); }
 
   private void updateMinMax(double distance, double rpmBottom, double rpmTop) {
     if (distance < distanceMin) {

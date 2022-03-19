@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.StickyFaults;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -129,9 +130,9 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
 
     mMaster.setInverted(mConstants.kMasterConstants.invert_motor);
     mMaster.setSensorPhase(mConstants.kMasterConstants.invert_sensor_phase);
-    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10, 20);
-    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 20);
-    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, mConstants.kStatusFrame8UpdateRate, 20);
+    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10, Constants.CAN_TIMEOUT);
+    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.CAN_TIMEOUT);
+    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, mConstants.kStatusFrame8UpdateRate, Constants.CAN_TIMEOUT);
     mMaster.selectProfileSlot(kMotionProfileSlot, 0);  // Start with kMotionProfileSlot
 
     for (int i = 0; i < mSlaves.length; ++i) {
@@ -140,10 +141,9 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
       mSlaves[i].follow(mMaster);
     }
 
-    isBrakeMode = false;
-    setBrakeMode(true);
+    setBrakeMode(!isBrakeMode);
     setOpenLoop(0.0);
-    mMaster.set(ControlMode.PercentOutput, 0.0);  // Send a neutral command
+    mMaster.set(TalonFXControlMode.PercentOutput, 0.0);  // Send a neutral command
   }
 
   public static class PeriodicIO {
@@ -237,9 +237,13 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   }
 
   @Override
+  public void updateHardware() {
+    updateMotors();
+  }
+
+  @Override
   public void updateDashboard(boolean showDetails) {
     SmartDashboard.putNumber(getName() + ": Position", mPeriodicIO.position_units);
-    // SmartDashboard.putBoolean(getName() + ": Home", atHomingLocation());
   }
 
   // ------------------------------ SETTERS: SENSORS ------------------------------
@@ -288,20 +292,18 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     mPeriodicIO.demand = constrainTicks(homedUnitsToTicks(units));
     mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kMotionMagicKf + mConstants.kMotionMagicKd / 100.0) / 1023.0;
     setControlMode(ControlState.MOTION_MAGIC);
-    mMaster.set(ControlMode.MotionMagic, mPeriodicIO.demand, DemandType.ArbitraryFeedForward, mPeriodicIO.feedforward);
   }
 
   public void setSetpointPositionPID(double units, double feedforward_v) {
     mPeriodicIO.demand = constrainTicks(homedUnitsToTicks(units));
     mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kMotionMagicKf + mConstants.kMotionMagicKd / 100.0) / 1023.0;
     setControlMode(ControlState.POSITION_PID);
-    mMaster.set(ControlMode.Position, mPeriodicIO.demand, DemandType.ArbitraryFeedForward, mPeriodicIO.feedforward);
   }
 
   public void setOpenLoop(double percentage) {
     mPeriodicIO.demand = percentage;
+    mPeriodicIO.feedforward = 0.0;
     setControlMode(ControlState.OPEN_LOOP);
-    mMaster.set(ControlMode.PercentOutput, mPeriodicIO.demand, DemandType.ArbitraryFeedForward, mPeriodicIO.feedforward);
   }
 
   public void setBrakeMode(boolean enable) {
@@ -337,7 +339,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   /** In "Units" */
   public double getPosition() { return ticksToHomedUnits(mPeriodicIO.position_ticks); }
   /** In "Units per second" */
-  public double getVelocity() { return ticksToUnits(mPeriodicIO.velocity_ticks_per_100ms) * 10.0; } 
+  public double getVelocity() { return ticksToUnits(mPeriodicIO.velocity_ticks_per_100ms) * 10.0; }
   public double getSetpoint() { return (mControlState == ControlState.MOTION_MAGIC || mControlState == ControlState.POSITION_PID) ? ticksToUnits(mPeriodicIO.demand) : Double.NaN; }
   public double getSetpointHomed() { return (mControlState == ControlState.MOTION_MAGIC || mControlState == ControlState.POSITION_PID) ? ticksToHomedUnits(mPeriodicIO.demand) : Double.NaN; }
   public double getPositionTicks() { return mPeriodicIO.position_ticks; }
@@ -365,5 +367,17 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
       mMaster.selectProfileSlot(mode == ControlState.MOTION_MAGIC ? kMotionProfileSlot : kPositionPIDSlot, 0);
     }
     mControlState = mode;
+  }
+
+  protected void updateMotors() {
+    TalonFXControlMode mode;
+    if (mControlState == ControlState.MOTION_MAGIC) {
+      mode = TalonFXControlMode.MotionMagic;
+    } else if (mControlState == ControlState.POSITION_PID) {
+      mode = TalonFXControlMode.Position;
+    } else {
+      mode = TalonFXControlMode.PercentOutput;
+    }
+    mMaster.set(mode, mPeriodicIO.demand, DemandType.ArbitraryFeedForward, mPeriodicIO.feedforward);
   }
 }

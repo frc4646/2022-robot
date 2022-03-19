@@ -10,9 +10,9 @@ import frc.team4646.LEDColor;
 
 public class Diagnostics extends SmartSubsystem {
   public final LEDColor
-    OFF = new LEDColor(0.0, 0.0, 0.0),
-    RED = new LEDColor(1.0, 0.0, 0.0),
-    BLUE = new LEDColor(0.0, 00, 1.0);
+    OFF = new LEDColor(0, 0, 0),
+    RED = new LEDColor(255, 0, 0),
+    BLUE = new LEDColor(0, 0, 255);
 
   private final Canifier canifier;
   private final OperatorControls operator = RobotContainer.CONTROLS.getOperator();
