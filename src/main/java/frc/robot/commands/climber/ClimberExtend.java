@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 
-public class ClimberArms extends InstantCommand {
+public class ClimberExtend extends InstantCommand {
   private final Climber subsystem = RobotContainer.CLIMBER;
   private final boolean extend;
 
-  public ClimberArms(boolean extend) {
+  public ClimberExtend(boolean extend) {
     this.extend = extend;
   }
 

@@ -6,16 +6,16 @@ import frc.robot.subsystems.Climber;
 
 public class ClimberPosition extends CommandBase {
   private Climber subsystem = RobotContainer.CLIMBER;
-  private final double position;
+  private final double percentUp;
 
-  public ClimberPosition(double position) {
+  public ClimberPosition(double percentUp) {
     addRequirements(subsystem);
-    this.position = position;
+    this.percentUp = percentUp;
   }
 
   @Override
   public void initialize() {
-    subsystem.setClosedLoopPosition(position);
+    subsystem.setClosedLoopPosition(percentUp);
   }
 
   @Override

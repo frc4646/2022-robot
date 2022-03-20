@@ -4,7 +4,8 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.climber.ClimberArms;
+import frc.robot.commands.climber.ClimberExtend;
+import frc.robot.commands.climber.ClimberPosition;
 import frc.robot.commands.climber.ClimberEnableLimits;
 import frc.robot.commands.sequence.ClimbMode;
 import frc.robot.commands.sequence.ExhaustIntake;
@@ -31,8 +32,8 @@ public class OperatorControls {
 
   public void configureButtons() {
     // Climber
-    start.whenPressed(new ClimberArms(true));  // TODO move to alt buttons when in climb mode?
-    start.whenReleased(new ClimberArms(false));
+    start.whenPressed(new ClimberExtend(true));  // TODO move to alt buttons when in climb mode?
+    start.whenReleased(new ClimberExtend(false));
     Fn.whenPressed(new ClimberEnableLimits(false));
     Fn.whenReleased(new ClimberEnableLimits(true));
     buttonX.toggleWhenPressed(new ClimbMode());  // TODO move to start button?
@@ -55,13 +56,13 @@ public class OperatorControls {
   public boolean getAimFar() { return operator.getRawAxis(TRIGGER_R) > TRIGGER_DEADBAND; }
   public double getClimberStick() { return -operator.getRawAxis(XboxController.Axis.kRightY.value); }
   public double getShooterTrim() { return -operator.getRawAxis(XboxController.Axis.kLeftY.value); }
-  public double getTurretStick() { return -operator.getRawAxis(XboxController.Axis.kLeftX.value); }
+  public double getTurretStick() { return operator.getRawAxis(XboxController.Axis.kLeftX.value); }
   public int getTurretSnap() {
     int pov = operator.getPOV();
     if(pov == -1) {
       return -1;
     }
-    return  (-pov + 360 ) % 360; // flip the direction
+    return  (pov + 180) % 360 - 180; // flip the direction
   }
   public boolean getFn() { return operator.getBackButton(); }
 

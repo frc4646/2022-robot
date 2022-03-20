@@ -82,6 +82,20 @@ public class Turret extends ServoMotorSubsystem {
     return stability.isStable();
   }
 
+  public double wrapIfPastDeadzone(double degrees) {
+    double limitMin = Constants.TURRET.SERVO.kMinUnitsLimit;
+    double limitMax = Constants.TURRET.SERVO.kMaxUnitsLimit;
+    double aboveMax = degrees - limitMax;
+    double belowMin = limitMin - degrees;
+
+    if (aboveMax > 0.0) {
+      return limitMin + aboveMax;  // Ex: want 180 above max, use 20 above min instead
+    } else if (belowMin < 0.0) {
+      return limitMax + belowMin;
+    }
+    return degrees;
+  }
+
   @Override
   public void runTests() {
     Test.checkFirmware(this, mMaster);

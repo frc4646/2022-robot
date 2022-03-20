@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.climber.ClimberTune;
 import frc.robot.commands.drivetrain.DriveTune;
 import frc.robot.commands.sequence.FireCargo;
 import frc.robot.commands.shooter.ShooterTune;
@@ -13,6 +14,9 @@ import frc.robot.commands.turret.TurretPosition;
 
 public class DashboardControls {
   public void configureButtons() {
+    if (Constants.TUNING.CLIMBER) {
+      SmartDashboard.putData("Climber Tune", new ClimberTune());
+    }
     if (Constants.TUNING.DRIVETRAIN) {
       SmartDashboard.putData("Reset Odometry", new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)));}));
       SmartDashboard.putData("Drive Velocity", new DriveTune(0.75));

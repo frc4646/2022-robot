@@ -23,7 +23,7 @@ public class Agitator extends SmartSubsystem {
     masterR = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.AGITATOR_R, false);
     configureMotor(masterL);
     configureMotor(masterR);
-    updateBrakeMode(false);
+    setBrakeMode(false);
   }
 
   protected void configureMotor(CANSparkMax motor) {
@@ -38,12 +38,12 @@ public class Agitator extends SmartSubsystem {
 
   @Override
   public void onEnable(boolean isAutonomous) {
-    updateBrakeMode(true);
+    setBrakeMode(true);
   }
 
   @Override
   public void onDisable() {
-    updateBrakeMode(false);
+    setBrakeMode(false);
   }
 
   public void setOpenLoop(double left, double right) {
@@ -56,7 +56,7 @@ public class Agitator extends SmartSubsystem {
     masterR.set(outputs.setpointR);
   }
 
-  private void updateBrakeMode(boolean enable) {
+  private void setBrakeMode(boolean enable) {
     if (enable != cache.inBrakeMode) {
       cache.inBrakeMode = enable;
       IdleMode mode = cache.inBrakeMode ? IdleMode.kBrake : IdleMode.kCoast;

@@ -45,9 +45,9 @@ public final class Constants {
 
   public static final class TUNING {
     public static final boolean 
-      CLIMBER = false,
-      COLORSENSOR = true,
-      DRIVETRAIN = true,
+      CLIMBER = true,
+      COLORSENSOR = false,
+      DRIVETRAIN = false,
       FEEDER = false,
       SHOOTERS = false,
       TURRET = false,
@@ -209,15 +209,15 @@ public final class Constants {
     public static final ServoMotorSubsystemConstants SERVO = new ServoMotorSubsystemConstants();
     static {
       SERVO.kMasterConstants.id = CAN.TURRET;
-      SERVO.kMasterConstants.invert_motor = true;
+      SERVO.kMasterConstants.invert_motor = false;
       SERVO.kMasterConstants.invert_sensor_phase = false;
       SERVO.kSupplyContinuousCurrentLimit = 20;
       SERVO.kSupplyPeakCurrentLimit = 40;
       SERVO.kSupplyPeakCurrentDuration = 10; // ms
 
-      SERVO.kMinUnitsLimit = 180.0 - 220.0;
-      SERVO.kMaxUnitsLimit = 180.0 + 80.0;
-      SERVO.kHomePosition = 180.0;
+      SERVO.kMinUnitsLimit = -210.0;
+      SERVO.kMaxUnitsLimit = 113.0;
+      SERVO.kHomePosition = -42.5;
       SERVO.kTicksPerUnitDistance = 2048.0 * GEAR_RATIO / 360.0;
 
       SERVO.kPositionKp = 0.02;
