@@ -49,7 +49,7 @@ public final class Constants {
       COLORSENSOR = false,
       DRIVETRAIN = false,
       FEEDER = false,
-      SHOOTERS = false,
+      SHOOTERS = true,
       TURRET = false,
       VISION = true;
   }
@@ -101,8 +101,8 @@ public final class Constants {
     public static final double
       TIMEOUT_DISABLED_COAST = 5.0,
       THROTTLE_SLEW_LIMIT = 1.20,  // % output per second
-      THROTTLE_DEADBAND = 0.04,
-      TURNING_DEADBAND = 0.035;
+      THROTTLE_DEADBAND = 0.08,
+      TURNING_DEADBAND = 0.07;
 
     public static final int CURRENT_LIMIT = 30;
 
@@ -174,13 +174,16 @@ public final class Constants {
     public static int STABLE_COUNTS = 2;
     public static final double
       OPEN_LOOP_REV_SECONDS = 1.0,
-      RPM_MAX = 6380.0 * 1.105,  //  Tuned 3/15
+      RPM_MAX = 6380.0,  //  Tuned 3/15
       RPM_ERROR_ALLOWED = 80.0,  // Tuned 3/1, 25-50 seem to work well TODO try 30 again
       RPM_TRIM = 150.0,
       DEADBAND = 0.05,
       TICKS_PER_REV = 2048.0,
-      P = 0.01,  // Probably between 0.0075 and 0.25
-      F =  TICKS_PER_REV / RPM_MAX / 60.0 * 10.0,
+      P = 0.05,  // Probably between 0.0075 and 0.25
+      I = 0,
+      D = 0.1   ,
+      F = 0.04535, // TICKS_PER_REV / RPM_MAX / 60.0 * 10.0,
+      CRACKPOINT = 0.03968,
       WHEEL_DIAMETER = 4.0,
       GEAR_RATIO = 1.0 / 1.0;
   }
@@ -188,12 +191,15 @@ public final class Constants {
   public static final class SHOOTER_TOP {
     public static int STABLE_COUNTS = SHOOTER.STABLE_COUNTS;
     public static final double
-      RPM_MAX = 6380.0 * 1.25,  //  Tuned 3/15
+      RPM_MAX = 6380.0,  //  Tuned 3/15
       RPM_ERROR_ALLOWED = SHOOTER.RPM_ERROR_ALLOWED * 2.0,  // Tuned 3/1, 25-50 seem to work well TODO try 30 again
       RPM_TRIM = SHOOTER.RPM_TRIM * 2.0,
       TICKS_PER_REV = 2048.0,
       P = 0.02,  // Probably between 0.0075 and 0.25
-      F =  TICKS_PER_REV / RPM_MAX / 60.0 * 10.0,
+      I = 0,
+      D = 0.08,
+      F = 0.047, // TICKS_PER_REV / RPM_MAX / 60.0 * 10.0,
+      CRACKPOINT = 0.03968,
       WHEEL_DIAMETER = 2.0,
       GEAR_RATIO = 36.0 / 55.0;
   }

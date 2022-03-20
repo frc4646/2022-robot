@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -36,6 +37,12 @@ public class ShooterTop extends SmartSubsystem {
   public ShooterTop() {
     masterTop = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_TOP);
     configureMotor(masterTop, false);
+    
+    SmartDashboard.putNumber("ShooterTop P", Constants.SHOOTER_TOP.P);
+    SmartDashboard.putNumber("ShooterTop I", Constants.SHOOTER_TOP.I);
+    SmartDashboard.putNumber("ShooterTop D", Constants.SHOOTER_TOP.D);
+    SmartDashboard.putNumber("ShooterTop F", Constants.SHOOTER_TOP.F);
+    SmartDashboard.putNumber("ShooterTop FeedForward", Constants.SHOOTER_TOP.CRACKPOINT);
   }
 
   public void configureMotor(TalonFX motor, boolean inverted) {
@@ -44,13 +51,22 @@ public class ShooterTop extends SmartSubsystem {
     motor.enableVoltageCompensation(true);
 
     TalonUtil.checkError(motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), "ShooterTop: Could not detect encoder: ");
-    TalonUtil.checkError(motor.config_kP(0, Constants.SHOOTER.P, Constants.CAN_TIMEOUT), "ShooterTop: could not set P: ");
-    TalonUtil.checkError(motor.config_kF(0, Constants.SHOOTER.F, Constants.CAN_TIMEOUT), "ShooterTop: could not set F: ");
+    TalonUtil.checkError(motor.config_kP(0, Constants.SHOOTER_TOP.P, Constants.CAN_TIMEOUT), "ShooterTop: could not set P: ");
+    TalonUtil.checkError(motor.config_kI(0, Constants.SHOOTER_TOP.I, Constants.CAN_TIMEOUT), "ShooterTop: could not set I: ");
+    TalonUtil.checkError(motor.config_kD(0, Constants.SHOOTER_TOP.D, Constants.CAN_TIMEOUT), "ShooterTop: could not set D: ");
+    TalonUtil.checkError(motor.config_kF(0, Constants.SHOOTER_TOP.F, Constants.CAN_TIMEOUT), "ShooterTop: could not set F: ");
 
     SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 30.0, 100.0, 0.02);
     TalonUtil.checkError(motor.configSupplyCurrentLimit(limit), "ShooterTop: Could not set supply current limit");
   }
 
+  @Override
+  public void onDisable() {
+    TalonUtil.checkError(masterTop.config_kP(0, SmartDashboard.getNumber("ShooterTop P", 0.0), Constants.CAN_TIMEOUT), "ShooterTop: could not set P: ");
+    TalonUtil.checkError(masterTop.config_kI(0, SmartDashboard.getNumber("ShooterTop I", 0.0), Constants.CAN_TIMEOUT), "ShooterTop: could not set I: ");
+    TalonUtil.checkError(masterTop.config_kD(0, SmartDashboard.getNumber("ShooterTop D", 0.0), Constants.CAN_TIMEOUT), "ShooterTop: could not set D: ");
+    TalonUtil.checkError(masterTop.config_kF(0, SmartDashboard.getNumber("ShooterTop F", 0.0), Constants.CAN_TIMEOUT), "ShooterTop: could not set F: ");
+  }
   @Override
   public void cacheSensors() {
     cache.nativeVelocityL = masterTop.getSelectedSensorVelocity();
@@ -85,7 +101,12 @@ public class ShooterTop extends SmartSubsystem {
   private double rpmToNativeUnits(double rpm) { return rpm / 60.0 / 10.0 * Constants.SHOOTER_TOP.TICKS_PER_REV; }
 
   private void updateMotors() {
-    masterTop.set(outputs.mode, outputs.mode == TalonFXControlMode.Velocity ? rpmToNativeUnits(outputs.setpoint) : outputs.setpoint);
+    double setpoint = outputs.mode == TalonFXControlMode.Velocity ? rpmToNativeUnits(outputs.setpoint) : outputs.setpoint;
+    double feedForward = SmartDashboard.getNumber("ShooterTop FeedForward", 0.0);
+    if(setpoint == 0.0) {
+      feedForward = 0;
+    }
+    masterTop.set(outputs.mode, setpoint, DemandType.ArbitraryFeedForward, feedForward);
   }
 
   @Override
