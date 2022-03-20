@@ -45,12 +45,12 @@ public final class Constants {
 
   public static final class TUNING {
     public static final boolean 
-      CLIMBER = true,
+      CLIMBER = false,
       COLORSENSOR = false,
       DRIVETRAIN = false,
       FEEDER = false,
-      SHOOTERS = true,
-      TURRET = false,
+      SHOOTERS = false,
+      TURRET = true,
       VISION = true;
   }
 
@@ -165,7 +165,7 @@ public final class Constants {
 
   public static final class INTAKE {
     public static final double
-      OPEN_LOOP = 0.32846,
+      OPEN_LOOP = 0.30,
       OPEN_LOOP_RAMP = 0.4,
       TIMEOUT_STOW = 1.25;
   }
@@ -257,10 +257,11 @@ public final class Constants {
     public static ShootMap MAP = new ShootMap();
     static {
       MAP.add(75.0, 1450.0, 2800.0);
-      MAP.add(90.0, 1500.0, 3000.0);
+      MAP.add(90.0, 1500.0, 3100.0);
       MAP.add(120.0, 1600.0, 3200.0);
-      MAP.add(150.0, 1700.0, 3400.0);
+      MAP.add(150.0, 1750.0, 3400.0);
       MAP.add(170.0, 1850.0, 3700.0);
+      MAP.add(194.0, 1850.0, 3900.0);
     }
   }
 

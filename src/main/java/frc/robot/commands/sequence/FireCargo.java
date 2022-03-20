@@ -11,6 +11,7 @@ public class FireCargo extends SequentialCommandGroup {
   public FireCargo() {
     addCommands(
       new FeederOpenLoop(Constants.FEEDER.OPEN_LOOP_SHOOT),
+      new WaitCommand(0.25),
       // sequence(
       //   new WaitForFeederState(false),
       //   new WaitForFeederState(true),
