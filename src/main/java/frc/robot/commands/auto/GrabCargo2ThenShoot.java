@@ -24,12 +24,15 @@ public class GrabCargo2ThenShoot extends SequentialCommandGroup {
           new WaitForColorState(STATE.CORRECT)
         ),
         new DeployIntake(),
-        new ShooterRev(distanceShoot).beforeStarting(new WaitCommand(0.25))  // TODO refactor out const
+        new ShooterRev().beforeStarting(new WaitCommand(0.25))  // TODO refactor out const
+        // TODO hint turret to shoot angle
+        // TODO ScheduleCommand the turret hint so default command happens afterwards?
       ),
       deadline(
         new WaitCommand(ModeBase.TIME_CANCEL_MOMENTUM),  // TODO wait for drive speed
         new DriveOpenLoop(),
         new IntakeExtend(false).andThen(new IntakeOpenLoop())  // Workaround: StowIntake not finishing
+        // TODO update rev rpm further while slowing down new ShooterRev()
       ),
       new ShootVision(),
       parallel(new ShooterOpenLoop(), new FeederOpenLoop())

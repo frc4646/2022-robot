@@ -25,6 +25,7 @@ public class HumanPlayerThenShoot extends SequentialCommandGroup {
         // TODO new ShooterRev().beforeStarting(new WaitForDistanceDriven(2.0))
       ),
       new DriveOpenLoop(),
+      // TODO keep reving to refine correct RPM
       new ShootVision().beforeStarting(new WaitCommand(ModeBase.TIME_CANCEL_MOMENTUM))  // TODO wait for drive speed
     );
   }
