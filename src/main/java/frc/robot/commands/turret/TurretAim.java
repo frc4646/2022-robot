@@ -28,7 +28,7 @@ public class TurretAim extends CommandBase {
     double feedforward = 0.0;
 
     if (vision.isTargetPresent() && !operator.getFn()) {
-      setpoint -= vision.getTurretError() * GAIN_STABILITY;
+      setpoint += vision.getTurretError() * GAIN_STABILITY;
       feedforward -= drive.getHeadingRate() * GAIN_YAW_RATE;
     } else if (snap != -1) {
       setpoint = snap;

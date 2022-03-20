@@ -174,7 +174,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   protected ControlState mControlState = ControlState.OPEN_LOOP;
   protected boolean mHasBeenZeroed = false;
   protected StickyFaults mFaults = new StickyFaults();
-  private boolean isBrakeMode;
+  private boolean isBrakeMode = true;
 
   @Override
   public void cacheSensors() {
@@ -307,15 +307,14 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   }
 
   public void setBrakeMode(boolean enable) {
-    if (isBrakeMode == enable) {
-      return;  // Already in this mode
+    if (isBrakeMode != enable) {
+      NeutralMode mode = enable ? NeutralMode.Brake : NeutralMode.Coast;
+      mMaster.setNeutralMode(mode);
+      for (int i = 0; i < mSlaves.length; ++i) {
+        mSlaves[i].setNeutralMode(mode);
+      }
+      isBrakeMode = enable;
     }
-    NeutralMode mode = enable ? NeutralMode.Brake : NeutralMode.Coast;
-    mMaster.setNeutralMode(mode);
-    for (int i = 0; i < mSlaves.length; ++i) {
-      mSlaves[i].setNeutralMode(mode);
-    }
-    isBrakeMode = enable;
   }
 
   // ------------------------------ GETTERS ------------------------------

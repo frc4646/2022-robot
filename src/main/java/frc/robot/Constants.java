@@ -51,7 +51,7 @@ public final class Constants {
       FEEDER = false,
       SHOOTERS = false,
       TURRET = false,
-      VISION = false;
+      VISION = true;
   }
 
   public static final class AGITATOR {
@@ -245,8 +245,8 @@ public final class Constants {
     public static int STABLE_COUNTS = 3;
     public static final double
       CAMERA_MOUNTING_HEIGHT = 44.5,  // Inches
-      CAMERA_MOUNTING_ANGLE = 33.2, // Degrees, tuned 2/27
-      CAMERA_MOUNTING_OFFSET = 16.0;  // Tuned 3/4
+      CAMERA_MOUNTING_ANGLE = 27.6, // Degrees, tuned 2/27
+      CAMERA_MOUNTING_OFFSET = 0.0;  // Tuned 3/4
 
     public static ShootMap MAP = new ShootMap();
     static {
