@@ -38,10 +38,6 @@ public class OperatorControls {
     Fn.whenReleased(new ClimberEnableLimits(true));
     buttonX.toggleWhenPressed(new ClimbMode());  // TODO move to start button?
     // buttonX.whenPressed(new ClimberZero());
-
-    // Intake
-    buttonA.whenActive(new ExhaustIntake());
-    buttonA.whenInactive(new StowIntake());
     
     // Shooter
     bumperL.whenPressed(new ShootOpenLoop());

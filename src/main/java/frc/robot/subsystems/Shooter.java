@@ -41,12 +41,6 @@ public class Shooter extends SmartSubsystem {
     masterR = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_R);
     configureMotor(masterL, true);
     configureMotor(masterR, false);
-
-    SmartDashboard.putNumber("Shooter P", Constants.SHOOTER.P);
-    SmartDashboard.putNumber("Shooter I", Constants.SHOOTER.I);
-    SmartDashboard.putNumber("Shooter D", Constants.SHOOTER.D);
-    SmartDashboard.putNumber("Shooter F", Constants.SHOOTER.F);
-    SmartDashboard.putNumber("Shooter FeedForward", Constants.SHOOTER.CRACKPOINT);
   }
 
   public void configureMotor(TalonFX motor, boolean inverted) {
@@ -62,18 +56,6 @@ public class Shooter extends SmartSubsystem {
 
     SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40.0, 100.0, 0.02);
     TalonUtil.checkError(motor.configSupplyCurrentLimit(limit), "Shooter: Could not set supply current limit");
-  }
-
-  @Override
-  public void onDisable() {
-    TalonUtil.checkError(masterL.config_kP(0, SmartDashboard.getNumber("Shooter P", 0.0), Constants.CAN_TIMEOUT), "Shooter: could not set P: ");
-    TalonUtil.checkError(masterL.config_kI(0, SmartDashboard.getNumber("Shooter I", 0.0), Constants.CAN_TIMEOUT), "Shooter: could not set I: ");
-    TalonUtil.checkError(masterL.config_kD(0, SmartDashboard.getNumber("Shooter D", 0.0), Constants.CAN_TIMEOUT), "Shooter: could not set D: ");
-    TalonUtil.checkError(masterL.config_kF(0, SmartDashboard.getNumber("Shooter F", 0.0), Constants.CAN_TIMEOUT), "Shooter: could not set F: ");
-    TalonUtil.checkError(masterR.config_kP(0, SmartDashboard.getNumber("Shooter P", 0.0), Constants.CAN_TIMEOUT), "Shooter: could not set P: ");
-    TalonUtil.checkError(masterR.config_kI(0, SmartDashboard.getNumber("Shooter I", 0.0), Constants.CAN_TIMEOUT), "Shooter: could not set I: ");
-    TalonUtil.checkError(masterR.config_kD(0, SmartDashboard.getNumber("Shooter D", 0.0), Constants.CAN_TIMEOUT), "Shooter: could not set D: ");
-    TalonUtil.checkError(masterR.config_kF(0, SmartDashboard.getNumber("Shooter F", 0.0), Constants.CAN_TIMEOUT), "Shooter: could not set F: ");
   }
 
   @Override
@@ -114,10 +96,7 @@ public class Shooter extends SmartSubsystem {
 
   private void updateMotors() {
     double setpoint = outputs.mode == TalonFXControlMode.Velocity ? rpmToNativeUnits(outputs.setpoint) : outputs.setpoint;
-    double feedForward = SmartDashboard.getNumber("Shooter FeedForward", 0.0);
-    if(setpoint == 0.0) {
-      feedForward = 0;
-    }
+    double feedForward = setpoint > 0.0 ? Constants.SHOOTER.CRACKPOINT : 0.0;
     masterL.set(outputs.mode, setpoint, DemandType.ArbitraryFeedForward, feedForward);
     masterR.set(outputs.mode, setpoint, DemandType.ArbitraryFeedForward, feedForward);
   }

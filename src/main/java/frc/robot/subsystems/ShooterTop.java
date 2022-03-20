@@ -37,12 +37,6 @@ public class ShooterTop extends SmartSubsystem {
   public ShooterTop() {
     masterTop = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_TOP);
     configureMotor(masterTop, false);
-    
-    SmartDashboard.putNumber("ShooterTop P", Constants.SHOOTER_TOP.P);
-    SmartDashboard.putNumber("ShooterTop I", Constants.SHOOTER_TOP.I);
-    SmartDashboard.putNumber("ShooterTop D", Constants.SHOOTER_TOP.D);
-    SmartDashboard.putNumber("ShooterTop F", Constants.SHOOTER_TOP.F);
-    SmartDashboard.putNumber("ShooterTop FeedForward", Constants.SHOOTER_TOP.CRACKPOINT);
   }
 
   public void configureMotor(TalonFX motor, boolean inverted) {
@@ -60,13 +54,6 @@ public class ShooterTop extends SmartSubsystem {
     TalonUtil.checkError(motor.configSupplyCurrentLimit(limit), "ShooterTop: Could not set supply current limit");
   }
 
-  @Override
-  public void onDisable() {
-    TalonUtil.checkError(masterTop.config_kP(0, SmartDashboard.getNumber("ShooterTop P", 0.0), Constants.CAN_TIMEOUT), "ShooterTop: could not set P: ");
-    TalonUtil.checkError(masterTop.config_kI(0, SmartDashboard.getNumber("ShooterTop I", 0.0), Constants.CAN_TIMEOUT), "ShooterTop: could not set I: ");
-    TalonUtil.checkError(masterTop.config_kD(0, SmartDashboard.getNumber("ShooterTop D", 0.0), Constants.CAN_TIMEOUT), "ShooterTop: could not set D: ");
-    TalonUtil.checkError(masterTop.config_kF(0, SmartDashboard.getNumber("ShooterTop F", 0.0), Constants.CAN_TIMEOUT), "ShooterTop: could not set F: ");
-  }
   @Override
   public void cacheSensors() {
     cache.nativeVelocityL = masterTop.getSelectedSensorVelocity();
@@ -102,10 +89,7 @@ public class ShooterTop extends SmartSubsystem {
 
   private void updateMotors() {
     double setpoint = outputs.mode == TalonFXControlMode.Velocity ? rpmToNativeUnits(outputs.setpoint) : outputs.setpoint;
-    double feedForward = SmartDashboard.getNumber("ShooterTop FeedForward", 0.0);
-    if(setpoint == 0.0) {
-      feedForward = 0;
-    }
+    double feedForward = setpoint > 0.0 ? Constants.SHOOTER_TOP.CRACKPOINT : 0.0;
     masterTop.set(outputs.mode, setpoint, DemandType.ArbitraryFeedForward, feedForward);
   }
 

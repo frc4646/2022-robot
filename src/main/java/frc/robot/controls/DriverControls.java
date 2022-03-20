@@ -3,6 +3,7 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.sequence.DeployIntake;
+import frc.robot.commands.sequence.ExhaustIntake;
 import frc.robot.commands.sequence.StowIntake;
 
 public class DriverControls {
@@ -19,8 +20,8 @@ public class DriverControls {
   public void configureButtons() {
     intake.whenPressed(new DeployIntake());
     intake.whenReleased(new StowIntake());
-    // exhaust.whenActive(new ExhaustIntake());
-    // exhaust.whenInactive(new StowIntake());
+    exhaust.whenActive(new ExhaustIntake());
+    exhaust.whenInactive(new StowIntake());
   }
 
   public double getThrottle() { return -throttle.getRawAxis(1); }
