@@ -11,7 +11,7 @@ import frc.team4646.Test;
 
 public class Feeder extends SmartSubsystem {
   private class DataCache {
-    public boolean shooterLoaded, shooterLoadedBottom;
+    public boolean shooterLoaded = false, HopperLoaded = false;
     public boolean inBrakeMode = true;
   }
   private class OutputCache {
@@ -37,7 +37,7 @@ public class Feeder extends SmartSubsystem {
   @Override
   public void cacheSensors () {
     cache.shooterLoaded = !breakBeam.get();
-    cache.shooterLoadedBottom = !breakBeamBottom.get();
+    cache.HopperLoaded = !breakBeamBottom.get();
   }
 
   @Override
@@ -48,7 +48,7 @@ public class Feeder extends SmartSubsystem {
   @Override
   public void updateDashboard(boolean showDetails) {
     SmartDashboard.putBoolean("Feeder: Loaded", isShooterLoaded());
-    SmartDashboard.putBoolean("Feeder: Bottom Loaded", isShooterLoadedBottom());
+    SmartDashboard.putBoolean("Feeder: Bottom Loaded", isHooperLoaded());
   }
 
   @Override
@@ -62,8 +62,9 @@ public class Feeder extends SmartSubsystem {
   }
 
   public void setOpenLoop(double percent) { outputs.setpoint = percent; }
+  public boolean isHooperLoaded() { return cache.HopperLoaded; }
   public boolean isShooterLoaded() { return cache.shooterLoaded; }
-  public boolean isShooterLoadedBottom() { return cache.shooterLoadedBottom; }
+  public boolean isShooterAndHopperLoaded() { return isShooterLoaded() && isHooperLoaded(); }
 
   private void updateMotors() {
     motor.set(outputs.setpoint);

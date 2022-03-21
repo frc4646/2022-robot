@@ -210,7 +210,8 @@ public final class Constants {
       STICK_GAIN = 150.0,
       STICK_DEADBAND = 0.1,
       GEAR_RATIO = 72.0 / 14.0 * 154.0 / 16.0,
-      VELOCITY_MAX = 21500.0;
+      VELOCITY_MAX = 21500.0,
+      GAIN_STABILITY = 1.0;
 
     public static final ServoMotorSubsystemConstants SERVO = new ServoMotorSubsystemConstants();
     static {

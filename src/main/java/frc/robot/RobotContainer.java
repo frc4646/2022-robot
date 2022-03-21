@@ -8,6 +8,7 @@ import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.drivetrain.DriveDisabled;
 import frc.robot.commands.feeder.FeederOpenLoop;
 import frc.robot.commands.intake.IntakeOpenLoop;
+import frc.robot.commands.shooter.ShooterAutoRev;
 import frc.robot.commands.shooter.ShooterOpenLoop;
 import frc.robot.commands.turret.TurretAim;
 import frc.robot.controls.AutoModeSelector;
@@ -20,6 +21,7 @@ import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.RobotState;
 import frc.robot.subsystems.Infrastructure;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.LEDMode;
@@ -47,6 +49,7 @@ public class RobotContainer {
   public static Feeder FEEDER;
   public static Intake INTAKE;
   public static Infrastructure INFRASTRUCTURE;
+  public static RobotState ROBOT_STATE;
   public static Shooter SHOOTER;
   public static ShooterTop SHOOTER_TOP;
   public static Turret TURRET;
@@ -60,6 +63,15 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     CONTROLS = new Controls();  // Must create controllers BEFORE subsystems
+    setSubsystems();
+    allSubsystems = Arrays.asList(AGITATOR, CANIFIER, CLIMBER, COLOR_SENSOR, DRIVETRAIN, FEEDER, INFRASTRUCTURE, INTAKE, SHOOTER, SHOOTER_TOP, TURRET, VISION, ROBOT_STATE, DIAGNOSTICS);
+    CONTROLS.configureButtons();  // Must create buttons AFTER subsystems
+    setDefaultCommands();
+
+    autoModeSelector = new AutoModeSelector();
+  }
+
+  private void setSubsystems() {
     AGITATOR = new Agitator();
     CANIFIER = new Canifier();
     CLIMBER = new Climber();
@@ -72,10 +84,11 @@ public class RobotContainer {
     SHOOTER_TOP = new ShooterTop();
     TURRET = new Turret();
     VISION = new Vision();
+    ROBOT_STATE = new RobotState();
     DIAGNOSTICS = new Diagnostics();
-    allSubsystems = Arrays.asList(AGITATOR, CANIFIER, CLIMBER, COLOR_SENSOR, DRIVETRAIN, FEEDER, INFRASTRUCTURE, INTAKE, SHOOTER, SHOOTER_TOP, TURRET, VISION, DIAGNOSTICS);
+  }
 
-    CONTROLS.configureButtons();  // Must create buttons AFTER subsystems
+  private void setDefaultCommands() {
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
@@ -84,10 +97,8 @@ public class RobotContainer {
     CLIMBER.setDefaultCommand(new ClimberTeleop());
     FEEDER.setDefaultCommand(new FeederOpenLoop().perpetually());
     INTAKE.setDefaultCommand(new IntakeOpenLoop().perpetually());
-    SHOOTER.setDefaultCommand(new ShooterOpenLoop().perpetually());
+    SHOOTER.setDefaultCommand(new ShooterAutoRev());
     TURRET.setDefaultCommand(new TurretAim());
-
-    autoModeSelector = new AutoModeSelector();
   }
 
   public void cacheSensors() {

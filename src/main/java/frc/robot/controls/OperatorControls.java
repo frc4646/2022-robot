@@ -5,15 +5,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.climber.ClimberExtend;
-import frc.robot.commands.climber.ClimberPosition;
 import frc.robot.commands.climber.ClimberEnableLimits;
 import frc.robot.commands.sequence.ClimbMode;
-import frc.robot.commands.sequence.ExhaustIntake;
 import frc.robot.commands.sequence.ShootOpenLoop;
 import frc.robot.commands.sequence.ShootVision;
-import frc.robot.commands.sequence.StowIntake;
 import frc.robot.commands.shooter.ShooterOpenLoop;
-import frc.robot.commands.shooter.ShooterRev;
 
 public class OperatorControls {
   private final int TRIGGER_L = 2, TRIGGER_R = 3;
@@ -44,8 +40,6 @@ public class OperatorControls {
     bumperL.whenReleased(new ShooterOpenLoop());
     bumperR.whenPressed(new ShootVision());
     bumperR.whenReleased(new ShooterOpenLoop());
-    buttonY.whenPressed(new ShooterRev());
-    buttonY.whenReleased(new ShooterOpenLoop());
   }
 
   public boolean getAimLob() { return operator.getRawAxis(TRIGGER_L) > TRIGGER_DEADBAND; }
