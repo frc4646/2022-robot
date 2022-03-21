@@ -39,8 +39,9 @@ public final class Constants {
 
   public static final class DIGITAL {
     public static final int
-      FEEDER_BREAK_BEAM = 0, 
-      FEEDER_BOTTOM_BREAK_BEAM = 1;
+      BREAK_BEAM_SHOOTER = 0, 
+      BREAK_BEAM_INDEXER = 1,      
+      BREAK_BEAM_HOPPER = 2;
   }
 
   public static final class TUNING {
@@ -49,9 +50,10 @@ public final class Constants {
       COLORSENSOR = false,
       DRIVETRAIN = false,
       FEEDER = false,
+      ROBOT_STATE = true,
       SHOOTERS = false,
-      TURRET = true,
-      VISION = true;
+      TURRET = false,
+      VISION = false;
   }
 
   public static final class AGITATOR {

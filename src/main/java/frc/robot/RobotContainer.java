@@ -3,9 +3,11 @@ package frc.robot;
 import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.SignalDriveTeam;
 import frc.robot.commands.agitator.AgitateOpenLoop;
+import frc.robot.commands.climber.ClimberAuto;
 import frc.robot.commands.climber.ClimberTeleop;
 import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.drivetrain.DriveDisabled;
+import frc.robot.commands.feeder.FeederAutoIndex;
 import frc.robot.commands.feeder.FeederOpenLoop;
 import frc.robot.commands.intake.IntakeOpenLoop;
 import frc.robot.commands.shooter.ShooterAutoRev;
@@ -93,9 +95,8 @@ public class RobotContainer {
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
     AGITATOR.setDefaultCommand(new AgitateOpenLoop().perpetually());
-    // CLIMBER.setDefaultCommand(new ClimberAuto());  // TODO try ClimberZero on button if this doesn't work
-    CLIMBER.setDefaultCommand(new ClimberTeleop());
-    FEEDER.setDefaultCommand(new FeederOpenLoop().perpetually());
+    CLIMBER.setDefaultCommand(new ClimberAuto());
+    FEEDER.setDefaultCommand(new FeederAutoIndex());
     INTAKE.setDefaultCommand(new IntakeOpenLoop().perpetually());
     SHOOTER.setDefaultCommand(new ShooterAutoRev());
     TURRET.setDefaultCommand(new TurretAim());

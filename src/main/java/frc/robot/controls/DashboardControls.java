@@ -19,7 +19,7 @@ public class DashboardControls {
     }
     if (Constants.TUNING.DRIVETRAIN) {
       SmartDashboard.putData("Reset Odometry", new InstantCommand(() -> { RobotContainer.DRIVETRAIN.resetPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)));}));
-      SmartDashboard.putData("Drive Velocity", new DriveTune(0.75));
+      SmartDashboard.putData("Drive Velocity", new DriveTune());
     }
     if (Constants.TUNING.SHOOTERS) {
       SmartDashboard.putData("FireCargo", new FireCargo());

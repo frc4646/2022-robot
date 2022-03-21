@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -18,7 +20,7 @@ public class RobotState extends SmartSubsystem {
     if (Constants.TUNING.ROBOT_STATE) {
       SmartDashboard.putNumber("State: Predicted Yaw", getDrivePredictedYaw());
       SmartDashboard.putNumber("State: Turret Vision", getTurretVisionSetpoint());
-      SmartDashboard.putNumber("State: Turret Fused", getTurretFusedSetpoint());
+      SmartDashboard.putNumber("State: Turret Fused", getTurretFusedFeedForward());
     }
   }
 
@@ -30,8 +32,18 @@ public class RobotState extends SmartSubsystem {
     return turret.getPosition() + vision.getTurretError() * Constants.TURRET.GAIN_STABILITY;
   }
 
-  public double getTurretFusedSetpoint() {
-    return getTurretVisionSetpoint() + getDrivePredictedYaw() * GAIN_YAW_RATE;
+  public double getTurretFusedFeedForward() {
+    Rotation2d turretDegrees = Rotation2d.fromDegrees(turret.getPosition());
+    Rotation2d hubDegrees = turretDegrees.rotateBy(Rotation2d.fromDegrees(vision.getTurretError()));
+    Rotation2d driveYawDegrees = Rotation2d.fromDegrees(drive.getHeadingRate());
+
+    double dxParallelToHubMeters = hubDegrees.getSin() * drive.getPose().getX();
+    double distanceToHubMeters = vision.groundDistanceToHubInches() / 0.0254;
+
+    Rotation2d dAngleRobotToHubDegrees = Rotation2d.fromDegrees(dxParallelToHubMeters / distanceToHubMeters);
+    Rotation2d errorDrivingInducedDegrees = driveYawDegrees.rotateBy(dAngleRobotToHubDegrees);
+
+    return -errorDrivingInducedDegrees.getDegrees();
   }
 
   public boolean isShootingStable() {
@@ -43,6 +55,6 @@ public class RobotState extends SmartSubsystem {
   }  
 
   public boolean isAutoRevWanted() {
-    return feeder.isShooterLoaded() && feeder.isHooperLoaded() && vision.isTargetPresent();
+    return feeder.isShooterLoaded() && feeder.isHooperFull() && vision.isTargetPresent();
   }
 }

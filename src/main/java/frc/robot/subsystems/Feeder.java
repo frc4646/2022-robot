@@ -11,7 +11,7 @@ import frc.team4646.Test;
 
 public class Feeder extends SmartSubsystem {
   private class DataCache {
-    public boolean shooterLoaded = false, HopperLoaded = false;
+    public boolean breakBeamShooter = false, breakBeamHopper = false, breakBeamIndexer = false;
     public boolean inBrakeMode = true;
   }
   private class OutputCache {
@@ -19,14 +19,15 @@ public class Feeder extends SmartSubsystem {
   }
 
   private final CANSparkMax motor;
-  private final DigitalInput breakBeam, breakBeamBottom;
+  private final DigitalInput breakBeam, breakBeamIndexer, breakBeamHopper;
   private final DataCache cache = new DataCache();
   private final OutputCache outputs = new OutputCache();
 
   public Feeder() {
     motor = SparkMaxFactory.createDefaultSparkMax(Constants.CAN.FEEDER);
-    breakBeam = new DigitalInput(Constants.DIGITAL.FEEDER_BREAK_BEAM);
-    breakBeamBottom = new DigitalInput(Constants.DIGITAL.FEEDER_BOTTOM_BREAK_BEAM);
+    breakBeam = new DigitalInput(Constants.DIGITAL.BREAK_BEAM_SHOOTER);
+    breakBeamIndexer = new DigitalInput(Constants.DIGITAL.BREAK_BEAM_INDEXER);
+    breakBeamHopper = new DigitalInput(Constants.DIGITAL.BREAK_BEAM_HOPPER);
 
     motor.setInverted(true);
     motor.enableVoltageCompensation(12.0);
@@ -36,8 +37,9 @@ public class Feeder extends SmartSubsystem {
 
   @Override
   public void cacheSensors () {
-    cache.shooterLoaded = !breakBeam.get();
-    cache.HopperLoaded = !breakBeamBottom.get();
+    cache.breakBeamShooter = !breakBeam.get();
+    cache.breakBeamHopper = !breakBeamIndexer.get();
+    cache.breakBeamIndexer = !breakBeamHopper.get();
   }
 
   @Override
@@ -47,8 +49,9 @@ public class Feeder extends SmartSubsystem {
 
   @Override
   public void updateDashboard(boolean showDetails) {
-    SmartDashboard.putBoolean("Feeder: Loaded", isShooterLoaded());
-    SmartDashboard.putBoolean("Feeder: Bottom Loaded", isHooperLoaded());
+    SmartDashboard.putBoolean("Feeder: Shooter Cargo", isShooterLoaded());
+    SmartDashboard.putBoolean("Feeder: Hopper Cargo", isHooperFull());
+    SmartDashboard.putBoolean("Feeder: Indexed Cargo", isCargoIndexed());
   }
 
   @Override
@@ -62,9 +65,9 @@ public class Feeder extends SmartSubsystem {
   }
 
   public void setOpenLoop(double percent) { outputs.setpoint = percent; }
-  public boolean isHooperLoaded() { return cache.HopperLoaded; }
-  public boolean isShooterLoaded() { return cache.shooterLoaded; }
-  public boolean isShooterAndHopperLoaded() { return isShooterLoaded() && isHooperLoaded(); }
+  public boolean isHooperFull() { return cache.breakBeamHopper; }
+  public boolean isCargoIndexed() { return cache.breakBeamIndexer; }
+  public boolean isShooterLoaded() { return cache.breakBeamShooter; }
 
   private void updateMotors() {
     motor.set(outputs.setpoint);

@@ -57,7 +57,7 @@ public class Vision extends SmartSubsystem {
     } else {
       noTargetCounts = 0;
     }
-    cache.distanceCalculated = calculateGroundDistanceToHubInches();
+    cache.distanceCalculated = groundDistanceToHubInches();
     if (isTargetPresent()) {
       cache.rpmCalculated = new ShootSetpoint(
         Constants.VISION.MAP.getRPMBottom(cache.distanceFiltered),  // TODO filter distance before calculating rpms?
@@ -108,20 +108,20 @@ public class Vision extends SmartSubsystem {
 
   public void setLED(LEDMode mode) { outputs.modeLED = mode.ordinal(); }
 
+  /** See https://docs.limelightvision.io/en/latest/cs_estimating_distance.html#. */
+  public double groundDistanceToHubInches() {
+    if (isTargetPresent()) {
+      return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians(cache.yDegrees + Constants.VISION.CAMERA_MOUNTING_ANGLE)) - Constants.VISION.CAMERA_MOUNTING_OFFSET;
+    }
+    return cache.distanceFiltered;  // Last known
+  }
+
   public ShootSetpoint getShooterRPM() { return cache.rpmCalculated; }
   public double getTurretError() { return cache.xDegrees; }
 
   public boolean isTargetPresent() { return cache.seesTarget; }
   public boolean isStable() { return seesTargetCounts >= Constants.VISION.STABLE_COUNTS; }
   public boolean isInShootRange() { return cache.inShootRange; };
-
-  /** See https://docs.limelightvision.io/en/latest/cs_estimating_distance.html#. */
-  private double calculateGroundDistanceToHubInches() {
-    if (isTargetPresent()) {
-      return HEIGHT_VISION_TAPE_TO_CAMERA / Math.tan(Math.toRadians(cache.yDegrees + Constants.VISION.CAMERA_MOUNTING_ANGLE)) - Constants.VISION.CAMERA_MOUNTING_OFFSET;
-    }
-    return cache.distanceFiltered;  // Last known
-  }
 
   @Override
   public void runTests() {
