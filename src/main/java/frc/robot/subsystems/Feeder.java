@@ -12,7 +12,7 @@ import frc.team4646.Test;
 public class Feeder extends SmartSubsystem {
   private class DataCache {
     public boolean breakBeamShooter = false, breakBeamHopper = false, breakBeamIndexer = false;
-    public boolean inBrakeMode = true;
+    public boolean inBrakeMode = false;
   }
   private class OutputCache {
     public double setpoint = 0.0;
@@ -38,8 +38,8 @@ public class Feeder extends SmartSubsystem {
   @Override
   public void cacheSensors () {
     cache.breakBeamShooter = !breakBeam.get();
-    cache.breakBeamHopper = !breakBeamIndexer.get();
-    cache.breakBeamIndexer = !breakBeamHopper.get();
+    cache.breakBeamHopper = !breakBeamHopper.get();
+    cache.breakBeamIndexer = !breakBeamIndexer.get();
   }
 
   @Override

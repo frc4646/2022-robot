@@ -15,9 +15,7 @@ public class ShooterAutoRev extends SequentialCommandGroup {
 
   public ShooterAutoRev() {
     addRequirements(shooter, shooterTop);
-    addCommands(
-      new SelectCommand(ShooterAutoRev::select)
-    );
+    addCommands(new SelectCommand(ShooterAutoRev::select));
   }
 
   public static Command select() {

@@ -24,6 +24,8 @@ public class SignalDriveTeam extends CommandBase {
   public void execute() {
     if (isTurretFaultPresent()) {
       diagnostics.setState(Constants.DIAGNOSTICS.FAULT_TURRET);
+    // } else if (isClimberFaultPresent()) {
+    //   diagnostics.setState(Constants.DIAGNOSTICS.FAULT_CLIMBER);
     // } else if (isClimbing()) {
     //   diagnostics.setState(Constants.DIAGNOSTICS.CLIMBING);
     } else if (canPressShoot()) {
@@ -37,6 +39,7 @@ public class SignalDriveTeam extends CommandBase {
 
   private boolean canPressShoot() { return vision.isTargetPresent() && vision.isInShootRange() && feeder.isShooterLoaded(); }
   private boolean isCargoLoaded() { return feeder.isShooterLoaded(); }
+  private boolean isClimberFaultPresent() { return !climber.isZeroed(); }
   private boolean isClimbing() { return climber.isInClimbMode(); }
   private boolean isTurretFaultPresent() { return !turret.hasBeenZeroed(); }
 

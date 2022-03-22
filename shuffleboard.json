@@ -1161,7 +1161,7 @@
       }
     },
     {
-      "title": "Tab 5",
+      "title": "Drive",
       "autoPopulate": true,
       "autoPopulatePrefix": "Dashboard",
       "widgetPane": {
@@ -1171,51 +1171,6 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "10,14": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/Drive Velocity",
-              "_title": "SmartDashboard/Drive Velocity"
-            }
-          },
-          "7,0": {
-            "size": [
-              7,
-              6
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Drive: Velocity L",
-              "_title": "SmartDashboard/Drive: Velocity L",
-              "Graph/Visible time": 10.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul"
-            }
-          },
-          "7,6": {
-            "size": [
-              7,
-              6
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Drive: Velocity R",
-              "_title": "SmartDashboard/Drive: Velocity R",
-              "Graph/Visible time": 10.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul"
-            }
-          },
           "14,14": {
             "size": [
               5,
@@ -1227,54 +1182,139 @@
               "_title": "SmartDashboard/Auto: Mode"
             }
           },
-          "19,14": {
+          "11,0": {
             "size": [
               3,
-              2
+              3
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Drive P",
-              "_title": "SmartDashboard/Drive P"
-            }
-          },
-          "22,14": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Drive D",
-              "_title": "SmartDashboard/Drive D"
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Drive Velocity",
+              "_title": "SmartDashboard/Drive Velocity"
             }
           },
           "14,0": {
             "size": [
-              18,
-              14
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Tune: Drive Closed Loop",
+              "_title": "SmartDashboard/Tune: Drive Closed Loop"
+            }
+          },
+          "20,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Tune: Drive Setpoint",
+              "_title": "SmartDashboard/Tune: Drive Setpoint"
+            }
+          },
+          "10,4": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive: X",
+              "_title": "SmartDashboard/Drive: X"
+            }
+          },
+          "14,4": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drive: Y",
+              "_title": "SmartDashboard/Drive: Y"
+            }
+          },
+          "10,6": {
+            "size": [
+              7,
+              7
             ],
             "content": {
               "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Drive: Error",
-              "_title": "SmartDashboard/Drive: Error",
-              "Graph/Visible time": 30.0,
+              "_source0": "network_table:///SmartDashboard/Drive: Velocity",
+              "_title": "SmartDashboard/Drive: Velocity",
+              "Graph/Visible time": 10.0,
               "Graph/X-axis auto scrolling": true,
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul"
+              "Y-axis/Unit": "ul",
+              "Visible data/SmartDashboard/Drive: Velocity": true
             }
           },
-          "8,12": {
+          "17,6": {
             "size": [
-              2,
-              1
+              7,
+              7
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Drive: Error L",
+              "_title": "SmartDashboard/Drive: Error L",
+              "Graph/Visible time": 10.0,
+              "Graph/X-axis auto scrolling": true,
+              "Y-axis/Automatic bounds": true,
+              "Y-axis/Upper bound": 1.0,
+              "Y-axis/Lower bound": -1.0,
+              "Y-axis/Unit": "ul",
+              "Visible data/SmartDashboard/Drive: Error L": true
+            }
+          },
+          "24,6": {
+            "size": [
+              7,
+              7
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Turret: Position",
-              "_title": "SmartDashboard/Turret: Position"
+              "_source0": "network_table:///SmartDashboard/Drive: Error R",
+              "_title": "SmartDashboard/Drive: Error R"
+            }
+          },
+          "23,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Tuner: F",
+              "_title": "SmartDashboard/Tuner: F"
+            }
+          },
+          "17,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Tune: Drive Seconds",
+              "_title": "SmartDashboard/Tune: Drive Seconds"
+            }
+          },
+          "26,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Tuner: P",
+              "_title": "SmartDashboard/Tuner: P"
             }
           }
         }
@@ -1323,8 +1363,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Turret: Error": true
+              "Y-axis/Unit": "ul"
             }
           },
           "4,0": {

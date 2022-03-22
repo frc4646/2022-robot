@@ -20,6 +20,8 @@ public class FeederAutoIndex extends SequentialCommandGroup {
   public static Command select() {
     if (!feeder.isShooterLoaded() && !feeder.isCargoIndexed() && feeder.isHooperFull()) {
       return new FeederOpenLoop(Constants.FEEDER.OPEN_LOOP_LOAD).until(() -> { return feeder.isCargoIndexed() || feeder.isShooterLoaded(); });
+    } else if (!feeder.isShooterLoaded() && feeder.isCargoIndexed() && feeder.isHooperFull()) {
+      return new FeederOpenLoop(Constants.FEEDER.OPEN_LOOP_LOAD).until(() -> { return  feeder.isShooterLoaded(); });
     }
     return new FeederOpenLoop().perpetually().until(() -> { return feeder.isShooterLoaded() || feeder.isCargoIndexed() || feeder.isHooperFull(); });
   }

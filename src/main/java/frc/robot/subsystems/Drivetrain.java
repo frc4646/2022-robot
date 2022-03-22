@@ -166,9 +166,13 @@ public class Drivetrain extends SmartSubsystem {
   private double metersToRotations(double meters) { return meters * Constants.DRIVETRAIN.GEAR_RATIO / Constants.DRIVETRAIN.WHEEL_DIAMETER / Math.PI / 0.0254; }
 
   private void updateMotors() {
+    // double feedforwardL = Math.signum(outputs.setpointL) * Constants.DRIVETRAIN.CRACKPOINT;
+    // double feedforwardR = Math.signum(outputs.setpointR) * Constants.DRIVETRAIN.CRACKPOINT;
     if (outputs.mode == ControlType.kVelocity) {
       pidL.setReference(metersToRotations(outputs.setpointL * 60.0), ControlType.kVelocity);
       pidR.setReference(metersToRotations(outputs.setpointR * 60.0), ControlType.kVelocity);
+      // pidL.setReference(metersToRotations(outputs.setpointL * 60.0), ControlType.kVelocity, 0, feedforwardL, ArbFFUnits.kPercentOut);
+      // pidR.setReference(metersToRotations(outputs.setpointR * 60.0), ControlType.kVelocity, 0, feedforwardR, ArbFFUnits.kPercentOut);
     } else {
       masterL.set(outputs.setpointL);
       masterR.set(outputs.setpointR);

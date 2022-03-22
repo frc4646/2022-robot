@@ -1,6 +1,7 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -11,28 +12,36 @@ import frc.team254.util.DriveSignal;
 import frc.team254.util.OpenLoopCheesyDriveHelper;
 
 public class DriveTeleop extends CommandBase {
-  private final Drivetrain subsystem = RobotContainer.DRIVETRAIN;
+  private final Drivetrain drive = RobotContainer.DRIVETRAIN;
   private final DriverControls controls = RobotContainer.CONTROLS.getDriver();
   private final OpenLoopCheesyDriveHelper steeringController = OpenLoopCheesyDriveHelper.getInstance();
   private final SlewRateLimiter throttleAccelLimiter = new SlewRateLimiter(Constants.DRIVETRAIN.THROTTLE_SLEW_LIMIT);
   private final Shooter shooter = RobotContainer.SHOOTER;
 
   public DriveTeleop() {
-    addRequirements(subsystem);
+    addRequirements(drive);
   }
 
   public void initialize() {
-    subsystem.setBrakeMode(false);
+    drive.setBrakeMode(false);
   }
 
   @Override
   public void execute() {
     double stickThrottle = controls.getThrottle();
+    double stickTurn = controls.getTurning();
     if (shooter.isIntendingToShoot()) {
-      stickThrottle = stickThrottle * 0.05;
+      stickThrottle = 0.0;
+      stickTurn = 0.0;
+      DifferentialDriveWheelSpeeds speed = drive.getWheelSpeeds();
+      double speedMetersPerSecond = (speed.leftMetersPerSecond + speed.rightMetersPerSecond) / 2.0;
+      boolean safeToBrake = Math.abs(speedMetersPerSecond) < 0.25;
+      drive.setBrakeMode(safeToBrake);
+    } else {
+      drive.setBrakeMode(false);
     }
     final double throttle = throttleAccelLimiter.calculate(stickThrottle);
-    final DriveSignal output = steeringController.cheesyDrive(throttle, controls.getTurning(), controls.getQuickturn());
-    subsystem.setOpenLoop(output.getLeft(), output.getRight());
+    final DriveSignal output = steeringController.cheesyDrive(throttle, stickTurn, controls.getQuickturn());
+    drive.setOpenLoop(output.getLeft(), output.getRight());
   }
 }

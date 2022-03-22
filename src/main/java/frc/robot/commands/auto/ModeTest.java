@@ -40,8 +40,8 @@ public class ModeTest extends ModeBase {
     addCommands(
       new ResetAuto(PATH.getInitialPose()),
       deadline(
-        new DrivePath(PATH, useVelocityMode),
-        new DeployIntake().beforeStarting(new WaitForDistanceDriven(1.0))
+        new DrivePath(PATH, useVelocityMode)
+        // new DeployIntake().beforeStarting(new WaitForDistanceDriven(1.0))
       )
     );
     // addCommands(

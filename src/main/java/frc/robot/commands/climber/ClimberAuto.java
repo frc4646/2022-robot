@@ -11,9 +11,7 @@ public class ClimberAuto extends SequentialCommandGroup {
   
   public ClimberAuto() {
     addRequirements(climber);
-    addCommands(
-      new SelectCommand(ClimberAuto::select)
-    );
+    addCommands(new SelectCommand(ClimberAuto::select));
   }
 
   public static Command select() {

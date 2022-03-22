@@ -9,7 +9,7 @@ import frc.team4646.Test;
 
 public class Agitator extends SmartSubsystem {
   private class DataCache {
-    public boolean inBrakeMode = true;
+    public boolean inBrakeMode = false;
   }
   private class OutputCache {
     public double setpointL = 0.0, setpointR = 0.0;

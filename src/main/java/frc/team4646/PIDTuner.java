@@ -3,6 +3,7 @@ package frc.team4646;
 import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -22,6 +23,7 @@ public class PIDTuner {
   private final double DEFAULT_CRACKPOINT;
   private final int SLOT;
   private final List<TalonFX> motors;
+  private final List<CANSparkMax> motors2;
 
   /** Updates PIDF of motor controller without needing to program */
   public PIDTuner(TalonFX... motors) {
@@ -36,6 +38,34 @@ public class PIDTuner {
   /** Updates PIDF of motor controller without needing to program */
   public PIDTuner(double P, double I, double D, double F, double crackpoint, int slot, TalonFX... motors) {
     this.motors = List.of(motors);
+    this.motors2 = List.of();
+    DEFAULT_P = P;
+    DEFAULT_I = I;
+    DEFAULT_D = D;
+    DEFAULT_F = F;
+    DEFAULT_CRACKPOINT = crackpoint;
+    SLOT = slot;
+    SmartDashboard.putNumber(DASHBOARD_KEY_P, DEFAULT_P);
+    SmartDashboard.putNumber(DASHBOARD_KEY_I, DEFAULT_I);
+    SmartDashboard.putNumber(DASHBOARD_KEY_D, DEFAULT_D);
+    SmartDashboard.putNumber(DASHBOARD_KEY_F, DEFAULT_F);
+    SmartDashboard.putNumber(DASHBOARD_KEY_CRACKPOINT, DEFAULT_CRACKPOINT);
+  }
+
+  /** Updates PIDF of motor controller without needing to program */
+  public PIDTuner(CANSparkMax... motors) {
+    this(0.0, 0.0, 0.0, 0.0, 0.0, 0, motors);
+  }
+
+  /** Updates PIDF of motor controller without needing to program */
+  public PIDTuner(double P, double I, double D, double F, double crackpoint, CANSparkMax... motors) {
+    this(P, I, D, F, 0.0, 0, motors);
+  }
+
+  /** Updates PIDF of motor controller without needing to program */
+  public PIDTuner(double P, double I, double D, double F, double crackpoint, int slot, CANSparkMax... motors) {
+    this.motors = List.of();
+    this.motors2 = List.of(motors);
     DEFAULT_P = P;
     DEFAULT_I = I;
     DEFAULT_D = D;
@@ -64,6 +94,12 @@ public class PIDTuner {
       TalonUtil.checkError(motor.config_kI(SLOT, I, Constants.CAN_TIMEOUT), "Tuner: could not set I: ");
       TalonUtil.checkError(motor.config_kD(SLOT, D, Constants.CAN_TIMEOUT), "Tuner: could not set D: ");
       TalonUtil.checkError(motor.config_kF(SLOT, F, Constants.CAN_TIMEOUT), "Tuner: could not set F: ");
+    }
+    for (CANSparkMax motor : motors2) {
+      motor.getPIDController().setP(P, SLOT);
+      motor.getPIDController().setI(I, SLOT);
+      motor.getPIDController().setD(D, SLOT);
+      motor.getPIDController().setFF(F, SLOT);
     }
   }
   

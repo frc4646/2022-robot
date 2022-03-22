@@ -39,18 +39,18 @@ public final class Constants {
 
   public static final class DIGITAL {
     public static final int
-      BREAK_BEAM_SHOOTER = 0, 
-      BREAK_BEAM_INDEXER = 1,      
-      BREAK_BEAM_HOPPER = 2;
+      BREAK_BEAM_SHOOTER = 0,
+      BREAK_BEAM_HOPPER = 1,
+      BREAK_BEAM_INDEXER = 2;
   }
 
   public static final class TUNING {
     public static final boolean 
-      CLIMBER = false,
+      CLIMBER = true,
       COLORSENSOR = false,
       DRIVETRAIN = false,
       FEEDER = false,
-      ROBOT_STATE = true,
+      ROBOT_STATE = false,
       SHOOTERS = false,
       TURRET = false,
       VISION = false;
@@ -92,9 +92,9 @@ public final class Constants {
   public static final class DIAGNOSTICS {
     public static final double RUMBLE_PERCENT = 0.2;
     public static final DiagnosticState
-      FAULT_CARGO = new DiagnosticState(new LEDColor(255, 0, 255)),
-      FAULT_TURRET = new DiagnosticState(new LEDColor(255, 255, 0), true),
-      CLIMBING = new DiagnosticState(new LEDColor(0, 255, 255)),
+      FAULT_CLIMBER = new DiagnosticState(new LEDColor(255, 0, 255)),
+      FAULT_TURRET = new DiagnosticState(new LEDColor(255, 165, 0), true),
+      CLIMBING = new DiagnosticState(new LEDColor(255, 105, 180)),
       CARGO_LOADED = new DiagnosticState(new LEDColor(76, 0, 76)),
       CAN_PRESS_SHOOT = new DiagnosticState(new LEDColor(0, 255, 0));
   }
@@ -124,7 +124,8 @@ public final class Constants {
       VELOCITY_P = 0.0005,
       VELOCITY_I = 0.0,
       VELOCITY_D = 0.0,
-      VELOCITY_F = 1.0 / VELOCITY_MAX;
+      VELOCITY_F = 1.0 / VELOCITY_MAX,  // with crackpoint: F=0.00017, P=0.0001???
+      CRACKPOINT = 0.012;  // Tuned 3/21
       //Left and right should be tuned via a step response to a velocity change - P = V, D = A, I = dist
 
     public static final boolean IS_LEFT_ENCODER_INVERTED = false;

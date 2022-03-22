@@ -19,7 +19,7 @@ public class FeederLoadCargo extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    return subsystem.isShooterLoaded();
+    return subsystem.isShooterLoaded();  // TODO refactor
   }
 
   @Override

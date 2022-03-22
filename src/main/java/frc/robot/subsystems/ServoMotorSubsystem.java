@@ -174,7 +174,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   protected ControlState mControlState = ControlState.OPEN_LOOP;
   protected boolean mHasBeenZeroed = false;
   protected StickyFaults mFaults = new StickyFaults();
-  private boolean isBrakeMode = true;
+  protected boolean isBrakeMode = false;
 
   @Override
   public void cacheSensors() {
