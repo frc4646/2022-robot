@@ -20,7 +20,7 @@ public class HumanPlayerThenShoot extends SequentialCommandGroup {
       ),
       deadline(
         new DrivePath(pathShoot3And4),
-        new IntakeExtend(false).andThen(new IntakeOpenLoop())  // TODO stow after distance driven instead
+        new IntakeExtend(false).andThen(new IntakeOpenLoop())  // TODO stow after pose or distance driven instead
         // TODO new StowIntake().beforeStarting(new WaitForDistanceDriven(0.5))
         // TODO new ShooterRev().beforeStarting(new WaitForDistanceDriven(2.0))
       ),

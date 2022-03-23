@@ -29,6 +29,7 @@ public class Agitator extends SmartSubsystem {
   protected void configureMotor(CANSparkMax motor) {
     motor.enableVoltageCompensation(12.0);
     motor.setOpenLoopRampRate(Constants.AGITATOR.OPEN_LOOP_RAMP);
+    motor.setSmartCurrentLimit(20);
   }
 
   @Override

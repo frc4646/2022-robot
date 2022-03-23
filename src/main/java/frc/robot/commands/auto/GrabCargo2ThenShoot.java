@@ -3,6 +3,8 @@ package frc.robot.commands.auto;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.RobotContainer;
 import frc.robot.commands.drivetrain.DriveOpenLoop;
 import frc.robot.commands.drivetrain.DrivePath;
 import frc.robot.commands.feeder.FeederOpenLoop;
@@ -12,8 +14,6 @@ import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.ShootVision;
 import frc.robot.commands.shooter.ShooterOpenLoop;
 import frc.robot.commands.shooter.ShooterRev;
-import frc.robot.commands.wait.WaitForColorState;
-import frc.robot.subsystems.ColorSensor.STATE;
 
 public class GrabCargo2ThenShoot extends SequentialCommandGroup {
   public GrabCargo2ThenShoot(Trajectory pathCargo2, double distanceShoot) {
@@ -21,10 +21,10 @@ public class GrabCargo2ThenShoot extends SequentialCommandGroup {
       deadline(
         race(
           new DrivePath(pathCargo2).beforeStarting(new WaitCommand(ModeBase.TIME_INTAKE_DEPLOY)),
-          new WaitForColorState(STATE.CORRECT)
+          new WaitUntilCommand(RobotContainer.FEEDER::isHooperFull)
         ),
         new DeployIntake(),
-        new ShooterRev().beforeStarting(new WaitCommand(0.25))  // TODO refactor out const
+        new ShooterRev().beforeStarting(new WaitCommand(0.25))  // TODO Remove? Have auto rev now
         // TODO hint turret to shoot angle
         // TODO ScheduleCommand the turret hint so default command happens afterwards?
       ),

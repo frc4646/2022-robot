@@ -3,7 +3,8 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
-public class RobotState extends SmartSubsystem {  
+public class RobotState extends SmartSubsystem {
+  private final ColorSensor colorSensor = RobotContainer.COLOR_SENSOR;
   private final Drivetrain drive = RobotContainer.DRIVETRAIN;
   private final Feeder feeder = RobotContainer.FEEDER;
   private final Shooter shooter = RobotContainer.SHOOTER;
@@ -35,7 +36,11 @@ public class RobotState extends SmartSubsystem {
 
   public boolean isAutoRevWanted() {
     return feeder.isShooterLoaded() && (feeder.isHooperFull() || feeder.isCargoIndexed()) && vision.isTargetPresent() ;
-  }  
+  }
+
+  public boolean isShootExhaustWanted() {
+    return colorSensor.isWrongCargo() && feeder.isShooterLoaded();
+  }
 
   // public double getTurretFusedFeedForward() {
   //   Rotation2d turretDegrees = Rotation2d.fromDegrees(turret.getPosition());

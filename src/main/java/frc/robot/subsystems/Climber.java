@@ -75,7 +75,7 @@ public class Climber extends SmartSubsystem {
     TalonUtil.checkError(motor.config_kD(0, Constants.CLIMBER.D, Constants.CAN_TIMEOUT), "Climber: could not set D: ");
     TalonUtil.checkError(motor.config_kF(0, Constants.CLIMBER.F, Constants.CAN_TIMEOUT), "Climber: could not set F: ");
 
-    StatorCurrentLimitConfiguration limitStator = new StatorCurrentLimitConfiguration(true, 40, 60, 0.2);
+    StatorCurrentLimitConfiguration limitStator = new StatorCurrentLimitConfiguration(true, 40, 40, 0.2);
     TalonUtil.checkError(motor.configStatorCurrentLimit(limitStator, Constants.CAN_TIMEOUT), "Climber: Could not set stator current limits");
     TalonUtil.checkError(motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT), "Climber: Could not set voltage comp saturation");
     motor.enableVoltageCompensation(true);

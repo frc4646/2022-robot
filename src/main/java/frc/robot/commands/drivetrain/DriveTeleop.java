@@ -31,11 +31,11 @@ public class DriveTeleop extends CommandBase {
     double stickThrottle = controls.getThrottle();
     double stickTurn = controls.getTurning();
     if (shooter.isIntendingToShoot()) {
-      stickThrottle = 0.0;
-      stickTurn = 0.0;
       DifferentialDriveWheelSpeeds speed = drive.getWheelSpeeds();
       double speedMetersPerSecond = (speed.leftMetersPerSecond + speed.rightMetersPerSecond) / 2.0;
       boolean safeToBrake = Math.abs(speedMetersPerSecond) < 0.25;
+      stickThrottle = 0.0;
+      stickTurn = 0.0;
       drive.setBrakeMode(safeToBrake);
     } else {
       drive.setBrakeMode(false);

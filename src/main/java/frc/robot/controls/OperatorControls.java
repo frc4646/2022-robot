@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.climber.ClimberExtend;
+import frc.robot.RobotContainer;
 import frc.robot.commands.climber.ClimberEnableLimits;
 import frc.robot.commands.sequence.ClimbMode;
 import frc.robot.commands.sequence.ShootOpenLoop;
@@ -16,6 +18,8 @@ public class OperatorControls {
   private final double TRIGGER_DEADBAND = 0.2;
   private final XboxController operator;
   private final JoystickButton buttonA, buttonB, buttonX, buttonY, bumperL, bumperR, Fn, start;
+
+  // private final Trigger exhaustShoot = new Trigger(RobotContainer.ROBOT_STATE::isAutoExhaustWanted);
   // private final Trigger climbMode;
 
   public OperatorControls() {
