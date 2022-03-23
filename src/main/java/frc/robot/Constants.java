@@ -26,7 +26,7 @@ public final class Constants {
       PNEUMATIC_CONTROL_MODULE = 0, POWER_DISTRIBUTION_PANEL = 2,
       DRIVETRAIN_FL = 24, DRIVETRAIN_BL = 23, DRIVETRAIN_BR = 22, DRIVETRAIN_FR = 21,
       TALON_SHOOTER_L = 25, TALON_SHOOTER_R = 27, TALON_SHOOTER_TOP = 28,
-      CLIMBER_L = 13, CLIMBER_R = 14,
+      CLIMBER_L = 14, CLIMBER_R = 13,
       AGITATOR_R = 31, AGITATOR_L = 32,
       INTAKE = 5, TURRET = 26, FEEDER = 8, CANIFIER = 9;
   }
@@ -70,11 +70,11 @@ public final class Constants {
       DEADBAND = 0.2,
       TIMEOUT_ZERO = 5.0,
       GEAR_RATIO = 72.0 / 14.0,
-      TICKS_TO_TOP = 10000.0,  // TODO
-      TICKS_PER_UNIT_DISTANCE = 1.0 / TICKS_TO_TOP,
+      TICKS_TO_TOP = 227300.0,
+      TICKS_PER_UNIT_DISTANCE = TICKS_TO_TOP,
       LIMIT_F = TICKS_TO_TOP,
       POSITION_DEADBAND = 0.02,  // Tune
-      P = 0.0,
+      P = 0.32,
       I = 0.0,
       D = 0.0,
       F = 0.0;

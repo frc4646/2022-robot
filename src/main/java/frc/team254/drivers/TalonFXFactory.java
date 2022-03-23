@@ -53,14 +53,19 @@ public class TalonFXFactory {
     static {
         // This control frame value seems to need to be something reasonable to avoid the Talon's
         // LEDs behaving erratically. Potentially try to increase as much as possible.
-        kSlaveConfiguration.CONTROL_FRAME_PERIOD_MS = 100;
-        kSlaveConfiguration.MOTION_CONTROL_FRAME_PERIOD_MS = 1000;
-        kSlaveConfiguration.GENERAL_STATUS_FRAME_RATE_MS = 1000;
-        kSlaveConfiguration.FEEDBACK_STATUS_FRAME_RATE_MS = 1000;
-        kSlaveConfiguration.QUAD_ENCODER_STATUS_FRAME_RATE_MS = 1000;
-        kSlaveConfiguration.ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS = 1000;
-        kSlaveConfiguration.PULSE_WIDTH_STATUS_FRAME_RATE_MS = 1000;
         kSlaveConfiguration.ENABLE_SOFT_LIMIT = false;
+        kSlaveConfiguration.CONTROL_FRAME_PERIOD_MS = 100;
+        kSlaveConfiguration.MOTION_CONTROL_FRAME_PERIOD_MS = 1000;         // 10: Motion Profiling/Motion Magic Information
+        kSlaveConfiguration.GENERAL_STATUS_FRAME_RATE_MS = 1000;           // 1: Applied Motor Output, Fault Info, Limit Switch Info
+        kSlaveConfiguration.FEEDBACK_STATUS_FRAME_RATE_MS = 1000;          // 2: Selected Sensor Position (PID 0), Selected Sensor Velocity (PID 0), Brushed Supply Current Measurement, Sticky Fault Info
+        kSlaveConfiguration.QUAD_ENCODER_STATUS_FRAME_RATE_MS = 1000;      // 3: Quadrature Info
+        kSlaveConfiguration.ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS = 1000;  // 4: Analog Input, Supply Battery Voltage, Controller Temperature
+        kSlaveConfiguration.PULSE_WIDTH_STATUS_FRAME_RATE_MS = 1000;       // 8: Pulse Width Information
+                                                                           // 12: Selected Sensor Position (Aux PID 1), Selected Sensor Velocity (Aux PID 1)
+                                                                           // 13: PID0 (Primary PID) Info
+                                                                           // 14: PID1 (Auxiliary PID) Info
+                                                                           // 21: Integrated Sensor Position (Talon FX), Integrated Sensor Velocity (Talon FX)
+                                                                           // ??: Brushless Supply Current Measurement, Brushless Stator Current Measurement
     }
 
     // create a CANTalon with the default (out of the box) configuration

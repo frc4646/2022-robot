@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.team254.drivers.TalonFXFactory;
 import frc.team254.drivers.TalonUtil;
+import frc.team4646.PIDTuner;
 import frc.team4646.Test;
 
 public class Climber extends SmartSubsystem {
@@ -29,13 +30,14 @@ public class Climber extends SmartSubsystem {
   }
   private class OutputCache {
     public TalonFXControlMode mode = TalonFXControlMode.PercentOutput;
-    public double setpointL = 0.0, setpointR = 0.0;
+    public double setpointL = 0.0, setpointR = 0.0, feedforward = 0.0;
     public boolean extend = false;
 
-    public void set(TalonFXControlMode mode, double setpointL, double setpointR) {
+    public void set(TalonFXControlMode mode, double setpointL, double setpointR, double feedforward) {
       outputs.mode = mode;
       outputs.setpointL = setpointL;
       outputs.setpointR = setpointR;
+      outputs.feedforward = feedforward;
     }
   }
 
@@ -44,12 +46,14 @@ public class Climber extends SmartSubsystem {
   private final DataCache cache = new DataCache();
   private final OutputCache outputs = new OutputCache();
   private boolean hasBeenZeroedL = false, hasBeenZeroedR = false, inClimbMode = false;
+  private PIDTuner tuner;
 
   public Climber() {
     masterL = TalonFXFactory.createDefaultTalon(Constants.CAN.CLIMBER_L);
     masterR = TalonFXFactory.createDefaultTalon(Constants.CAN.CLIMBER_R);
     armL = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID.ARM_L_OUT, Constants.SOLENOID.ARM_L_IN);
     armR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID.ARM_R_OUT, Constants.SOLENOID.ARM_R_IN);
+    tuner = new PIDTuner(masterL, masterR);
 
     configureMotor(masterL, false);
     configureMotor(masterR, true);
@@ -81,6 +85,7 @@ public class Climber extends SmartSubsystem {
     motor.enableVoltageCompensation(true);
 
     motor.setInverted(isInverted);
+    motor.setSensorPhase(true);
     motor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 60, Constants.CAN_TIMEOUT);
     motor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 60, Constants.CAN_TIMEOUT);
     motor.overrideLimitSwitchesEnable(true);
@@ -108,8 +113,8 @@ public class Climber extends SmartSubsystem {
       SmartDashboard.putBoolean("Climber: Limit R", cache.limitR);
       if (Constants.TUNING.CLIMBER) {
         SmartDashboard.putNumber("Climber: Position L", cache.positionL);
-        SmartDashboard.putNumber("Climber: Position R", cache.positionR);
-        SmartDashboard.putNumber("Climber: Position Raw", masterL.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Climber: Position R", cache.positionR); 
+        // SmartDashboard.putNumber("Climber: Position Raw", masterL.getSelectedSensorPosition());
         SmartDashboard.putNumber("Climber: Velocity Raw", masterL.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Climber: Current", masterL.getStatorCurrent());
       }
@@ -119,10 +124,11 @@ public class Climber extends SmartSubsystem {
   @Override
   public void onEnable(boolean isAutonomous) {
     updateBrakeMode(true);
+    tuner.updateMotorPIDF();
   }
 
-  public void setOpenLoop(double percent) { outputs.set(TalonFXControlMode.PercentOutput, percent, percent); }
-  public void setClosedLoopPosition(double percentUp) { outputs.set(TalonFXControlMode.Position, percentUp, percentUp); }
+  public void setOpenLoop(double percent, double feedforward) { outputs.set(TalonFXControlMode.PercentOutput, percent, percent, feedforward); }
+  public void setClosedLoopPosition(double percentUp, double feedforward) { outputs.set(TalonFXControlMode.Position, percentUp, percentUp, feedforward); }
   public void setArms(boolean extend) { outputs.extend = extend; }
   public void setClimbMode(boolean enable) { inClimbMode = enable; }
 
@@ -177,8 +183,8 @@ public class Climber extends SmartSubsystem {
   private void updateMotors() {
     double setpointL = outputs.mode == TalonFXControlMode.Position ? unitsToTicks(outputs.setpointL) : outputs.setpointL;
     double setpointR = outputs.mode == TalonFXControlMode.Position ? unitsToTicks(outputs.setpointR) : outputs.setpointR;
-    masterL.set(outputs.mode, setpointL, DemandType.ArbitraryFeedForward, 0.0);
-    masterR.set(outputs.mode, setpointR, DemandType.ArbitraryFeedForward, 0.0);
+    masterL.set(outputs.mode, setpointL, DemandType.ArbitraryFeedForward, outputs.feedforward);
+    masterR.set(outputs.mode, setpointR, DemandType.ArbitraryFeedForward, outputs.feedforward);
   }
 
   private void updateSolenoids() {

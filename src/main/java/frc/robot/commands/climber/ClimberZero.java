@@ -15,7 +15,7 @@ public class ClimberZero extends CommandBase {
   @Override
   public void initialize() {
     subsystem.setSoftLimitsEnabled(false);
-    subsystem.setOpenLoop(-Constants.CLIMBER.OPEN_LOOP_ZERO);
+    subsystem.setOpenLoop(-Constants.CLIMBER.OPEN_LOOP_ZERO, 0.0);
   }
 
   @Override
@@ -29,6 +29,6 @@ public class ClimberZero extends CommandBase {
     subsystem.zeroSensors(true);
     subsystem.zeroSensors(false);
     subsystem.setSoftLimitsEnabled(true);
-    subsystem.setOpenLoop(0.0);
+    subsystem.setOpenLoop(0.0, 0.0);
   }
 }

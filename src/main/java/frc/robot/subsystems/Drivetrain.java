@@ -188,11 +188,11 @@ public class Drivetrain extends SmartSubsystem {
     Test.add(this, "Gyro - Pitch (Robot Is Flat)", Math.abs(cache.pitch.getDegrees()) < 5.0);
 
     setBrakeMode(false);
-    MotorTestSparkMax.checkMotors(this,
-      Arrays.asList(new MotorConfig<>("MasterR", masterR), new MotorConfig<>("SlaveR", slaveR)),
-      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, encoderR::getVelocity));
-    MotorTestSparkMax.checkMotors(this,
-      Arrays.asList(new MotorConfig<>("MasterL", masterL), new MotorConfig<>("SlaveL", slaveL)),
-      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, encoderL::getVelocity));
+    // MotorTestSparkMax.checkMotors(this,
+    //   Arrays.asList(new MotorConfig<>("MasterR", masterR), new MotorConfig<>("SlaveR", slaveR)),
+    //   new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, encoderR::getVelocity));
+    // MotorTestSparkMax.checkMotors(this,
+    //   Arrays.asList(new MotorConfig<>("MasterL", masterL), new MotorConfig<>("SlaveL", slaveL)),
+    //   new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, encoderL::getVelocity));
   }
 }

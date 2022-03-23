@@ -2,16 +2,12 @@ package frc.robot;
 
 import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.SignalDriveTeam;
-import frc.robot.commands.agitator.AgitateOpenLoop;
 import frc.robot.commands.climber.ClimberAuto;
-import frc.robot.commands.climber.ClimberTeleop;
 import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.drivetrain.DriveDisabled;
 import frc.robot.commands.feeder.FeederAutoIndex;
-import frc.robot.commands.feeder.FeederOpenLoop;
 import frc.robot.commands.intake.IntakeOpenLoop;
 import frc.robot.commands.shooter.ShooterAutoRev;
-import frc.robot.commands.shooter.ShooterOpenLoop;
 import frc.robot.commands.turret.TurretAim;
 import frc.robot.controls.AutoModeSelector;
 import frc.robot.controls.Controls;

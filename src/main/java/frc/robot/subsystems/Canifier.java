@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix.CANifierFaults;
 import com.ctre.phoenix.CANifierStatusFrame;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,7 +24,7 @@ public class Canifier extends SmartSubsystem {
 
   public Canifier() {
     canifier = new CANifier(Constants.CAN.CANIFIER);
-    canifier.setStatusFramePeriod(CANifierStatusFrame.Status_1_General, 255, Constants.CAN_TIMEOUT);
+    canifier.setStatusFramePeriod(CANifierStatusFrame.Status_1_General, 100, Constants.CAN_TIMEOUT);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_2_General, 10, Constants.CAN_TIMEOUT);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_3_PwmInputs0, 1000, Constants.CAN_TIMEOUT);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_4_PwmInputs1, 1000, Constants.CAN_TIMEOUT);
@@ -60,7 +61,11 @@ public class Canifier extends SmartSubsystem {
 
   @Override
   public void runTests() {
+    CANifierFaults faults = new CANifierFaults();
+    canifier.getFaults(faults);
+
     Test.checkFirmware(this, canifier);
     Test.add(this, "Turret Home", cache.isTurrentHome);
+    Test.add(this, String.format("Faults: 0x%X", faults.toBitfield()), faults.hasAnyFault());
   }
 }

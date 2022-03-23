@@ -15,6 +15,6 @@ public class ClimberOpenLoop extends InstantCommand {
 
   @Override
   public void initialize() {
-    subsystem.setOpenLoop(output);
+    subsystem.setOpenLoop(output, 0.0);
   }
 }

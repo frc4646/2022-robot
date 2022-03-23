@@ -12,12 +12,17 @@ public class ClimberTune extends CommandBase {
 
   public ClimberTune() {
     addRequirements(subsystem);
-    SmartDashboard.putNumber(DASHBOARD_KEY_TUNE, 0.0);
+    SmartDashboard.putNumber(DASHBOARD_KEY_TUNE, 0.5);
   }
 
   @Override
   public void initialize() {
     double setpoint = SmartDashboard.getNumber(DASHBOARD_KEY_TUNE, 0.0);
-    subsystem.setClosedLoopPosition(setpoint);
+    subsystem.setClosedLoopPosition(setpoint, 0.0);
+  }
+
+  @Override
+  public boolean isFinished() {
+    return subsystem.isStable();
   }
 }

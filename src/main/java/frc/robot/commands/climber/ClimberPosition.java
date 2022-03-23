@@ -15,7 +15,7 @@ public class ClimberPosition extends CommandBase {
 
   @Override
   public void initialize() {
-    subsystem.setClosedLoopPosition(percentUp);
+    subsystem.setClosedLoopPosition(percentUp, 0.0);
   }
 
   @Override
