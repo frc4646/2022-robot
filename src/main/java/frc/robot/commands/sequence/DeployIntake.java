@@ -11,9 +11,9 @@ public class DeployIntake extends ParallelCommandGroup {
   public DeployIntake() {
     addCommands(
       new IntakeExtend(true),
-      new IntakeOpenLoop(Constants.INTAKE.OPEN_LOOP),
-      new AgitatorPulse(Constants.AGITATOR.OPEN_LOOP_LOAD * 1.5, 0.5),
-      new FeederLoadCargo()
+      new IntakeOpenLoop(Constants.INTAKE.OPEN_LOOP).perpetually()
+      // new AgitatorPulse(Constants.AGITATOR.OPEN_LOOP_LOAD * 1.5, 0.5),
+      // new FeederLoadCargo()
     );
   }
 }

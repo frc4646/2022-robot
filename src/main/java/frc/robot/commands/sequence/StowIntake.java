@@ -15,8 +15,8 @@ public class StowIntake extends SequentialCommandGroup {
       new IntakeExtend(false),
       deadline(
         new WaitCommand(Constants.INTAKE.TIMEOUT_STOW),
-        new FeederLoadCargo(),
-        new AgitatorPulse(Constants.AGITATOR.OPEN_LOOP_LOAD * 1.0, 0.5),
+        // new FeederLoadCargo(),
+        // new AgitatorPulse(Constants.AGITATOR.OPEN_LOOP_LOAD * 1.0, 0.5),
         new IntakeOpenLoop(0.0)
       )
     );

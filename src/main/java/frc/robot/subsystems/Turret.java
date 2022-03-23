@@ -15,10 +15,14 @@ public class Turret extends ServoMotorSubsystem {
   private class DataCache {
     public boolean limitF, limitR;
   }
+  private class OutputCache {
+    public double setpoint = 0.0;
+  }
 
   private final Canifier canifier;
   private final StabilityCounter stability = new StabilityCounter(Constants.TURRET.STABLE_COUNTS);
   private final DataCache cache = new DataCache();
+  private final OutputCache outputs = new OutputCache();
   
   public Turret() {
     super(Constants.TURRET.SERVO);
@@ -37,8 +41,7 @@ public class Turret extends ServoMotorSubsystem {
     cache.limitF = mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1;
     cache.limitR = mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1;
     resetIfAtHome();
-    stability.calculate(Math.abs(mPeriodicIO.error_ticks) <= Constants.TURRET.SERVO.kMotionMagicDeadband);
-    // TODO use position to compute error
+    stability.calculate(getError() < Constants.TURRET.ERROR_ALLOWED_DEGREES);
   }
 
   @Override
@@ -78,9 +81,14 @@ public class Turret extends ServoMotorSubsystem {
     return canifier.isTurretHome();
   }
 
-  public boolean isOnTarget() {
-    return stability.isStable();
+  @Override
+  public void setSetpointMotionMagic(double units, double feedforward_v) {
+    super.setSetpointMotionMagic(units, feedforward_v);
+    outputs.setpoint = units;
   }
+
+  public boolean isOnTarget() { return stability.isStable(); }
+  private double getError() { return Math.abs(outputs.setpoint - getPosition()); }
 
   public double wrapIfPastDeadzone(double degrees) {
     double limitMin = Constants.TURRET.SERVO.kMinUnitsLimit;

@@ -21,7 +21,7 @@ public class GrabCargo2ThenShoot extends SequentialCommandGroup {
       deadline(
         race(
           new DrivePath(pathCargo2).beforeStarting(new WaitCommand(ModeBase.TIME_INTAKE_DEPLOY)),
-          new WaitUntilCommand(RobotContainer.FEEDER::isHooperFull)
+          new WaitUntilCommand(RobotContainer.FEEDER::isHopperFull)
         ),
         new DeployIntake(),
         new ShooterRev().beforeStarting(new WaitCommand(0.25))  // TODO Remove? Have auto rev now

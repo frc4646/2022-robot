@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.commands.VisionLED;
-import frc.robot.commands.climber.ClimberExtend;
-import frc.robot.commands.intake.IntakeExtend;
 import frc.robot.commands.turret.TurretPosition;
 import frc.robot.subsystems.Vision.LEDMode;
 
@@ -19,9 +17,9 @@ public class ClimbMode extends ConditionalCommand {
     public SetMode(LEDMode led, boolean extend) {
       addCommands(        
         new VisionLED(led),
-        new TurretPosition(Constants.TURRET.SERVO.kHomePosition, 0.1).withTimeout(1.0),  // TODO bigger tolerance instead of timeout?
-        new ClimberExtend(extend),
-        new IntakeExtend(extend)
+        new TurretPosition(0.0).withTimeout(2.0)
+        // new ClimberExtend(extend),
+        // new IntakeExtend(extend)
         // TODO set drivetrain brake mode?
       );
     }

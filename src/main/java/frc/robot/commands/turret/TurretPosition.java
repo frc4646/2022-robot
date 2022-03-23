@@ -6,12 +6,11 @@ import frc.robot.subsystems.Turret;
 
 public class TurretPosition extends CommandBase {
   private final Turret subsystem = RobotContainer.TURRET;
-  private final double setpoint, tolerance;
+  private final double setpoint;
 
-  public TurretPosition(double angle, double tolerance) {
+  public TurretPosition(double angle) {
     addRequirements(subsystem);
     setpoint = angle;
-    this.tolerance = tolerance;
   }
 
   @Override
@@ -21,6 +20,6 @@ public class TurretPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(subsystem.getPosition() - setpoint) < tolerance;  // TODO use isOnTarget
+    return subsystem.isOnTarget();
   }
 }

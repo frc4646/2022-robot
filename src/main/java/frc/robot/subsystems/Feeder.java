@@ -50,7 +50,7 @@ public class Feeder extends SmartSubsystem {
   @Override
   public void updateDashboard(boolean showDetails) {
     SmartDashboard.putBoolean("Feeder: Shooter Cargo", isShooterLoaded());
-    SmartDashboard.putBoolean("Feeder: Hopper Cargo", isHooperFull());
+    SmartDashboard.putBoolean("Feeder: Hopper Cargo", isHopperFull());
     SmartDashboard.putBoolean("Feeder: Indexed Cargo", isCargoIndexed());
   }
 
@@ -65,7 +65,7 @@ public class Feeder extends SmartSubsystem {
   }
 
   public void setOpenLoop(double percent) { outputs.setpoint = percent; }
-  public boolean isHooperFull() { return cache.breakBeamHopper; }
+  public boolean isHopperFull() { return cache.breakBeamHopper; }
   public boolean isCargoIndexed() { return cache.breakBeamIndexer; }
   public boolean isShooterLoaded() { return cache.breakBeamShooter; }
 

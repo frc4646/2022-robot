@@ -6,20 +6,25 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Feeder;
 
-public class IndexCargoBase extends CommandBase {
+public class IndexCargo extends CommandBase {
   private final Agitator agitator = RobotContainer.AGITATOR;
   private final Feeder feeder = RobotContainer.FEEDER;
-  private final boolean on;
+  private final boolean feed, agitate;
 
-  public IndexCargoBase(boolean on) {
+  public IndexCargo() {
+    this(true, true);
+  }
+
+  public IndexCargo(boolean feed, boolean agitate) {
     addRequirements(agitator, feeder);
-    this.on = on;
+    this.feed = feed;
+    this.agitate = agitate;
   }
 
   @Override
   public void initialize() {
-    double setpointAgitator = on ? Constants.AGITATOR.OPEN_LOOP_LOAD : 0.0;
-    double setpointFeeder = on ? Constants.FEEDER.OPEN_LOOP_LOAD : 0.0;
+    double setpointAgitator = agitate ? Constants.AGITATOR.OPEN_LOOP_LOAD : 0.0;
+    double setpointFeeder = feed ? Constants.FEEDER.OPEN_LOOP_LOAD : 0.0;
     agitator.setOpenLoop(setpointAgitator, setpointAgitator);
     feeder.setOpenLoop(setpointFeeder);
   }

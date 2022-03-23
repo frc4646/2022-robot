@@ -35,7 +35,10 @@ public class RobotState extends SmartSubsystem {
   }  
 
   public boolean isAutoRevWanted() {
-    return feeder.isShooterLoaded() && (feeder.isHooperFull() || feeder.isCargoIndexed()) && vision.isTargetPresent() ;
+    return vision.isTargetPresent() && 
+          (feeder.isHopperFull() && feeder.isCargoIndexed()) ||
+          (feeder.isHopperFull() && feeder.isShooterLoaded()) ||
+          (feeder.isCargoIndexed() && feeder.isShooterLoaded()) ;
   }
 
   public boolean isShootExhaustWanted() {

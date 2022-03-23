@@ -46,6 +46,7 @@ public class Intake extends SmartSubsystem {
 
   public void setOpenLoop (double intakeSpeed) { outputs.setpoint = intakeSpeed; }
   public void setExtend (boolean extend) { outputs.extend = extend; }
+  public boolean isExtended() { return cache.extended; }
 
   private void updateMotors() {
     motor.set(ControlMode.PercentOutput, outputs.setpoint);

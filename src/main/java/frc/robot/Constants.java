@@ -155,7 +155,7 @@ public final class Constants {
 
   public static final class FEEDER {    
     public static final double
-      OPEN_LOOP_EXHAUST = 0.2,
+      OPEN_LOOP_EXHAUST = 0.5,
       OPEN_LOOP_LOAD = 0.3,
       OPEN_LOOP_SHOOT = 0.5,
       OPEN_LOOP_RAMP = 0.25,  // TODO tune
@@ -178,11 +178,11 @@ public final class Constants {
     public static final double
       OPEN_LOOP_REV_SECONDS = 1.0,
       RPM_MAX = 6380.0,  //  Tuned 3/15
-      RPM_ERROR_ALLOWED = 80.0,  // Tuned 3/1, 25-50 seem to work well TODO try 30 again
+      RPM_ERROR_ALLOWED = 80.0,  // TODO TURN THIS DOWN
       RPM_TRIM = 150.0,
       DEADBAND = 0.05,
       TICKS_PER_REV = 2048.0,
-      P = 0.05,  // Probably between 0.0075 and 0.25
+      P = 0.05,
       I = 0,
       D = 0.1   ,
       F = 0.04535, // TICKS_PER_REV / RPM_MAX / 60.0 * 10.0,
@@ -195,10 +195,10 @@ public final class Constants {
     public static int STABLE_COUNTS = SHOOTER.STABLE_COUNTS;
     public static final double
       RPM_MAX = 6380.0,  //  Tuned 3/15
-      RPM_ERROR_ALLOWED = SHOOTER.RPM_ERROR_ALLOWED * 2.0,  // Tuned 3/1, 25-50 seem to work well TODO try 30 again
+      RPM_ERROR_ALLOWED = SHOOTER.RPM_ERROR_ALLOWED * 2.0,  // TODO TURN THIS DOWN
       RPM_TRIM = SHOOTER.RPM_TRIM * 2.0,
       TICKS_PER_REV = 2048.0,
-      P = 0.02,  // Probably between 0.0075 and 0.25
+      P = 0.02,
       I = 0,
       D = 0.08,
       F = 0.047, // TICKS_PER_REV / RPM_MAX / 60.0 * 10.0,
@@ -212,6 +212,7 @@ public final class Constants {
     public static final double
       STICK_GAIN = 150.0,
       STICK_DEADBAND = 0.1,
+      ERROR_ALLOWED_DEGREES = 1.0,  // TODO TUNE THIS
       GEAR_RATIO = 72.0 / 14.0 * 154.0 / 16.0,
       VELOCITY_MAX = 21500.0,
       GAIN_STABILITY = 1.0;

@@ -94,7 +94,7 @@ public class RobotContainer {
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
-    AGITATOR.setDefaultCommand(new AgitateOpenLoop().perpetually());
+    // AGITATOR.setDefaultCommand(new AgitateOpenLoop().perpetually());
     CLIMBER.setDefaultCommand(new ClimberAuto());
     FEEDER.setDefaultCommand(new FeederAutoIndex());
     INTAKE.setDefaultCommand(new IntakeOpenLoop().perpetually());

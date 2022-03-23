@@ -57,7 +57,7 @@ public class ModeRight5Cargo extends ModeBase {
         new DrivePath(CARGO_2_3).beforeStarting(new WaitCommand(ModeBase.TIME_INTAKE_DEPLOY)),
         new DeployIntake(),
         // sequence(
-          new TurretPosition(215.0, 5.0).beforeStarting(new WaitCommand(1.5)), // TODO refactor out const
+          new TurretPosition(215.0).beforeStarting(new WaitCommand(1.5)), // TODO refactor out const
           new WaitCommand(CARGO_2_3.getTotalTimeSeconds() - 3.0).andThen(new ShooterRev(150.0))//,
           // new WaitCommand(CARGO_2_3.getTotalTimeSeconds() - 1).andThen(new ShootVision()) 
         // )

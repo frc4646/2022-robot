@@ -25,7 +25,7 @@ public class ModeFallback extends ModeBase {
           new DriveOpenLoop().beforeStarting(new WaitCommand(.65))
         ),
         sequence(
-          new WaitUntilCommand(RobotContainer.FEEDER::isHooperFull).withTimeout(2.0),
+          new WaitUntilCommand(RobotContainer.FEEDER::isHopperFull).withTimeout(2.0),
           new AgitateOpenLoop(),
           new StowIntake()
         )
