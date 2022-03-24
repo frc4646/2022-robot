@@ -24,7 +24,7 @@ public class Canifier extends SmartSubsystem {
 
   public Canifier() {
     canifier = new CANifier(Constants.CAN.CANIFIER);
-    canifier.setStatusFramePeriod(CANifierStatusFrame.Status_1_General, 100, Constants.CAN_TIMEOUT);
+    canifier.setStatusFramePeriod(CANifierStatusFrame.Status_1_General, 50, Constants.CAN_TIMEOUT);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_2_General, 10, Constants.CAN_TIMEOUT);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_3_PwmInputs0, 1000, Constants.CAN_TIMEOUT);
     canifier.setStatusFramePeriod(CANifierStatusFrame.Status_4_PwmInputs1, 1000, Constants.CAN_TIMEOUT);
@@ -53,8 +53,9 @@ public class Canifier extends SmartSubsystem {
   private void updateLEDs() {
     if (!cache.color.isEqual(outputs.color)) {      
       cache.color = outputs.color;
-      canifier.setLEDOutput(cache.color.red / 255.0, CANifier.LEDChannel.LEDChannelA);
-      canifier.setLEDOutput(cache.color.green / 255.0, CANifier.LEDChannel.LEDChannelB);
+      cache.color = new LEDColor(255, 0, 0);  // TODO REMOVE ME
+      canifier.setLEDOutput(cache.color.red / 255.0, CANifier.LEDChannel.LEDChannelB);
+      canifier.setLEDOutput(cache.color.green / 255.0, CANifier.LEDChannel.LEDChannelA);
       canifier.setLEDOutput(cache.color.blue / 255.0, CANifier.LEDChannel.LEDChannelC);
     }
   }
