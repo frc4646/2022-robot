@@ -21,7 +21,7 @@ public class AgitatorPulse extends CommandBase {
     addRequirements(subsystem);
     switchTimer = new DelayedBoolean(time);
     this.strength = strength;
-    this.strength2 = strength * 0.5;  // 0% causes cargo to pop out
+    this.strength2 = strength * 0.25;  // 25% worked best in our 1st 4-cargo autonomous, 0% causes cargo to pop out of hopper
   }
 
   @Override

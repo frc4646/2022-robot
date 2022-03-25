@@ -26,5 +26,6 @@ public class DriverControls {
 
   public double getThrottle() { return -throttle.getRawAxis(1); }
   public double getTurning() { return turn.getRawAxis(0); }
-  public boolean getQuickturn() { return turn.getRawButton(1); }  
+  public boolean getQuickturn() { return turn.getRawButton(1); }
+  public boolean getDriveSlow() { return turn.getRawButton(2); }  
 }

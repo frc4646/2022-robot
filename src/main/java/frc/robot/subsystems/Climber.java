@@ -68,9 +68,9 @@ public class Climber extends SmartSubsystem {
   protected void configureMotor(TalonFX motor, boolean isInverted) {
     TalonUtil.checkError(motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen), "Climber: Could not set reverse limit switch: ");
     TalonUtil.checkError(motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), "Climber: Could not detect encoder: ");
-    // TalonUtil.checkError(motor.configForwardSoftLimitThreshold(Constants.CLIMBER.LIMIT_F, Constants.CAN_TIMEOUT), "Climber: Could not set forward soft limit: ");
+    // TalonUtil.checkError(motor.configForwardSoftLimitThreshold(Constants.CLIMBER.SOFT_LIMIT_F, Constants.CAN_TIMEOUT), "Climber: Could not set forward soft limit: ");
     // TalonUtil.checkError(motor.configForwardSoftLimitEnable(true, Constants.CAN_TIMEOUT), "Climber: Could not enable forward soft limit: ");
-    TalonUtil.checkError(motor.configReverseSoftLimitThreshold(0.0, Constants.CAN_TIMEOUT), "Climber: Could not set reverse soft limit: ");
+    TalonUtil.checkError(motor.configReverseSoftLimitThreshold(Constants.CLIMBER.SOFT_LIMIT_R, Constants.CAN_TIMEOUT), "Climber: Could not set reverse soft limit: ");
     TalonUtil.checkError(motor.configReverseSoftLimitEnable(true, Constants.CAN_TIMEOUT), "Climber: Could not enable reverse soft limit: ");
 
     TalonUtil.checkError(motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), "Climber: Could not detect encoder: ");

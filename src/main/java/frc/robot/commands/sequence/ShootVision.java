@@ -13,16 +13,17 @@ import frc.robot.commands.turret.TurretLockPosition;
 import frc.robot.commands.wait.WaitForAim;
 
 public class ShootVision extends SequentialCommandGroup {
-  public ShootVision(boolean forceShot) {    
+  public ShootVision(boolean forceShot) {
+    double timeoutAiming = forceShot ? 1.0 : 10.0;
+    
     addCommands(
       deadline(
-        parallel(
-          new WaitForAim(),
-          new FeederLoadCargo()
-        ),
+        new WaitForAim().withTimeout(timeoutAiming),  // ONLY wait for vision+shooter+turret before shooting
+        new FeederLoadCargo(),
         new ShooterAim(),
-        new AgitatorOpenLoop(Constants.AGITATOR.OPEN_LOOP_LOAD)
-      // new AgitatorPulse(Constants.AGITATOR.OPEN_LOOP_LOAD * 1.5, 0.5)
+        // TODO new TurretAim(),  THIS SEEMS LIKE A GOOD IDEA TO ADD IN
+        // new AgitatorOpenLoop(Constants.AGITATOR.OPEN_LOOP_LOAD)
+        new AgitatorPulse(Constants.AGITATOR.OPEN_LOOP_LOAD * 1.5, 0.5)
       ),
       parallel(
         new ShooterLockRPM(),  // Protect form obstructions, ex: first cargo in flight

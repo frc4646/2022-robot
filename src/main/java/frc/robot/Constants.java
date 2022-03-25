@@ -68,11 +68,10 @@ public final class Constants {
     public static final double
       OPEN_LOOP_ZERO = 0.1,
       DEADBAND = 0.2,
-      TIMEOUT_ZERO = 5.0,
-      GEAR_RATIO = 72.0 / 14.0,
       TICKS_TO_TOP = 227300.0,
       TICKS_PER_UNIT_DISTANCE = TICKS_TO_TOP,
-      LIMIT_F = TICKS_TO_TOP,
+      SOFT_LIMIT_R = TICKS_TO_TOP * 0.0375,
+      SOFT_LIMIT_F = TICKS_TO_TOP * 1.00,
       POSITION_DEADBAND = 0.02,  // Tune
       P = 0.32,
       I = 0.0,

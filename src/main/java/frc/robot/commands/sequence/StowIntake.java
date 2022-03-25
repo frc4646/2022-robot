@@ -3,8 +3,6 @@ package frc.robot.commands.sequence;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-import frc.robot.commands.agitator.AgitatorPulse;
-import frc.robot.commands.feeder.FeederLoadCargo;
 import frc.robot.commands.intake.IntakeExtend;
 import frc.robot.commands.intake.IntakeOpenLoop;
 

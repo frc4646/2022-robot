@@ -1,6 +1,7 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.agitator.AgitatorAuto;
@@ -19,29 +20,29 @@ import frc.robot.commands.turret.TurretAim;
 import frc.robot.commands.wait.WaitForDistanceDriven;
 
 public class HumanPlayerThenShoot extends SequentialCommandGroup {
+  private static final double DISTANCE_DEPLOY_INTAKE = 1.5;
+  private static final double STOW_INTAKE_LATER_THAN_NORMAL = 0.5;
+
   public HumanPlayerThenShoot(Trajectory pathHumanPlayer, Trajectory pathShoot3And4) {
     addCommands(
-      // parallel(new AgitatorAuto(), new FeederAutoIndex(), new ShooterAutoRev())  // Reset default commands after shoot in autonomous mode
       deadline(
         sequence(
           deadline(
-            new DrivePath(pathHumanPlayer),  // TODO stop early if has two cargo
-            new DeployIntake().beforeStarting(new WaitForDistanceDriven(1.5)),
-            new AgitatorPulse().beforeStarting(new WaitForDistanceDriven(1.5))
+            new DrivePath(pathHumanPlayer),
+            new DeployIntake().beforeStarting(new WaitForDistanceDriven(DISTANCE_DEPLOY_INTAKE)),
+            new AgitatorPulse().beforeStarting(new WaitForDistanceDriven(DISTANCE_DEPLOY_INTAKE))
           ),
           deadline(
             sequence(
-              deadline(new DrivePath(pathShoot3And4), new StowIntake(0.2)),
+              deadline(new DrivePath(pathShoot3And4), new StowIntake(STOW_INTAKE_LATER_THAN_NORMAL)),
               deadline(new WaitCommand(ModeBase.TIME_CANCEL_MOMENTUM), new DriveOpenLoop())
             ),
-            new AgitatorAuto(),
-            new TurretAim(),
-            new ShooterRev()
+            new AgitatorAuto(), new TurretAim(), new ShooterRev()  // During second path, prepare to shoot
           )
         ),
-        new FeederAutoIndex()
+        new FeederAutoIndex()  // During both paths: Index cargos that enter the robot
       ),
-      new ShootVision(true)  // TODO wait for drive speed
+      new ShootVision(true)  // After both paths, shoot
     );
   }
 }
