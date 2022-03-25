@@ -6,6 +6,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Diagnostics;
 import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.RobotState;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
 
@@ -15,6 +16,7 @@ public class SignalDriveTeam extends CommandBase {
   private final Feeder feeder = RobotContainer.FEEDER;
   private final Turret turret = RobotContainer.TURRET;
   private final Vision vision = RobotContainer.VISION;
+  private final RobotState state = RobotContainer.ROBOT_STATE;
 
   public SignalDriveTeam() {
     addRequirements(diagnostics);
@@ -37,7 +39,7 @@ public class SignalDriveTeam extends CommandBase {
     }
   }
 
-  private boolean canPressShoot() { return vision.isTargetPresent() && vision.isInShootRange() && feeder.isShooterLoaded(); }
+  private boolean canPressShoot() { return vision.isTargetPresent() && vision.isInShootRange() && state.isTwoCargoLoaded(); }
   private boolean isCargoLoaded() { return feeder.isCargoIndexed(); }
   private boolean isClimberFaultPresent() { return !climber.isZeroed(); }
   private boolean isClimbing() { return climber.isInClimbMode(); }

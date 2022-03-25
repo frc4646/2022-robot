@@ -1,0 +1,10 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Tune: Turret A": "Command",
+      "/SmartDashboard/Tune: Turret B": "Command",
+      "/SmartDashboard/Tune: Turret Zero": "Command"
+    }
+  }
+}
