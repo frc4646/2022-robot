@@ -51,7 +51,7 @@ public final class Constants {
       DRIVETRAIN = false,
       FEEDER = false,
       ROBOT_STATE = false,
-      SHOOTERS = false,
+      SHOOTERS = true,
       TURRET = false,
       VISION = false;
   }
@@ -178,7 +178,7 @@ public final class Constants {
     public static final double
       OPEN_LOOP_REV_SECONDS = 1.0,
       RPM_MAX = 6380.0,  //  Tuned 3/15
-      RPM_ERROR_ALLOWED = 80.0,  // TODO TURN THIS DOWN
+      RPM_ERROR_ALLOWED = 70.0,  // TODO TURN THIS DOWN
       RPM_TRIM = 150.0,
       DEADBAND = 0.05,
       TICKS_PER_REV = 2048.0,
@@ -195,7 +195,7 @@ public final class Constants {
     public static int STABLE_COUNTS = SHOOTER.STABLE_COUNTS;
     public static final double
       RPM_MAX = 6380.0,  //  Tuned 3/15
-      RPM_ERROR_ALLOWED = SHOOTER.RPM_ERROR_ALLOWED * 2.0,  // TODO TURN THIS DOWN
+      RPM_ERROR_ALLOWED = SHOOTER.RPM_ERROR_ALLOWED * 1.5,  // TODO TURN THIS DOWN
       RPM_TRIM = SHOOTER.RPM_TRIM * 2.0,
       TICKS_PER_REV = 2048.0,
       P = 0.02,
@@ -256,17 +256,20 @@ public final class Constants {
     public static int STABLE_COUNTS = 3;
     public static final double
       CAMERA_MOUNTING_HEIGHT = 44.5,  // Inches
-      CAMERA_MOUNTING_ANGLE = 27.6, // Degrees, tuned 2/27
-      CAMERA_MOUNTING_OFFSET = 0.0;  // Tuned 3/4
+      CAMERA_MOUNTING_ANGLE = 29.0, // 30.4, // Degrees, tuned 2/27
+      CAMERA_MOUNTING_OFFSET = 0.0,  // Tuned 3/4
+      DISTANCE_CAL_OFFSET = 0.0;
 
     public static ShootMap MAP = new ShootMap();
     static {
-      MAP.add(75.0, 1450.0, 2800.0);
-      MAP.add(90.0, 1500.0, 3100.0);
-      MAP.add(120.0, 1600.0, 3200.0);
-      MAP.add(150.0, 1750.0, 3400.0);
-      MAP.add(170.0, 1850.0, 3700.0);
-      MAP.add(194.0, 1850.0, 3900.0);
+      MAP.add(75.0, 1200.0, 2800.0); // MAP.add(75.0 - DISTANCE_CAL_OFFSET, 1375.0, 2800.0);
+      // MAP.add(80.0 - DISTANCE_CAL_OFFSET, 1400.0, 3000.0); // MAP.add(80.0 - DISTANCE_CAL_OFFSET, 1400.0, 3000.0);
+      MAP.add(95.0, 1250.0, 2900.0); // MAP.add(100.0 - DISTANCE_CAL_OFFSET, 1200.0, 3400.0);
+      MAP.add(110.0, 1420.0, 3020.0); // MAP.add(100.0 - DISTANCE_CAL_OFFSET, 1200.0, 3400.0);
+      MAP.add(125.0, 1500.0, 3100.0); // MAP.add(120.0 - DISTANCE_CAL_OFFSET, 1525.0, 3200.0);
+      MAP.add(150.0, 1625.0, 3500.0); // MAP.add(150.0 - DISTANCE_CAL_OFFSET, 1725.0, 3400.0);
+      MAP.add(170.0, 1750.0, 3700.0); // MAP.add(170.0 - DISTANCE_CAL_OFFSET, 1850.0, 3700.0);
+      MAP.add(194.0, 1850.0, 3900.0); // MAP.add(194.0 - DISTANCE_CAL_OFFSET, 1850.0, 3900.0);
     }
   }
 

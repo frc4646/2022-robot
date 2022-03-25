@@ -103,7 +103,7 @@ public class Vision extends SmartSubsystem {
 
   @Override
   public void onDisable() {
-    setLED(LEDMode.OFF);
+    // setLED(LEDMode.OFF);
   }
 
   public void setLED(LEDMode mode) { outputs.modeLED = mode.ordinal(); }

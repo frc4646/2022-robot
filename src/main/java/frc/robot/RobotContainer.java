@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.commands.CompressorAuto;
 import frc.robot.commands.SignalDriveTeam;
+import frc.robot.commands.agitator.AgitatorAuto;
 import frc.robot.commands.climber.ClimberAuto;
 import frc.robot.commands.drivetrain.DriveTeleop;
 import frc.robot.commands.drivetrain.DriveDisabled;
@@ -90,7 +91,7 @@ public class RobotContainer {
     DRIVETRAIN.setDefaultCommand(new DriveTeleop());
     INFRASTRUCTURE.setDefaultCommand(new CompressorAuto());
     DIAGNOSTICS.setDefaultCommand(new SignalDriveTeam());
-    // AGITATOR.setDefaultCommand(new AgitateOpenLoop().perpetually());
+    AGITATOR.setDefaultCommand(new AgitatorAuto());
     CLIMBER.setDefaultCommand(new ClimberAuto());
     FEEDER.setDefaultCommand(new FeederAutoIndex());
     INTAKE.setDefaultCommand(new IntakeOpenLoop().perpetually());
@@ -111,6 +112,7 @@ public class RobotContainer {
     boolean isForceButtonPressed = SmartDashboard.getBoolean(Constants.SHOW_DETAILS, false);
     boolean showDetails = !isCompetition || isForceButtonPressed;
     allSubsystems.forEach(s -> s.updateDashboard(showDetails));
+    allSubsystems.forEach(s -> SmartDashboard.putData("Subsystem" + s.getName(), s));
   }
 
   public void onEnable(boolean isAutonomous) {

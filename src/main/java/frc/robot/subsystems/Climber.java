@@ -26,12 +26,12 @@ public class Climber extends SmartSubsystem {
     public boolean limitL, limitR;
     public double positionL, positionR;
     public boolean inBrakeMode = false;
-    public boolean extended = true;
+    public boolean extended = false;
   }
   private class OutputCache {
     public TalonFXControlMode mode = TalonFXControlMode.PercentOutput;
     public double setpointL = 0.0, setpointR = 0.0, feedforward = 0.0;
-    public boolean extend = false;
+    public boolean extend = true;
 
     public void set(TalonFXControlMode mode, double setpointL, double setpointR, double feedforward) {
       outputs.mode = mode;

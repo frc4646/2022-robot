@@ -7,6 +7,7 @@ public class RobotState extends SmartSubsystem {
   private final ColorSensor colorSensor = RobotContainer.COLOR_SENSOR;
   private final Drivetrain drive = RobotContainer.DRIVETRAIN;
   private final Feeder feeder = RobotContainer.FEEDER;
+  private final Intake intake = RobotContainer.INTAKE;
   private final Shooter shooter = RobotContainer.SHOOTER;
   private final ShooterTop shooterTop = RobotContainer.SHOOTER_TOP;
   private final Turret turret = RobotContainer.TURRET;
@@ -32,7 +33,7 @@ public class RobotState extends SmartSubsystem {
 
   public boolean isCanShoot() {
     return isShootingStable() && turret.isOnTarget() && vision.isStable();
-  }  
+  }
 
   public boolean isAutoRevWanted() {
     return vision.isTargetPresent() && 
@@ -43,6 +44,26 @@ public class RobotState extends SmartSubsystem {
 
   public boolean isShootExhaustWanted() {
     return colorSensor.isWrongCargo() && feeder.isShooterLoaded();
+  }
+
+  public boolean isAnyCargoPresent() {
+    return feeder.isShooterLoaded() || feeder.isCargoIndexed() || feeder.isHopperFull();
+  }
+
+  public boolean isIndexingWanted() {
+    return !feeder.isShooterLoaded() && !feeder.isCargoIndexed() && feeder.isHopperFull();
+  }
+
+  public boolean isIndexingFinished() {
+    return feeder.isCargoIndexed() || feeder.isShooterLoaded();
+  }
+
+  public boolean isAgiateHopperWanted() {
+    return intake.isExtended() && !feeder.isHopperFull();
+  }
+
+  public boolean isAgiateHopperFinished() {
+    return !intake.isExtended() || feeder.isHopperFull();
   }
 
   // public double getTurretFusedFeedForward() {

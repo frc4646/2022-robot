@@ -10,8 +10,12 @@ import frc.robot.commands.intake.IntakeOpenLoop;
 
 public class StowIntake extends SequentialCommandGroup {
   public StowIntake() {
+    this(0.5);
+  }
+
+  public StowIntake(double delaySolenoids) {
     addCommands(
-      new WaitCommand(0.5),
+      new WaitCommand(delaySolenoids),
       new IntakeExtend(false),
       deadline(
         new WaitCommand(Constants.INTAKE.TIMEOUT_STOW),

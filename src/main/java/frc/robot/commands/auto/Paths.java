@@ -18,7 +18,7 @@ public class Paths {
   public static class LEFT {
     private static final Pose2d
       POSE_START = new Pose2d(0.0, 0.0, new Rotation2d(0.0)),
-      POSE_CARGO_2 = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
+      POSE_CARGO_2 = new Pose2d(1.5, 0.0, new Rotation2d(0.0));
 
     public static final Trajectory
       CARGO_2 = TrajectoryGenerator.generateTrajectory(POSE_START, List.of(), POSE_CARGO_2, FORWARDS); 
@@ -41,7 +41,7 @@ public class Paths {
   public static class RIGHT {
     private static final Pose2d
       POSE_START = new Pose2d(0.0, 0.0, new Rotation2d(0.0)),
-      POSE_CARGO_2 = new Pose2d(0.0, 0.0, new Rotation2d(0.0)); 
+      POSE_CARGO_2 = new Pose2d(1.5, 0.0, new Rotation2d(0.0));
 
     public static final Trajectory
       CARGO_2 = TrajectoryGenerator.generateTrajectory(POSE_START, List.of(), POSE_CARGO_2, FORWARDS);

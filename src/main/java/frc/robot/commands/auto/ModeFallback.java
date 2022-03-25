@@ -3,7 +3,7 @@ package frc.robot.commands.auto;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.RobotContainer;
-import frc.robot.commands.agitator.AgitateOpenLoop;
+import frc.robot.commands.agitator.AgitatorOpenLoop;
 import frc.robot.commands.drivetrain.DriveOpenLoop;
 import frc.robot.commands.sequence.DeployIntake;
 import frc.robot.commands.sequence.ShootVision;
@@ -26,11 +26,11 @@ public class ModeFallback extends ModeBase {
         ),
         sequence(
           new WaitUntilCommand(RobotContainer.FEEDER::isHopperFull).withTimeout(2.0),
-          new AgitateOpenLoop(),
+          new AgitatorOpenLoop(),
           new StowIntake()
         )
       ),
-      new ShootVision()
+      new ShootVision(true)
     );
   }
 }

@@ -5,30 +5,28 @@ import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.commands.sequence.IndexCargo;
 import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.RobotState;
 
 public class FeederAutoIndex extends SequentialCommandGroup {
+  private static final RobotState state = RobotContainer.ROBOT_STATE;
   private static final Feeder feeder = RobotContainer.FEEDER;
-  private static final Intake intake = RobotContainer.INTAKE;
   
   public FeederAutoIndex() {
     addRequirements(feeder);
-    addCommands(
-      new SelectCommand(FeederAutoIndex::select)
-    );
+    addCommands(new SelectCommand(FeederAutoIndex::select));
   }
 
   public static Command select() {
-    if (intake.isExtended() && !feeder.isHopperFull()) {
-      return new IndexCargo(false, true).until(() -> { return !intake.isExtended() || feeder.isHopperFull(); });
-    } else if (!feeder.isShooterLoaded() && !feeder.isCargoIndexed() && feeder.isHopperFull()) {
-      return new IndexCargo().until(() -> { return feeder.isCargoIndexed() || feeder.isShooterLoaded(); });
+    if (state.isIndexingWanted()) {
+      return new FeederOpenLoop(Constants.FEEDER.OPEN_LOOP_LOAD).until(RobotContainer.ROBOT_STATE::isIndexingFinished);
     }
-    // else if (!feeder.isShooterLoaded() && feeder.isCargoIndexed() && feeder.isHooperFull()) {
-    //   return new IndexCargo().until(() -> { return  feeder.isShooterLoaded(); });
+    return new FeederOpenLoop().perpetually().until(RobotContainer.ROBOT_STATE::isAnyCargoPresent);
+    // if (state.isAgiateHopperWanted()) {
+    //   return parallel(new AgitatorPulse(), new FeederOpenLoop()).until(RobotContainer.ROBOT_STATE::isAgiateHopperFinished);
+    // } else if (state.isIndexingWanted()) {
+    //   return parallel(new AgitatorOpenLoop(Constants.AGITATOR.OPEN_LOOP_LOAD), new FeederOpenLoop(Constants.FEEDER.OPEN_LOOP_LOAD)).until(RobotContainer.ROBOT_STATE::isIndexingFinished);
     // }
-    return new IndexCargo(false, false).perpetually().until(() -> { return feeder.isShooterLoaded() || feeder.isCargoIndexed() || feeder.isHopperFull(); });
+    // return new IndexCargo(false, false).perpetually().until(RobotContainer.ROBOT_STATE::isAnyCargoPresent);
   }
 }

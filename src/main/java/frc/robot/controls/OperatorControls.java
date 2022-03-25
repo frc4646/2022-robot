@@ -15,25 +15,28 @@ import frc.robot.commands.shooter.ShooterOpenLoop;
 
 public class OperatorControls {
   private final int TRIGGER_L = 2, TRIGGER_R = 3;
-  private final double TRIGGER_DEADBAND = 0.2;
+  private final double TRIGGER_DEADBAND = 0.75;
   private final XboxController operator;
   private final JoystickButton buttonA, buttonB, buttonX, buttonY, bumperL, bumperR, Fn, start;
 
   // private final Trigger exhaustShoot = new Trigger(RobotContainer.ROBOT_STATE::isAutoExhaustWanted);
-  // private final Trigger climbMode;
+  private final Trigger climbArms;
 
   public OperatorControls() {
     operator = new XboxController(2);
     buttonA = makeButton(Button.kA); buttonB = makeButton(Button.kB); buttonX = makeButton(Button.kX); buttonY = makeButton(Button.kY);
     bumperL = makeButton(Button.kLeftBumper); bumperR = makeButton(Button.kRightBumper);
     Fn = makeButton(Button.kBack); start = makeButton(Button.kStart);
+    climbArms = new Trigger(() -> {return operator.getRawAxis(TRIGGER_L) > TRIGGER_DEADBAND;} );
     // climbMode = new Trigger(RobotContainer.CLIMBER::isInClimbMode);
   }
 
   public void configureButtons() {
     // Climber
-    start.whenPressed(new ClimberExtend(true));  // TODO move to alt buttons when in climb mode?
-    start.whenReleased(new ClimberExtend(false));
+    // start.whenPressed(new ClimberExtend(true));  // TODO move to alt buttons when in climb mode?
+    // start.whenReleased(new ClimberExtend(false));
+    climbArms.whenActive(new ClimberExtend(true));
+    climbArms.whenInactive(new ClimberExtend(false));
     Fn.whenPressed(new ClimberEnableLimits(false));
     Fn.whenReleased(new ClimberEnableLimits(true));
     buttonX.toggleWhenPressed(new ClimbMode());  // TODO move to start button?
@@ -42,7 +45,7 @@ public class OperatorControls {
     // Shooter
     bumperL.whenPressed(new ShootOpenLoop());
     bumperL.whenReleased(new ShooterOpenLoop());
-    bumperR.whenPressed(new ShootVision());
+    bumperR.whenPressed(new ShootVision(false));
     bumperR.whenReleased(new ShooterOpenLoop());
   }
 

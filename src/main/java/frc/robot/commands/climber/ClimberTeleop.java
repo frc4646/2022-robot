@@ -22,6 +22,9 @@ public class ClimberTeleop extends CommandBase{
     if (Math.abs(stick) > Constants.CLIMBER.DEADBAND) {
       setpoint = stick;
     }
+    if (setpoint > Constants.CLIMBER.DEADBAND) {
+      setpoint = 1.0;  // Extending always 100%, less likely to get stuck
+    }
     subsystem.setOpenLoop(setpoint, 0.0);
   }
 }

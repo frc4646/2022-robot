@@ -115,6 +115,7 @@ public class Drivetrain extends SmartSubsystem {
       SmartDashboard.putNumber("Drive: Heading", cache.heading.getDegrees());
       SmartDashboard.putNumber("Drive: Pitch", cache.pitch.getDegrees());
       SmartDashboard.putNumber("Drive: Heading Rate", cache.headingRate);
+      // SmartDashboard.putString("Drive: Command", this.getCurrentCommand().getName());
     }
     if (Constants.TUNING.DRIVETRAIN) {
       DifferentialDriveWheelSpeeds speed = getWheelSpeeds();

@@ -67,7 +67,7 @@ public class ModeRight5Cargo extends ModeBase {
         new WaitCommand(ModeBase.TIME_CANCEL_MOMENTUM),  // TODO wait for drive speed
         new IntakeExtend(false).andThen(new IntakeOpenLoop())  // Workaround: StowIntake not finishing
       ),
-      new ShootVision(), // todo how to shoot 3rd ball?
+      new ShootVision(true), // todo how to shoot 3rd ball?
       parallel(
         new ShooterOpenLoop(),
         new FeederOpenLoop()
