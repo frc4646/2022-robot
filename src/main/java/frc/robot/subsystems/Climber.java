@@ -53,8 +53,10 @@ public class Climber extends SmartSubsystem {
     masterR = TalonFXFactory.createDefaultTalon(Constants.CAN.CLIMBER_R);
     armL = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID.ARM_L_OUT, Constants.SOLENOID.ARM_L_IN);
     armR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID.ARM_R_OUT, Constants.SOLENOID.ARM_R_IN);
-    tuner = new PIDTuner(masterL, masterR);
-
+    
+    if(Constants.TUNING.CLIMBER) {
+    tuner = new PIDTuner("Climber", masterL, masterR);
+    } 
     configureMotor(masterL, false);
     configureMotor(masterR, true);
 
@@ -124,7 +126,10 @@ public class Climber extends SmartSubsystem {
   @Override
   public void onEnable(boolean isAutonomous) {
     updateBrakeMode(true);
-    tuner.updateMotorPIDF();
+    
+    if(Constants.TUNING.CLIMBER) {
+      tuner.updateMotorPIDF();
+    }
   }
 
   public void setOpenLoop(double percent, double feedforward) { outputs.set(TalonFXControlMode.PercentOutput, percent, percent, feedforward); }

@@ -69,9 +69,6 @@ public class Vision extends SmartSubsystem {
     if (cache.seesTarget) {
       cache.distanceFiltered = filterDistance.calculate(cache.distanceCalculated);
     }
-    if (noTargetCounts > 5) {
-      filterDistance.reset();
-    }
     // TODO should use distanceFiltered?
     cache.inShootRange = cache.distanceCalculated > Constants.VISION.MAP.getDistanceMin() && cache.distanceCalculated < Constants.VISION.MAP.getDistanceMax();
   }
@@ -88,10 +85,13 @@ public class Vision extends SmartSubsystem {
   public void updateDashboard(boolean showDetails) {
     SmartDashboard.putBoolean("Vision: Target", cache.seesTarget);
     SmartDashboard.putNumber("Vision: Distance", cache.distanceFiltered);
-    SmartDashboard.putNumber("Vision: X", cache.xDegrees);
     if (Constants.TUNING.VISION) {
+      SmartDashboard.putNumber("Vision: X", cache.xDegrees);
       SmartDashboard.putNumber("Vision: Area", cache.areaRaw);
       SmartDashboard.putNumber("Vision: Distance Raw", cache.distanceCalculated);
+    }
+    if (noTargetCounts > 50) {
+      filterDistance.reset();
     }
   }
 

@@ -25,7 +25,8 @@ public class SmartSubsystem extends SubsystemBase {
   /**
    * Override to do something whenever the <i>robot becomes enabled</i>.
    */
-  public void onEnable(boolean isAutonomous) {}
+  public void onEnable(boolean isAutonomous) {
+  }
 
   /**
    * Override to do something whenever the <i>robot becomes disabled</i>.

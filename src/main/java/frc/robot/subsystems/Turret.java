@@ -38,8 +38,10 @@ public class Turret extends ServoMotorSubsystem {
   @Override
   public void cacheSensors() {
     super.cacheSensors();
-    cache.limitF = mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1;
-    cache.limitR = mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1;
+    if (Constants.TUNING.TURRET) {
+      cache.limitF = mMaster.getSensorCollection().isFwdLimitSwitchClosed() == 1;
+      cache.limitR = mMaster.getSensorCollection().isRevLimitSwitchClosed() == 1;
+    }    
     resetIfAtHome();
     stability.calculate(getError() < Constants.TURRET.ERROR_ALLOWED_DEGREES);
   }

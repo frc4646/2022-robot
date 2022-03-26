@@ -11,6 +11,7 @@ import frc.robot.Constants;
 import frc.robot.util.ShootSetpoint;
 import frc.team254.drivers.TalonFXFactory;
 import frc.team254.drivers.TalonUtil;
+import frc.team4646.PIDTuner;
 import frc.team4646.StabilityCounter;
 import frc.team4646.Test;
 
@@ -33,10 +34,19 @@ public class ShooterTop extends SmartSubsystem {
   private final StabilityCounter stability = new StabilityCounter(Constants.SHOOTER_TOP.STABLE_COUNTS);
   private final DataCache cache = new DataCache();
   private final OutputCache outputs = new OutputCache();
+  private PIDTuner tuner;
 
   public ShooterTop() {
     masterTop = TalonFXFactory.createDefaultTalon(Constants.CAN.TALON_SHOOTER_TOP);
     configureMotor(masterTop, false);
+    
+    if(Constants.TUNING.SHOOTERS) {
+      tuner = new PIDTuner("ShooterTop",Constants.SHOOTER_TOP.P,
+      Constants.SHOOTER_TOP.I,
+      Constants.SHOOTER_TOP.D,
+      Constants.SHOOTER_TOP.F,
+      Constants.SHOOTER_TOP.CRACKPOINT, masterTop);
+    }
   }
 
   public void configureMotor(TalonFX motor, boolean inverted) {
@@ -70,8 +80,17 @@ public class ShooterTop extends SmartSubsystem {
   public void updateDashboard(boolean showDetails) {   
     SmartDashboard.putBoolean("ShooterTop: Stable", stability.isStable()); 
     if (Constants.TUNING.SHOOTERS) {
+      SmartDashboard.putNumber("ShooterTop: RPMCmd", outputs.setpoint);
       SmartDashboard.putNumber("ShooterTop: RPM", getRPM());
       SmartDashboard.putNumber("ShooterTop: Error", getErrorRPM());
+    }
+  }
+
+  @Override
+  public void onEnable(boolean isAutonomous) {
+    
+    if(Constants.TUNING.SHOOTERS) {
+    tuner.updateMotorPIDF();
     }
   }
 

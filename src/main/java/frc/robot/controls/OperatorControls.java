@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.climber.ClimberExtend;
+import frc.robot.commands.climber.ClimberPosition;
 import frc.robot.RobotContainer;
 import frc.robot.commands.climber.ClimberEnableLimits;
 import frc.robot.commands.sequence.ClimbMode;
@@ -16,6 +17,7 @@ import frc.robot.commands.shooter.ShooterOpenLoop;
 public class OperatorControls {
   private final int TRIGGER_L = 2, TRIGGER_R = 3;
   private final double TRIGGER_DEADBAND = 0.75;
+  private final double CLIMB_FULLY_EXTEND = 1.0;
   private final XboxController operator;
   private final JoystickButton buttonA, buttonB, buttonX, buttonY, bumperL, bumperR, Fn, start;
 
@@ -41,7 +43,9 @@ public class OperatorControls {
     Fn.whenReleased(new ClimberEnableLimits(true));
     buttonX.toggleWhenPressed(new ClimbMode());  // TODO move to start button?
     // buttonX.whenPressed(new ClimberZero());    
-    
+    buttonY.whenPressed(new ClimberPosition(CLIMB_FULLY_EXTEND));
+    buttonA.whenPressed(new ClimberPosition(0.4));
+
     // Shooter
     bumperL.whenPressed(new ShootOpenLoop());
     bumperL.whenReleased(new ShooterOpenLoop());

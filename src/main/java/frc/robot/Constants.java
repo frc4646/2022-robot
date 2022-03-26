@@ -46,12 +46,12 @@ public final class Constants {
 
   public static final class TUNING {
     public static final boolean 
-      CLIMBER = true,
+      CLIMBER = false,
       COLORSENSOR = false,
       DRIVETRAIN = false,
       FEEDER = false,
       ROBOT_STATE = false,
-      SHOOTERS = true,
+      SHOOTERS = false,
       TURRET = false,
       VISION = false;
   }
@@ -261,14 +261,13 @@ public final class Constants {
 
     public static ShootMap MAP = new ShootMap();
     static {
-      MAP.add(75.0, 1200.0, 2800.0); // MAP.add(75.0 - DISTANCE_CAL_OFFSET, 1375.0, 2800.0);
-      // MAP.add(80.0 - DISTANCE_CAL_OFFSET, 1400.0, 3000.0); // MAP.add(80.0 - DISTANCE_CAL_OFFSET, 1400.0, 3000.0);
-      MAP.add(95.0, 1250.0, 2900.0); // MAP.add(100.0 - DISTANCE_CAL_OFFSET, 1200.0, 3400.0);
-      MAP.add(110.0, 1420.0, 3020.0); // MAP.add(100.0 - DISTANCE_CAL_OFFSET, 1200.0, 3400.0);
-      MAP.add(125.0, 1500.0, 3100.0); // MAP.add(120.0 - DISTANCE_CAL_OFFSET, 1525.0, 3200.0);
-      MAP.add(150.0, 1625.0, 3500.0); // MAP.add(150.0 - DISTANCE_CAL_OFFSET, 1725.0, 3400.0);
-      MAP.add(170.0, 1750.0, 3700.0); // MAP.add(170.0 - DISTANCE_CAL_OFFSET, 1850.0, 3700.0);
-      MAP.add(194.0, 1850.0, 3900.0); // MAP.add(194.0 - DISTANCE_CAL_OFFSET, 1850.0, 3900.0);
+      MAP.add(75.0, 1200.0, 2800.0);
+      MAP.add(95.0, 1250.0, 2900.0);
+      MAP.add(110.0, 1420.0, 3020.0);
+      MAP.add(125.0, 1500.0, 3100.0);
+      MAP.add(150.0, 1625.0, 3500.0);
+      MAP.add(170.0, 1750.0, 3700.0);
+      MAP.add(194.0, 1850.0, 3900.0);
     }
   }
 

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel;
 
 import frc.robot.Constants;
 import frc.team254.drivers.SparkMaxFactory;
@@ -30,6 +31,7 @@ public class Agitator extends SmartSubsystem {
     motor.enableVoltageCompensation(12.0);
     motor.setOpenLoopRampRate(Constants.AGITATOR.OPEN_LOOP_RAMP);
     motor.setSmartCurrentLimit(20);
+    motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 40);
   }
 
   @Override

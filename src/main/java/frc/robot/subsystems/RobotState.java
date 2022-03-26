@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
@@ -15,6 +16,8 @@ public class RobotState extends SmartSubsystem {
 
   @Override
   public void updateDashboard(boolean showDetails) {
+    SmartDashboard.putBoolean("State: Agitate Wanted", isAgiateHopperWanted());
+    SmartDashboard.putBoolean("State: Agitate Finished", isAgiateHopperFinished());
     if (Constants.TUNING.ROBOT_STATE) {
     }
   }

@@ -24,19 +24,20 @@ public class PIDTuner {
   private final int SLOT;
   private final List<TalonFX> motors;
   private final List<CANSparkMax> motors2;
+  private final String name;
 
   /** Updates PIDF of motor controller without needing to program */
-  public PIDTuner(TalonFX... motors) {
-    this(0.0, 0.0, 0.0, 0.0, 0.0, 0, motors);
+  public PIDTuner(String name, TalonFX... motors) {
+    this(name, 0.0, 0.0, 0.0, 0.0, 0.0, 0, motors);
   }
 
   /** Updates PIDF of motor controller without needing to program */
-  public PIDTuner(double P, double I, double D, double F, double crackpoint, TalonFX... motors) {
-    this(P, I, D, F, 0.0, 0, motors);
+  public PIDTuner(String name, double P, double I, double D, double F, double crackpoint, TalonFX... motors) {
+    this(name, P, I, D, F, crackpoint, 0, motors);
   }
 
   /** Updates PIDF of motor controller without needing to program */
-  public PIDTuner(double P, double I, double D, double F, double crackpoint, int slot, TalonFX... motors) {
+  public PIDTuner(String name, double P, double I, double D, double F, double crackpoint, int slot, TalonFX... motors) {
     this.motors = List.of(motors);
     this.motors2 = List.of();
     DEFAULT_P = P;
@@ -45,25 +46,26 @@ public class PIDTuner {
     DEFAULT_F = F;
     DEFAULT_CRACKPOINT = crackpoint;
     SLOT = slot;
-    SmartDashboard.putNumber(DASHBOARD_KEY_P, DEFAULT_P);
-    SmartDashboard.putNumber(DASHBOARD_KEY_I, DEFAULT_I);
-    SmartDashboard.putNumber(DASHBOARD_KEY_D, DEFAULT_D);
-    SmartDashboard.putNumber(DASHBOARD_KEY_F, DEFAULT_F);
-    SmartDashboard.putNumber(DASHBOARD_KEY_CRACKPOINT, DEFAULT_CRACKPOINT);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_P, DEFAULT_P);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_I, DEFAULT_I);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_D, DEFAULT_D);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_F, DEFAULT_F);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_CRACKPOINT, DEFAULT_CRACKPOINT);
+    this.name = name;
   }
 
   /** Updates PIDF of motor controller without needing to program */
-  public PIDTuner(CANSparkMax... motors) {
-    this(0.0, 0.0, 0.0, 0.0, 0.0, 0, motors);
+  public PIDTuner(String name, CANSparkMax... motors) {
+    this(name, 0.0, 0.0, 0.0, 0.0, 0.0, 0, motors);
   }
 
   /** Updates PIDF of motor controller without needing to program */
-  public PIDTuner(double P, double I, double D, double F, double crackpoint, CANSparkMax... motors) {
-    this(P, I, D, F, 0.0, 0, motors);
+  public PIDTuner(String name, double P, double I, double D, double F, double crackpoint, CANSparkMax... motors) {
+    this(name, P, I, D, F, crackpoint, 0, motors);
   }
 
   /** Updates PIDF of motor controller without needing to program */
-  public PIDTuner(double P, double I, double D, double F, double crackpoint, int slot, CANSparkMax... motors) {
+  public PIDTuner(String name, double P, double I, double D, double F, double crackpoint, int slot, CANSparkMax... motors) {
     this.motors = List.of();
     this.motors2 = List.of(motors);
     DEFAULT_P = P;
@@ -72,11 +74,12 @@ public class PIDTuner {
     DEFAULT_F = F;
     DEFAULT_CRACKPOINT = crackpoint;
     SLOT = slot;
-    SmartDashboard.putNumber(DASHBOARD_KEY_P, DEFAULT_P);
-    SmartDashboard.putNumber(DASHBOARD_KEY_I, DEFAULT_I);
-    SmartDashboard.putNumber(DASHBOARD_KEY_D, DEFAULT_D);
-    SmartDashboard.putNumber(DASHBOARD_KEY_F, DEFAULT_F);
-    SmartDashboard.putNumber(DASHBOARD_KEY_CRACKPOINT, DEFAULT_CRACKPOINT);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_P, DEFAULT_P);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_I, DEFAULT_I);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_D, DEFAULT_D);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_F, DEFAULT_F);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_CRACKPOINT, DEFAULT_CRACKPOINT);
+    this.name = name;
   }
 
   /** 
@@ -84,10 +87,10 @@ public class PIDTuner {
    * Suggest from subsystem.OnEnabled() or subsystem.OnDisabled().
    */
   public void updateMotorPIDF() {
-    double P = SmartDashboard.getNumber(DASHBOARD_KEY_P, 0.0);
-    double I = SmartDashboard.getNumber(DASHBOARD_KEY_I, 0.0);
-    double D = SmartDashboard.getNumber(DASHBOARD_KEY_D, 0.0);
-    double F = SmartDashboard.getNumber(DASHBOARD_KEY_F, 0.0);
+    double P = SmartDashboard.getNumber(name + DASHBOARD_KEY_P, 0.0);
+    double I = SmartDashboard.getNumber(name + DASHBOARD_KEY_I, 0.0);
+    double D = SmartDashboard.getNumber(name + DASHBOARD_KEY_D, 0.0);
+    double F = SmartDashboard.getNumber(name + DASHBOARD_KEY_F, 0.0);
     
     for (TalonFX motor : motors) {
       TalonUtil.checkError(motor.config_kP(SLOT, P, Constants.CAN_TIMEOUT), "Tuner: could not set P: ");
@@ -105,6 +108,6 @@ public class PIDTuner {
   
   /** @return crackpoint. Pass into motor controller's set function. */
   public double getCrackpoint() {
-    return SmartDashboard.getNumber(DASHBOARD_KEY_CRACKPOINT, 0.0);
+    return SmartDashboard.getNumber(name + DASHBOARD_KEY_CRACKPOINT, 0.0);
   }
 }

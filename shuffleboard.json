@@ -231,8 +231,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Shooter: RPM": true
+              "Y-axis/Unit": "ul"
             }
           },
           "0,1": {
@@ -249,8 +248,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/ShooterTop: RPM": true
+              "Y-axis/Unit": "ul"
             }
           },
           "5,0": {
@@ -293,16 +291,6 @@
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Shooter: IsStable",
                   "_title": "SmartDashboard/Shooter: IsStable"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/ShooterTop: Demand",
-                  "_title": "SmartDashboard/ShooterTop: Demand"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Shooter: Demand",
-                  "_title": "SmartDashboard/Shooter: Demand"
                 }
               ]
             }
@@ -340,10 +328,36 @@
               "_title": "SmartDashboard/Vision: Distance"
             }
           },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Shooter: Stable",
+              "_title": "SmartDashboard/Shooter: Stable",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "5,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/ShooterTop: Stable",
+              "_title": "SmartDashboard/ShooterTop: Stable",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
           "8,0": {
             "size": [
               2,
-              3
+              5
             ],
             "content": {
               "_type": "List Layout",
@@ -352,55 +366,77 @@
               "_children": [
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Shooter P",
-                  "_title": "SmartDashboard/Shooter P"
+                  "_source0": "network_table:///SmartDashboard/ShooterTopTuner: CRACKPOINT",
+                  "_title": "/SmartDashboard/ShooterTopTuner: CRACKPOINT"
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Shooter I",
-                  "_title": "SmartDashboard/Shooter I"
+                  "_source0": "network_table:///SmartDashboard/ShooterTopTuner: I",
+                  "_title": "/SmartDashboard/ShooterTopTuner: I"
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Shooter D",
-                  "_title": "SmartDashboard/Shooter D"
+                  "_source0": "network_table:///SmartDashboard/ShooterTopTuner: P",
+                  "_title": "/SmartDashboard/ShooterTopTuner: P"
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Shooter F",
-                  "_title": "SmartDashboard/Shooter F"
+                  "_source0": "network_table:///SmartDashboard/ShooterTopTuner: F",
+                  "_title": "/SmartDashboard/ShooterTopTuner: F"
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Shooter FeedForward",
-                  "_title": "SmartDashboard/Shooter FeedForward"
+                  "_source0": "network_table:///SmartDashboard/ShooterTopTuner: D",
+                  "_title": "/SmartDashboard/ShooterTopTuner: D"
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/ShooterTop P",
-                  "_title": "SmartDashboard/ShooterTop P"
+                  "_source0": "network_table:///SmartDashboard/ShooterTuner: CRACKPOINT",
+                  "_title": "/SmartDashboard/ShooterTuner: CRACKPOINT"
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/ShooterTop I",
-                  "_title": "SmartDashboard/ShooterTop I"
+                  "_source0": "network_table:///SmartDashboard/ShooterTuner: P",
+                  "_title": "/SmartDashboard/ShooterTuner: P"
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/ShooterTop D",
-                  "_title": "SmartDashboard/ShooterTop D"
+                  "_source0": "network_table:///SmartDashboard/ShooterTuner: I",
+                  "_title": "/SmartDashboard/ShooterTuner: I"
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/ShooterTop F",
-                  "_title": "SmartDashboard/ShooterTop F"
+                  "_source0": "network_table:///SmartDashboard/ShooterTuner: D",
+                  "_title": "/SmartDashboard/ShooterTuner: D"
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/ShooterTop FeedForward",
-                  "_title": "SmartDashboard/ShooterTop FeedForward"
+                  "_source0": "network_table:///SmartDashboard/ShooterTuner: F",
+                  "_title": "/SmartDashboard/ShooterTuner: F"
                 }
               ]
+            }
+          },
+          "3,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ShooterTop: RPMCmd",
+              "_title": "/SmartDashboard/ShooterTop: RPMCmd"
+            }
+          },
+          "6,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Shooter: RPMCmd",
+              "_title": "/SmartDashboard/Shooter: RPMCmd"
             }
           }
         }
@@ -606,6 +642,32 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Turret: Position",
               "_title": "SmartDashboard/Turret: Position"
+            }
+          },
+          "10,3": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/State: Agitate Finished",
+              "_title": "SmartDashboard/State: Agitate Finished",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "10,1": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/State: Agitate Wanted",
+              "_title": "SmartDashboard/State: Agitate Wanted",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
