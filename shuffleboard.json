@@ -22,17 +22,6 @@
               "_title": "SmartDashboard/Auto: Mode"
             }
           },
-          "0,1": {
-            "size": [
-              3,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/Auto: Position",
-              "_title": "SmartDashboard/Auto: Position"
-            }
-          },
           "0,4": {
             "size": [
               3,
@@ -42,19 +31,6 @@
               "_type": "Toggle Button",
               "_source0": "network_table:///SmartDashboard/Show Details",
               "_title": "SmartDashboard/Show Details"
-            }
-          },
-          "3,3": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Color: Correct",
-              "_title": "SmartDashboard/Color: Correct",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
             }
           },
           "10,0": {
@@ -103,9 +79,9 @@
               "Visuals/Show value": true
             }
           },
-          "3,5": {
+          "10,4": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
@@ -116,9 +92,9 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "5,5": {
+          "11,4": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
@@ -145,7 +121,7 @@
           "3,1": {
             "size": [
               2,
-              1
+              2
             ],
             "content": {
               "_type": "Boolean Box",
@@ -155,10 +131,10 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "3,2": {
+          "3,3": {
             "size": [
               2,
-              1
+              2
             ],
             "content": {
               "_type": "Boolean Box",
@@ -168,20 +144,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "10,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Canifier: Turret Home",
-              "_title": "SmartDashboard/Canifier: Turret Home",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "11,4": {
+          "0,5": {
             "size": [
               2,
               1

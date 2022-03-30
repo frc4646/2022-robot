@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.agitator.AgitatorAuto;
 import frc.robot.commands.agitator.AgitatorPulse;
+import frc.robot.commands.climber.ClimberExtend;
 import frc.robot.commands.drivetrain.DriveOpenLoop;
 import frc.robot.commands.drivetrain.DrivePath;
 import frc.robot.commands.feeder.FeederAutoIndex;
@@ -42,7 +43,8 @@ public class HumanPlayerThenShoot extends SequentialCommandGroup {
         ),
         new FeederAutoIndex()  // During both paths: Index cargos that enter the robot
       ),
-      new ShootVision(true)  // After both paths, shoot
+      new ShootVision(true),  // After both paths, shoot
+      new ClimberExtend(true).beforeStarting(new WaitCommand(0.5))  // Post-Auto: Don't have to remember in match
     );
   }
 }

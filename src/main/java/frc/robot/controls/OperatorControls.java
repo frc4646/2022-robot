@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.climber.ClimberExtend;
 import frc.robot.commands.climber.ClimberPosition;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.commands.climber.ClimberEnableLimits;
 import frc.robot.commands.sequence.ClimbMode;
@@ -41,10 +42,11 @@ public class OperatorControls {
     climbArms.whenInactive(new ClimberExtend(false));
     Fn.whenPressed(new ClimberEnableLimits(false));
     Fn.whenReleased(new ClimberEnableLimits(true));
-    buttonX.toggleWhenPressed(new ClimbMode());  // TODO move to start button?
-    // buttonX.whenPressed(new ClimberZero());    
-    buttonY.whenPressed(new ClimberPosition(CLIMB_FULLY_EXTEND));
-    buttonA.whenPressed(new ClimberPosition(0.4));
+    // buttonX.whenPressed(new ClimberZero());
+    if (Constants.TUNING.CLIMBER) {
+      buttonY.whenPressed(new ClimberPosition(CLIMB_FULLY_EXTEND));
+      buttonA.whenPressed(new ClimberPosition(0.4));
+    }
 
     // Shooter
     bumperL.whenPressed(new ShootOpenLoop());

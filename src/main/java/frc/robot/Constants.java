@@ -68,7 +68,7 @@ public final class Constants {
     public static final double
       OPEN_LOOP_ZERO = 0.1,
       DEADBAND = 0.2,
-      TICKS_TO_TOP = 227300.0,
+      TICKS_TO_TOP = 227300.0 * 3.0,
       TICKS_PER_UNIT_DISTANCE = TICKS_TO_TOP,
       SOFT_LIMIT_R = TICKS_TO_TOP * 0.0375,
       SOFT_LIMIT_F = TICKS_TO_TOP * 1.00,
@@ -167,7 +167,7 @@ public final class Constants {
 
   public static final class INTAKE {
     public static final double
-      OPEN_LOOP = 0.30,
+      OPEN_LOOP = 0.50,
       OPEN_LOOP_RAMP = 0.4,
       TIMEOUT_STOW = 1.25;
   }

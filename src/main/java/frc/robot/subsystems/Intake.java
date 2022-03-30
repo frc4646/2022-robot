@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -10,6 +11,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.Constants;
 import frc.team254.drivers.TalonFXFactory;
+import frc.team254.drivers.TalonUtil;
 import frc.team4646.Test;
 
 public class Intake extends SmartSubsystem {
@@ -34,8 +36,8 @@ public class Intake extends SmartSubsystem {
     motor.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT);
     motor.enableVoltageCompensation(true);
     motor.configOpenloopRamp(Constants.INTAKE.OPEN_LOOP_RAMP);
-    // StatorCurrentLimitConfiguration limit = new StatorCurrentLimitConfiguration(true, 30.0, 50.0, 0.02);
-    // TalonUtil.checkError(motor.configStatorCurrentLimit(limit), "Intake: Could not set stator current limit");
+    SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40.0, 45.0, 0.04);
+    TalonUtil.checkError(motor.configSupplyCurrentLimit(limit), "Intake: Could not set supply current limit");
 
     motor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 60, Constants.CAN_TIMEOUT);
     setExtend(!cache.extended);  // solenoid default is OFF, not IN
