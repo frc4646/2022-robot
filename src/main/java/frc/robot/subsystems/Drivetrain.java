@@ -79,10 +79,7 @@ public class Drivetrain extends SmartSubsystem {
     motor.setSmartCurrentLimit(Constants.DRIVETRAIN.CURRENT_LIMIT);
     if (isMaster) {
       SparkMaxPIDController pid = isLeft ? pidL : pidR;
-      pid.setP(Constants.DRIVETRAIN.VELOCITY_P);
-      pid.setI(Constants.DRIVETRAIN.VELOCITY_I);
-      pid.setD(Constants.DRIVETRAIN.VELOCITY_D);
-      pid.setFF(Constants.DRIVETRAIN.VELOCITY_F);
+      SparkMaxFactory.setPID(pid, Constants.DRIVETRAIN.PID_VELOCITY);
       motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);  // Velocity
       motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 10);  // Position
     }
@@ -189,11 +186,11 @@ public class Drivetrain extends SmartSubsystem {
     Test.add(this, "Gyro - Pitch (Robot Is Flat)", Math.abs(cache.pitch.getDegrees()) < 5.0);
 
     setBrakeMode(false);
-    // MotorTestSparkMax.checkMotors(this,
-    //   Arrays.asList(new MotorConfig<>("MasterR", masterR), new MotorConfig<>("SlaveR", slaveR)),
-    //   new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, encoderR::getVelocity));
-    // MotorTestSparkMax.checkMotors(this,
-    //   Arrays.asList(new MotorConfig<>("MasterL", masterL), new MotorConfig<>("SlaveL", slaveL)),
-    //   new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, encoderL::getVelocity));
+    MotorTestSparkMax.checkMotors(this,
+      Arrays.asList(new MotorConfig<>("MasterR", masterR), new MotorConfig<>("SlaveR", slaveR)),
+      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, encoderR::getVelocity));
+    MotorTestSparkMax.checkMotors(this,
+      Arrays.asList(new MotorConfig<>("MasterL", masterL), new MotorConfig<>("SlaveL", slaveL)),
+      new TestConfig().amps(5.0, 2.0).rpm(90.0, 200.0, encoderL::getVelocity));
   }
 }

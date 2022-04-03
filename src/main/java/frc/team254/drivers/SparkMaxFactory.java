@@ -4,15 +4,25 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVLibError;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import frc.team4646.PID;
 
 /**
  * Creates CANTalon objects and configures all the parameters we care about to factory defaults. Closed-loop and sensor
  * parameters are not set, as these are expected to be set by the application.
  */
 public class SparkMaxFactory {
+    /** Set closed-loop constants for motor controller. Is more concise than applying each constant individually. */
+    public static void setPID(SparkMaxPIDController controller, PID PID) {
+        controller.setP(PID.P);
+        controller.setI(PID.I);
+        controller.setD(PID.D);
+        controller.setFF(PID.F);
+    }
+
     public static class Configuration {
         public boolean BURN_FACTORY_DEFAULT_FLASH = true;
         public IdleMode NEUTRAL_MODE = IdleMode.kCoast;
@@ -54,6 +64,9 @@ public class SparkMaxFactory {
         }
     }
 
+    /** 
+     * @param inverted Set the follower to output opposite of the leader
+     */
     public static CANSparkMax createPermanentSlaveSparkMax(int id, CANSparkMax master, boolean inverted) {
         final CANSparkMax sparkMax = createSparkMax(id, kSlaveConfiguration);
         handleCANError(id, sparkMax.follow(master, inverted), "setting follower");

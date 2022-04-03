@@ -38,8 +38,8 @@ public class DrivePath extends SequentialCommandGroup {
       Constants.DRIVETRAIN.FEED_FORWARD,
       Constants.DRIVETRAIN.KINEMATICS,
       RobotContainer.DRIVETRAIN::getWheelSpeeds,
-      new PIDController(Constants.DRIVETRAIN.VOLTAGE_P, Constants.DRIVETRAIN.VOLTAGE_I, Constants.DRIVETRAIN.VOLTAGE_D),
-      new PIDController(Constants.DRIVETRAIN.VOLTAGE_P, Constants.DRIVETRAIN.VOLTAGE_I, Constants.DRIVETRAIN.VOLTAGE_D),
+      new PIDController(Constants.DRIVETRAIN.PID_VOLTAGE.P, Constants.DRIVETRAIN.PID_VOLTAGE.I, Constants.DRIVETRAIN.PID_VOLTAGE.D),
+      new PIDController(Constants.DRIVETRAIN.PID_VOLTAGE.P, Constants.DRIVETRAIN.PID_VOLTAGE.I, Constants.DRIVETRAIN.PID_VOLTAGE.D),
       RobotContainer.DRIVETRAIN::setVolts,
       RobotContainer.DRIVETRAIN
     );

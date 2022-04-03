@@ -17,6 +17,7 @@ import frc.robot.Constants;
 import frc.team254.drivers.TalonFXFactory;
 import frc.team254.drivers.TalonUtil;
 import frc.team254.util.Util;
+import frc.team4646.PID;
 
 /** Abstract base class for a subsystem with a single sensored servo-mechanism */
 public abstract class ServoMotorSubsystem extends SmartSubsystem {
@@ -27,7 +28,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     public int id = -1;
     public boolean invert_motor = false;
     public boolean invert_sensor_phase = false;
-    public double encoder_ppr = 2048.0;
+    public double ticksPerMotorRotation = 2048.0;
   }
 
   /** Recommend initializing in a static block! */
@@ -37,19 +38,12 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
 
     public double kHomePosition = 0.0; // Units
     public double kTicksPerUnitDistance = 1.0;
-    public double kMotionMagicKp = 0.0;  // Raw output / raw error
-    public double kMotionMagicKi = 0.0;  // Raw output / sum of raw error
-    public double kMotionMagicKd = 0.0;  // Raw output / (err - prevErr)
-    public double kMotionMagicKf = 0.0;  // Raw output / velocity in ticks/100ms
-    public double kMotionMagicKa = 0.0;  // Raw output / accel in (ticks/100ms) / s
+    public PID kMotionMagicPID = new PID();
     public double kMaxIntegralAccumulator = 0.0;
     public double kIZone = 0.0; // Ticks
     public double kMotionMagicDeadband = 0.0; // Ticks
 
-    public double kPositionKp = 0.0;
-    public double kPositionKi = 0.0;
-    public double kPositionKd = 0.0;
-    public double kPositionKf = 0.0;
+    public PID kPositionPID = new PID();
     public double kPositionMaxIntegralAccumulator = 0.0;
     public double kPositionIZone = 0.0; // Ticks
     public double kPositionDeadband = 0.0; // Ticks
@@ -59,19 +53,14 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     public double kRampRate = 0.0; // s
     public double kMaxVoltage = 12.0;
 
-    public double kSupplyContinuousCurrentLimit = 20.0; // amps
-    public double kSupplyPeakCurrentLimit = 60.0; // amps
-    public double kSupplyPeakCurrentDuration = 0.2; // seconds
-    public boolean kEnableSupplyCurrentLimit = false;
-
-    public double kStatorContinuousCurrentLimit = 20.0; // amps
-    public double kStatorPeakCurrentLimit = 60.0; // amps
-    public double kStatorPeakCurrentDuration = 0.2; // seconds
-    public boolean kEnableStatorCurrentLimit = false;
+    public SupplyCurrentLimitConfiguration kSupplyCurrentLimit = new SupplyCurrentLimitConfiguration(false, 20.0, 60.0, 0.2);
+    public StatorCurrentLimitConfiguration kStatorCurrentLimit = new StatorCurrentLimitConfiguration(false, 20.0, 60.0, 0.2);
 
     public double kMaxUnitsLimit = Double.POSITIVE_INFINITY;
     public double kMinUnitsLimit = Double.NEGATIVE_INFINITY;
 
+    public int kStatusFrame2UpdateRate = 10;
+    public int kStatusFrame10UpdateRate = 10;
     public int kStatusFrame8UpdateRate = 1000;
     public boolean kRecoverPositionOnReset = false;
   }
@@ -98,20 +87,14 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
 
     TalonUtil.checkError(mMaster.configVoltageCompSaturation(12.0, Constants.CAN_TIMEOUT), getName() + ": Could not set voltage compensation saturation: ");
 
-    TalonUtil.checkError(mMaster.config_kP(kMotionProfileSlot, mConstants.kMotionMagicKp, Constants.CAN_TIMEOUT), getName() + ": could not set kP: ");
-    TalonUtil.checkError(mMaster.config_kI(kMotionProfileSlot, mConstants.kMotionMagicKi, Constants.CAN_TIMEOUT), getName() + ": could not set kI: ");
-    TalonUtil.checkError(mMaster.config_kD(kMotionProfileSlot, mConstants.kMotionMagicKd, Constants.CAN_TIMEOUT), getName() + ": could not set kD: ");
-    TalonUtil.checkError(mMaster.config_kF(kMotionProfileSlot, mConstants.kMotionMagicKf, Constants.CAN_TIMEOUT), getName() + ": Could not set kF: ");
+    TalonFXFactory.setPID(mMaster, mConstants.kMotionMagicPID, kMotionProfileSlot);
     TalonUtil.checkError(mMaster.configMaxIntegralAccumulator(kMotionProfileSlot, mConstants.kMaxIntegralAccumulator, Constants.CAN_TIMEOUT), getName() + ": Could not set max integral: ");
     TalonUtil.checkError(mMaster.config_IntegralZone(kMotionProfileSlot, mConstants.kIZone, Constants.CAN_TIMEOUT), getName() + ": Could not set i zone: ");
     TalonUtil.checkError(mMaster.configAllowableClosedloopError(kMotionProfileSlot, mConstants.kMotionMagicDeadband, Constants.CAN_TIMEOUT), getName() + ": Could not set deadband: ");
     TalonUtil.checkError(mMaster.configMotionCruiseVelocity(mConstants.kCruiseVelocity, Constants.CAN_TIMEOUT), getName() + ": Could not set cruise velocity: ");
     TalonUtil.checkError(mMaster.configMotionAcceleration(mConstants.kAcceleration, Constants.CAN_TIMEOUT), getName() + ": Could not set acceleration: ");
 
-    TalonUtil.checkError(mMaster.config_kP(kPositionPIDSlot, mConstants.kPositionKp, Constants.CAN_TIMEOUT), getName() + ": could not set kP: ");
-    TalonUtil.checkError(mMaster.config_kI(kPositionPIDSlot, mConstants.kPositionKi, Constants.CAN_TIMEOUT), getName() + ": could not set kI: ");
-    TalonUtil.checkError(mMaster.config_kD(kPositionPIDSlot, mConstants.kPositionKd, Constants.CAN_TIMEOUT), getName() + ": could not set kD: ");
-    TalonUtil.checkError(mMaster.config_kF(kPositionPIDSlot, mConstants.kPositionKf, Constants.CAN_TIMEOUT), getName() + ": Could not set kF: ");
+    TalonFXFactory.setPID(mMaster, mConstants.kPositionPID, kPositionPIDSlot);
     TalonUtil.checkError(mMaster.configMaxIntegralAccumulator(kPositionPIDSlot, mConstants.kPositionMaxIntegralAccumulator, Constants.CAN_TIMEOUT), getName() + ": Could not set max integral: ");
     TalonUtil.checkError(mMaster.config_IntegralZone(kPositionPIDSlot, mConstants.kPositionIZone, Constants.CAN_TIMEOUT), getName() + ": Could not set i zone: ");
     TalonUtil.checkError(mMaster.configAllowableClosedloopError(kPositionPIDSlot, mConstants.kPositionDeadband, Constants.CAN_TIMEOUT), getName() + ": Could not set deadband: ");
@@ -119,10 +102,8 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     TalonUtil.checkError(mMaster.configOpenloopRamp(mConstants.kRampRate, Constants.CAN_TIMEOUT), getName() + ": Could not set voltage ramp rate: ");
     TalonUtil.checkError(mMaster.configClosedloopRamp(mConstants.kRampRate, Constants.CAN_TIMEOUT), getName() + ": Could not set closed loop ramp rate: ");
 
-    SupplyCurrentLimitConfiguration limitsSupply = new SupplyCurrentLimitConfiguration(mConstants.kEnableSupplyCurrentLimit, mConstants.kSupplyContinuousCurrentLimit, mConstants.kSupplyPeakCurrentLimit, mConstants.kSupplyPeakCurrentDuration);
-    StatorCurrentLimitConfiguration limitsStator = new StatorCurrentLimitConfiguration(mConstants.kEnableStatorCurrentLimit, mConstants.kStatorContinuousCurrentLimit, mConstants.kStatorPeakCurrentLimit, mConstants.kStatorPeakCurrentDuration);
-    TalonUtil.checkError(mMaster.configSupplyCurrentLimit(limitsSupply), getName() + ": Could not set supply current limit.");
-    TalonUtil.checkError(mMaster.configStatorCurrentLimit(limitsStator), getName() + ": Could not set stator current limit.");
+    TalonUtil.checkError(mMaster.configSupplyCurrentLimit(mConstants.kSupplyCurrentLimit), getName() + ": Could not set supply current limit.");
+    TalonUtil.checkError(mMaster.configStatorCurrentLimit(mConstants.kStatorCurrentLimit), getName() + ": Could not set stator current limit.");
 
     mMaster.configVoltageMeasurementFilter(8);
     TalonUtil.checkError(mMaster.configVoltageCompSaturation(mConstants.kMaxVoltage, Constants.CAN_TIMEOUT), getName() + ": Could not set voltage comp saturation.");
@@ -130,8 +111,8 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
 
     mMaster.setInverted(mConstants.kMasterConstants.invert_motor);
     mMaster.setSensorPhase(mConstants.kMasterConstants.invert_sensor_phase);
-    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10, Constants.CAN_TIMEOUT);
-    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.CAN_TIMEOUT);
+    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, mConstants.kStatusFrame2UpdateRate, Constants.CAN_TIMEOUT);
+    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, mConstants.kStatusFrame10UpdateRate, Constants.CAN_TIMEOUT);
     mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, mConstants.kStatusFrame8UpdateRate, Constants.CAN_TIMEOUT);
     mMaster.selectProfileSlot(kMotionProfileSlot, 0);  // Start with kMotionProfileSlot
 
@@ -154,9 +135,6 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     public double active_trajectory_position; // ticks
     public double active_trajectory_velocity; // ticks/100ms
     public double active_trajectory_acceleration; // ticks/100ms/s
-    public double output_percent;
-    public double output_voltage;
-    public double master_current;
     public double error_ticks;
     public double encoder_wraps;
     public double absolute_pulse_offset = 0;
@@ -214,9 +192,6 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     }
     mPeriodicIO.error_ticks = (mMaster.getControlMode() == ControlMode.Position) ? mMaster.getClosedLoopError(0) : 0.0;
 
-    mPeriodicIO.master_current = mMaster.getStatorCurrent();
-    mPeriodicIO.output_voltage = mMaster.getMotorOutputVoltage();
-    mPeriodicIO.output_percent = mMaster.getMotorOutputPercent();
     mPeriodicIO.position_ticks = mMaster.getSelectedSensorPosition(0);
     mPeriodicIO.position_units = ticksToHomedUnits(mPeriodicIO.position_ticks);
     mPeriodicIO.velocity_ticks_per_100ms = mMaster.getSelectedSensorVelocity(0);
@@ -224,11 +199,11 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
     if (mConstants.kRecoverPositionOnReset) {
       mPeriodicIO.absolute_pulse_position_modded = mMaster.getSensorCollection().getIntegratedSensorAbsolutePosition();
       if (mPeriodicIO.absolute_pulse_position_modded < 0.0) {
-        mPeriodicIO.absolute_pulse_position_modded += mConstants.kMasterConstants.encoder_ppr;
+        mPeriodicIO.absolute_pulse_position_modded += mConstants.kMasterConstants.ticksPerMotorRotation;
       }
 
       double estimated_pulse_pos = ((mConstants.kMasterConstants.invert_sensor_phase ? -1.0 : 1.0) * mPeriodicIO.position_ticks) + mPeriodicIO.absolute_pulse_offset;
-      double new_wraps = Math.floor(estimated_pulse_pos / ((double) mConstants.kMasterConstants.encoder_ppr));
+      double new_wraps = Math.floor(estimated_pulse_pos / ((double) mConstants.kMasterConstants.ticksPerMotorRotation));
       // Only set this when we are really sure its a valid change
       if (Math.abs(mPeriodicIO.encoder_wraps - new_wraps) <= 1.0) {
         mPeriodicIO.encoder_wraps = new_wraps;
@@ -271,8 +246,8 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   public void recoverFromReset() {
     if (mPeriodicIO.reset_occured) {
       System.out.println(getName() + ": Master Talon reset occurred; resetting frame rates.");
-      mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10, 20);
-      mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 20);
+      mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, mConstants.kStatusFrame2UpdateRate, 20);
+      mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, mConstants.kStatusFrame10UpdateRate, 20);
       mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, mConstants.kStatusFrame8UpdateRate, 20);
 
       // Reset encoder position to estimated position from absolute encoder
@@ -290,13 +265,13 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   // ------------------------------ SETTERS: MOTORS ------------------------------
   public void setSetpointMotionMagic(double units, double feedforward_v) {
     mPeriodicIO.demand = constrainTicks(homedUnitsToTicks(units));
-    mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kMotionMagicKf + mConstants.kMotionMagicKd / 100.0) / 1023.0;
+    mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kMotionMagicPID.F + mConstants.kMotionMagicPID.D / 100.0) / 1023.0;
     setControlMode(ControlState.MOTION_MAGIC);
   }
 
   public void setSetpointPositionPID(double units, double feedforward_v) {
     mPeriodicIO.demand = constrainTicks(homedUnitsToTicks(units));
-    mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kMotionMagicKf + mConstants.kMotionMagicKd / 100.0) / 1023.0;
+    mPeriodicIO.feedforward = unitsPerSecondToTicksPer100ms(feedforward_v) * (mConstants.kMotionMagicPID.F + mConstants.kMotionMagicPID.D / 100.0) / 1023.0;
     setControlMode(ControlState.POSITION_PID);
   }
 
@@ -319,7 +294,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
 
   // ------------------------------ GETTERS ------------------------------
   public double estimateSensorPositionFromAbsolute() {
-    double estimated_pulse_pos = (mPeriodicIO.encoder_wraps * mConstants.kMasterConstants.encoder_ppr) + mPeriodicIO.absolute_pulse_position_modded;
+    double estimated_pulse_pos = (mPeriodicIO.encoder_wraps * mConstants.kMasterConstants.ticksPerMotorRotation) + mPeriodicIO.absolute_pulse_position_modded;
     double estimate_position_ticks = (mConstants.kMasterConstants.invert_sensor_phase ? -1.0 : 1.0) * (estimated_pulse_pos - mPeriodicIO.absolute_pulse_offset);
     return estimate_position_ticks;
   }
@@ -346,7 +321,7 @@ public abstract class ServoMotorSubsystem extends SmartSubsystem {
   /** @return absolute encoders raw ticks bounded to one rotation */
   protected double getAbsoluteEncoderRawPosition() {
     double abs_raw_with_rollover = mMaster.getSensorCollection().getIntegratedSensorAbsolutePosition();
-    return abs_raw_with_rollover + (abs_raw_with_rollover < 0.0 ? abs_raw_with_rollover + mConstants.kMasterConstants.encoder_ppr : 0.0);
+    return abs_raw_with_rollover + (abs_raw_with_rollover < 0.0 ? abs_raw_with_rollover + mConstants.kMasterConstants.ticksPerMotorRotation : 0.0);
   }
 
   // ------------------------------ UNIT CONVERSION ------------------------------

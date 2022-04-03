@@ -55,7 +55,7 @@ public class Climber extends SmartSubsystem {
     armR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.SOLENOID.ARM_R_OUT, Constants.SOLENOID.ARM_R_IN);
     
     if(Constants.TUNING.CLIMBER) {
-    tuner = new PIDTuner("Climber", masterL, masterR);
+      tuner = new PIDTuner("Climber", masterL, masterR);
     } 
     configureMotor(masterL, false);
     configureMotor(masterR, true);
@@ -76,10 +76,7 @@ public class Climber extends SmartSubsystem {
     TalonUtil.checkError(motor.configReverseSoftLimitEnable(true, Constants.CAN_TIMEOUT), "Climber: Could not enable reverse soft limit: ");
 
     TalonUtil.checkError(motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), "Climber: Could not detect encoder: ");
-    TalonUtil.checkError(motor.config_kP(0, Constants.CLIMBER.P, Constants.CAN_TIMEOUT), "Climber: could not set P: ");
-    TalonUtil.checkError(motor.config_kI(0, Constants.CLIMBER.I, Constants.CAN_TIMEOUT), "Climber: could not set I: ");
-    TalonUtil.checkError(motor.config_kD(0, Constants.CLIMBER.D, Constants.CAN_TIMEOUT), "Climber: could not set D: ");
-    TalonUtil.checkError(motor.config_kF(0, Constants.CLIMBER.F, Constants.CAN_TIMEOUT), "Climber: could not set F: ");
+    TalonFXFactory.setPID(motor, Constants.CLIMBER.PID);
 
     StatorCurrentLimitConfiguration limitStator = new StatorCurrentLimitConfiguration(true, 40, 40, 0.2);
     TalonUtil.checkError(motor.configStatorCurrentLimit(limitStator, Constants.CAN_TIMEOUT), "Climber: Could not set stator current limits");

@@ -16,10 +16,7 @@ public class PIDTuner {
   private static final String DASHBOARD_KEY_D = "Tuner: D";
   private static final String DASHBOARD_KEY_F = "Tuner: F";
   private static final String DASHBOARD_KEY_CRACKPOINT = "Tuner: CRACKPOINT";
-  private final double DEFAULT_P;
-  private final double DEFAULT_I;
-  private final double DEFAULT_D;
-  private final double DEFAULT_F;
+  private final PID DEFAULT_PID;
   private final double DEFAULT_CRACKPOINT;
   private final int SLOT;
   private final List<TalonFX> motors;
@@ -28,58 +25,44 @@ public class PIDTuner {
 
   /** Updates PIDF of motor controller without needing to program */
   public PIDTuner(String name, TalonFX... motors) {
-    this(name, 0.0, 0.0, 0.0, 0.0, 0.0, 0, motors);
+    this(name, new PID(), 0.0, 0, motors);
   }
 
   /** Updates PIDF of motor controller without needing to program */
-  public PIDTuner(String name, double P, double I, double D, double F, double crackpoint, TalonFX... motors) {
-    this(name, P, I, D, F, crackpoint, 0, motors);
+  public PIDTuner(String name, PID PID, double crackpoint, TalonFX... motors) {
+    this(name, PID, crackpoint, 0, motors);
   }
 
   /** Updates PIDF of motor controller without needing to program */
-  public PIDTuner(String name, double P, double I, double D, double F, double crackpoint, int slot, TalonFX... motors) {
+  public PIDTuner(String name, PID PID, double crackpoint, int slot, TalonFX... motors) {
     this.motors = List.of(motors);
     this.motors2 = List.of();
-    DEFAULT_P = P;
-    DEFAULT_I = I;
-    DEFAULT_D = D;
-    DEFAULT_F = F;
+    DEFAULT_PID = PID;
     DEFAULT_CRACKPOINT = crackpoint;
     SLOT = slot;
-    SmartDashboard.putNumber(name + DASHBOARD_KEY_P, DEFAULT_P);
-    SmartDashboard.putNumber(name + DASHBOARD_KEY_I, DEFAULT_I);
-    SmartDashboard.putNumber(name + DASHBOARD_KEY_D, DEFAULT_D);
-    SmartDashboard.putNumber(name + DASHBOARD_KEY_F, DEFAULT_F);
-    SmartDashboard.putNumber(name + DASHBOARD_KEY_CRACKPOINT, DEFAULT_CRACKPOINT);
     this.name = name;
+    initDashboard();
   }
 
   /** Updates PIDF of motor controller without needing to program */
   public PIDTuner(String name, CANSparkMax... motors) {
-    this(name, 0.0, 0.0, 0.0, 0.0, 0.0, 0, motors);
+    this(name, new PID(), 0.0, 0, motors);
   }
 
   /** Updates PIDF of motor controller without needing to program */
-  public PIDTuner(String name, double P, double I, double D, double F, double crackpoint, CANSparkMax... motors) {
-    this(name, P, I, D, F, crackpoint, 0, motors);
+  public PIDTuner(String name, PID PID, double crackpoint, CANSparkMax... motors) {
+    this(name, PID, crackpoint, 0, motors);
   }
 
   /** Updates PIDF of motor controller without needing to program */
-  public PIDTuner(String name, double P, double I, double D, double F, double crackpoint, int slot, CANSparkMax... motors) {
+  public PIDTuner(String name, PID PID, double crackpoint, int slot, CANSparkMax... motors) {
     this.motors = List.of();
     this.motors2 = List.of(motors);
-    DEFAULT_P = P;
-    DEFAULT_I = I;
-    DEFAULT_D = D;
-    DEFAULT_F = F;
+    DEFAULT_PID = PID;
     DEFAULT_CRACKPOINT = crackpoint;
     SLOT = slot;
-    SmartDashboard.putNumber(name + DASHBOARD_KEY_P, DEFAULT_P);
-    SmartDashboard.putNumber(name + DASHBOARD_KEY_I, DEFAULT_I);
-    SmartDashboard.putNumber(name + DASHBOARD_KEY_D, DEFAULT_D);
-    SmartDashboard.putNumber(name + DASHBOARD_KEY_F, DEFAULT_F);
-    SmartDashboard.putNumber(name + DASHBOARD_KEY_CRACKPOINT, DEFAULT_CRACKPOINT);
     this.name = name;
+    initDashboard();
   }
 
   /** 
@@ -109,5 +92,13 @@ public class PIDTuner {
   /** @return crackpoint. Pass into motor controller's set function. */
   public double getCrackpoint() {
     return SmartDashboard.getNumber(name + DASHBOARD_KEY_CRACKPOINT, 0.0);
+  }
+
+  private void initDashboard() {
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_P, DEFAULT_PID.P);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_I, DEFAULT_PID.I);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_D, DEFAULT_PID.D);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_F, DEFAULT_PID.F);
+    SmartDashboard.putNumber(name + DASHBOARD_KEY_CRACKPOINT, DEFAULT_CRACKPOINT);
   }
 }

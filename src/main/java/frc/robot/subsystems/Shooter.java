@@ -46,11 +46,7 @@ public class Shooter extends SmartSubsystem {
     configureMotor(masterR, false);
     
     if(Constants.TUNING.SHOOTERS) {
-      tuner = new PIDTuner("Shooter",Constants.SHOOTER.P,
-      Constants.SHOOTER.I,
-      Constants.SHOOTER.D,
-      Constants.SHOOTER.F,
-      Constants.SHOOTER.CRACKPOINT, masterL, masterR);
+      tuner = new PIDTuner("Shooter",Constants.SHOOTER.PID, Constants.SHOOTER.CRACKPOINT, masterL, masterR);
     }
   }
 
@@ -60,10 +56,7 @@ public class Shooter extends SmartSubsystem {
     motor.enableVoltageCompensation(true);
 
     TalonUtil.checkError(motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, Constants.CAN_TIMEOUT), "Shooter: Could not detect encoder: ");
-    TalonUtil.checkError(motor.config_kP(0, Constants.SHOOTER.P, Constants.CAN_TIMEOUT), "Shooter: could not set P: ");
-    TalonUtil.checkError(motor.config_kI(0, Constants.SHOOTER.I, Constants.CAN_TIMEOUT), "Shooter: could not set I: ");
-    TalonUtil.checkError(motor.config_kD(0, Constants.SHOOTER.D, Constants.CAN_TIMEOUT), "Shooter: could not set D: ");
-    TalonUtil.checkError(motor.config_kF(0, Constants.SHOOTER.F, Constants.CAN_TIMEOUT), "Shooter: could not set F: ");
+    TalonFXFactory.setPID(motor, Constants.SHOOTER.PID);
 
     SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40.0, 100.0, 0.02);
     TalonUtil.checkError(motor.configSupplyCurrentLimit(limit), "Shooter: Could not set supply current limit");
@@ -97,11 +90,11 @@ public class Shooter extends SmartSubsystem {
 
   @Override
   public void onEnable(boolean isAutonomous) {
-    
     if(Constants.TUNING.SHOOTERS) {
-    tuner.updateMotorPIDF();
+      tuner.updateMotorPIDF();
     }
   }
+
   public void setOpenLoop(double percent) { outputs.set(TalonFXControlMode.PercentOutput, percent, percent > 0.0); }
   public void setClosedLoop(ShootSetpoint setpoint, boolean isShooting) { outputs.set(TalonFXControlMode.Velocity, setpoint.rpmBottom, isShooting); }
 

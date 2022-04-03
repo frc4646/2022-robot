@@ -6,12 +6,27 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 
+import frc.team4646.PID;
+
 /**
  * Creates CANTalon objects and configures all the parameters we care about to factory defaults. Closed-loop and sensor
  * parameters are not set, as these are expected to be set by the application.
  */
 public class TalonFXFactory {
     private final static int kTimeoutMs = 100;
+
+    /** Set closed-loop constants for motor controller. Is more concise than applying each constant individually. */
+    public static void setPID(TalonFX motor, PID PID) {
+        TalonFXFactory.setPID(motor, PID, 0);
+    }
+
+    /** Set closed-loop constants for motor controller. Is more concise than applying each constant individually. */
+    public static void setPID(TalonFX motor, PID PID, int slot) {
+        TalonUtil.checkError(motor.config_kP(slot, PID.P, kTimeoutMs), "Could not set P: ");
+        TalonUtil.checkError(motor.config_kI(slot, PID.I, kTimeoutMs), "Could not set I: ");
+        TalonUtil.checkError(motor.config_kD(slot, PID.D, kTimeoutMs), "Could not set D: ");
+        TalonUtil.checkError(motor.config_kF(slot, PID.F, kTimeoutMs), "Could not set F: ");
+    }
 
     public static class Configuration {
         public NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
